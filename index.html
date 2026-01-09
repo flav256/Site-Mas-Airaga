@@ -3,38 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maison de charme à Eyragues - Location saisonnière</title>
+  <title data-i18n="page-title">Mas Airaga - Maison de charme à Eyragues</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="language-toggle">
+    <button class="lang-btn active" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
   <header class="hero">
     <div class="hero__overlay"></div>
     <nav class="nav">
-      <div class="nav__brand">Eyragues Escape</div>
+      <div class="nav__brand">Mas Airaga</div>
       <div class="nav__links">
-        <a href="#atouts">Atouts</a>
-        <a href="#photos">Photos</a>
-        <a href="#amenities">Équipements</a>
-        <a href="#localisation">Localisation</a>
-        <a href="#reservation" class="button button--ghost">Réserver</a>
+        <a href="#atouts" data-i18n="nav-atouts">Atouts</a>
+        <a href="#photos" data-i18n="nav-photos">Photos</a>
+        <a href="#amenities" data-i18n="nav-amenities">Équipements</a>
+        <a href="#localisation" data-i18n="nav-location">Localisation</a>
+        <a href="#reservation" class="button button--ghost" data-i18n="nav-book">Réserver</a>
       </div>
     </nav>
     <div class="hero__content">
-      <p class="eyebrow">Maison meublée Airbnb</p>
-      <h1>Maison de charme à Eyragues, entre Alpilles et Avignon</h1>
-      <p class="lead">Un cocon lumineux pour 4 à 6 voyageurs, jardin ombragé, climatisation, wifi fibre, et accès rapide aux marchés de Provence.</p>
+      <p class="eyebrow" data-i18n="hero-eyebrow">Villa avec piscine</p>
+      <h1 data-i18n="hero-title">Très beau "Mas Airaga" au calme, à 4 km de St-Rémy</h1>
+      <p class="lead" data-i18n="hero-lead">Mas entièrement climatisé, tout en lumière, 185 m2 habitables. Jardin parfumé à la lavande et aux oliviers d'environ 2000 m2 avec piscine sécurisée. DÉTENTE GARANTIE !</p>
       <div class="hero__ctas">
-        <a class="button" href="#reservation">Réserver en direct</a>
-        <a class="button button--ghost" href="#photos">Découvrir la maison</a>
+        <a class="button" href="#reservation" data-i18n="cta-book">Réserver en direct</a>
+        <a class="button button--ghost" href="#photos" data-i18n="cta-discover">Découvrir la maison</a>
       </div>
       <div class="hero__meta">
-        <span>4-6 voyageurs</span>
-        <span>2 chambres + canapé-lit</span>
-        <span>Parking privé</span>
-        <span>Climatisation</span>
+        <span data-i18n="meta-guests">10 voyageurs</span>
+        <span data-i18n="meta-pool">Piscine sécurisée</span>
+        <span data-i18n="meta-parking">Parking privé</span>
+        <span data-i18n="meta-ac">Climatisation</span>
       </div>
     </div>
   </header>
@@ -42,119 +46,290 @@
   <main>
     <section class="section" id="atouts">
       <div class="section__header">
-        <p class="eyebrow">Pourquoi ici</p>
-        <h2>Les atouts pour vos séjours</h2>
-        <p class="muted">Profitez d'une maison fraîche l'été, chaleureuse l'hiver, à 10 minutes de Saint-Rémy-de-Provence et 15 minutes d'Avignon.</p>
+        <p class="eyebrow" data-i18n="atouts-eyebrow">Pourquoi ici</p>
+        <h2 data-i18n="atouts-title">Les atouts pour vos séjours</h2>
+        <p class="muted" data-i18n="atouts-subtitle">Un mas provençal de 185 m2 tout en lumière, à proximité des commerces et à 4 km de Saint-Rémy-de-Provence.</p>
       </div>
       <div class="grid grid--3">
         <article class="card">
-          <div class="icon">🏡</div>
-          <h3>Confort moderne</h3>
-          <p>Séjour climatisé, literie queen, cuisine équipée, buanderie et salle d'eau rénovée.</p>
+          <div class="icon">🏊</div>
+          <h3 data-i18n="atout1-title">Piscine sécurisée</h3>
+          <p data-i18n="atout1-desc">Jardin de 2000 m2 parfumé à la lavande et aux oliviers avec piscine privée et sécurisée pour une détente absolue.</p>
         </article>
         <article class="card">
-          <div class="icon">🌿</div>
-          <h3>Extérieur paisible</h3>
-          <p>Jardin clos, pergola, plancha et grande table pour les repas à l'ombre.</p>
+          <div class="icon">🏡</div>
+          <h3 data-i18n="atout2-title">Espace généreux</h3>
+          <p data-i18n="atout2-desc">185 m2 habitables entièrement climatisés avec 10 couchages, idéal pour familles et groupes d'amis.</p>
         </article>
         <article class="card">
           <div class="icon">📍</div>
-          <h3>Emplacement idéal</h3>
-          <p>Village vivant, marché provençal, et base parfaite pour explorer les Alpilles et le Luberon.</p>
+          <h3 data-i18n="atout3-title">Emplacement idéal</h3>
+          <p data-i18n="atout3-desc">À 4 km de Saint-Rémy-de-Provence, proche des Alpilles et des plus beaux villages de Provence.</p>
         </article>
+      </div>
+    </section>
+
+    <section class="section" id="reviews">
+      <div class="section__header">
+        <p class="eyebrow" data-i18n="reviews-eyebrow">Avis clients</p>
+        <h2 data-i18n="reviews-title">Ce que nos voyageurs en pensent</h2>
+        <div class="reviews-rating">
+          <div class="rating-badge">
+            <span class="rating-number">4.82</span>
+            <span class="rating-stars">★★★★★</span>
+            <span class="rating-count" data-i18n="reviews-count">44 avis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reviews-grid">
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">L</div>
+            <div class="review-author">
+              <h4>Liza</h4>
+              <p class="muted" data-i18n="review1-date">Août 2025</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review1-text">Nous avons passé un excellent moment dans la belle maison de Virginie et Flavien à Eyragues. Elle avait tout ce dont nous avions besoin pour deux jeunes enfants et les hôtes étaient extrêmement réactifs et arrangeants tout au long de notre séjour. Nous avons adoré être à distance de marche du village et à seulement 10 minutes en voiture de Saint-Rémy !</p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">A</div>
+            <div class="review-author">
+              <h4>Amy</h4>
+              <p class="muted" data-i18n="review2-date">Juillet 2025</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review2-text">Nous avons passé un excellent séjour - la maison est spacieuse, confortable et bien équipée. Excellente climatisation dans chaque chambre. Belle zone de piscine avec une table de ping-pong et un BBQ. Distance de marche facile du village voisin. Court trajet en voiture vers St Rémy, une ville provençale classique.</p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">B</div>
+            <div class="review-author">
+              <h4>Bonnie</h4>
+              <p class="muted" data-i18n="review3-date">Août 2025</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review3-text">Nous avons séjourné ici une semaine avec une grande famille. Les quatre chambres étaient toutes grandes et spacieuses pour nos 7 invités. Le jardin était très impressionnant avec une piscine de belle taille. La table de ping-pong était un bel ajout. L'hôte a fourni un lit bébé de bonne qualité pour notre nouveau-né.</p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">T</div>
+            <div class="review-author">
+              <h4>Thomas</h4>
+              <p class="muted" data-i18n="review4-date">Août 2024</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review4-text">Notre séjour était assez idyllique - belle maison dans un quartier charmant. La maison était exceptionnellement bien équipée et Virginie était très réactive. Eyragues est un peu léger sur les endroits où manger mais plus loin (St Rémy) le choix était excellent.</p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">V</div>
+            <div class="review-author">
+              <h4>Vivienne</h4>
+              <p class="muted" data-i18n="review5-date">Juillet 2023</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review5-text">Nous avons passé un séjour magique en Provence. C'était l'endroit idéal pour explorer les villes et villages et tout ce que cette région a à offrir tout en ayant un endroit où revenir pour se détendre et se rafraîchir. La maison était parfaite pour notre famille et nos enfants - belle, propre et Virginie était une hôte merveilleuse.</p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">L</div>
+            <div class="review-author">
+              <h4>Liam</h4>
+              <p class="muted" data-i18n="review6-date">Août 2023</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review6-text">Cette maison est incroyable. Elle a dépassé nos attentes en termes d'emplacement. Eyragues est un village brillant avec tout ce dont vous avez besoin : boulangerie, magasin, bar, restaurants. La maison est impeccable. Chambres et salles de bains magnifiques et les espaces extérieurs sont parfaits.</p>
+        </article>
+      </div>
+
+      <div class="reviews-cta">
+        <a class="button button--ghost" href="https://www.airbnb.ae/rooms/11578905" target="_blank" rel="noopener" data-i18n="reviews-see-all">Voir tous les 44 avis sur Airbnb</a>
       </div>
     </section>
 
     <section class="section section--alt" id="photos">
       <div class="section__header">
-        <p class="eyebrow">Ambiance</p>
-        <h2>Un aperçu en images</h2>
-        <p class="muted">Remplacez ces photos par vos visuels Airbnb haute résolution.</p>
+        <p class="eyebrow" data-i18n="photos-eyebrow">Visite virtuelle</p>
+        <h2 data-i18n="photos-title">Découvrez chaque espace</h2>
+        <p class="muted" data-i18n="photos-subtitle">Une visite guidée du Mas Airaga, pièce par pièce.</p>
       </div>
-      <div class="gallery">
-        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80" alt="Salon lumineux">
-        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80" alt="Chambre confortable">
-        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=900&q=80" alt="Cuisine équipée">
-        <img src="https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=900&q=80" alt="Terrasse et jardin">
-        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1000&q=80" alt="Salle d'eau">
+
+      <!-- Extérieurs & Piscine -->
+      <div class="space-section">
+        <h3 class="space-title" data-i18n="space-outdoor-title">🏊 Piscine et extérieurs</h3>
+        <p class="space-desc muted" data-i18n="space-outdoor-desc">Jardin de 2000 m2 avec piscine privée sécurisée, lavande et oliviers. Parfait pour se détendre en plein air.</p>
+        <div class="space-gallery">
+          <img src="images/IMG_3465 2.jpg" alt="Vue panoramique piscine et mas" loading="lazy">
+          <img src="images/IMG_3472.jpg" alt="Jardin luxuriant avec piscine" loading="lazy">
+          <img src="images/IMG_3473.jpg" alt="Vue aérienne piscine et jardin" loading="lazy">
+          <img src="images/IMG_9675.jpg" alt="Terrasse bois et piscine" loading="lazy">
+          <img src="images/IMG_4547.jpg" alt="Vue frontale propriété avec piscine" loading="lazy">
+          <img src="images/IMG_9555.jpg" alt="Piscine eau turquoise" loading="lazy">
+          <img src="images/IMG_9676.jpg" alt="Terrasse deck et salons extérieurs" loading="lazy">
+          <img src="images/IMG_3474 2.jpg" alt="Vue depuis la piscine" loading="lazy">
+          <img src="images/IMG_3466 2.jpg" alt="Pergola et table extérieure" loading="lazy">
+          <img src="images/IMG_3476.jpg" alt="Espace détente piscine" loading="lazy">
+          <img src="images/IMG_9679.jpg" alt="Pool house moderne" loading="lazy">
+          <img src="images/IMG_4542.jpg" alt="Jardin méditerranéen" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Salon & Espaces de vie -->
+      <div class="space-section">
+        <h3 class="space-title" data-i18n="space-living-title">🛋️ Salon et espaces de vie</h3>
+        <p class="space-desc muted" data-i18n="space-living-desc">Salon lumineux et spacieux avec TV, climatisation et grandes fenêtres donnant sur le jardin.</p>
+        <div class="space-gallery">
+          <img src="images/IMG_9692.jpg" alt="Salon avec canapés design" loading="lazy">
+          <img src="images/IMG_9695.jpg" alt="Salon TV et cheminée" loading="lazy">
+          <img src="images/IMG_9694.jpg" alt="Vue ouverte salon-salle à manger" loading="lazy">
+          <img src="images/IMG_3478.jpg" alt="Entrée lumineuse" loading="lazy">
+          <img src="images/IMG_3479 2.jpg" alt="Escalier intérieur" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Cuisine & Salle à manger -->
+      <div class="space-section">
+        <h3 class="space-title" data-i18n="space-kitchen-title">🍽️ Cuisine et salle à manger</h3>
+        <p class="space-desc muted" data-i18n="space-kitchen-desc">Cuisine entièrement équipée avec machine à café, lave-vaisselle et grande table à manger pour partager vos repas.</p>
+        <div class="space-gallery">
+          <img src="images/IMG_3489.jpg" alt="Grande salle à manger" loading="lazy">
+          <img src="images/IMG_9691.jpg" alt="Salle à manger avec ilot" loading="lazy">
+          <img src="images/IMG_3488.jpg" alt="Cuisine ouverte avec ilot" loading="lazy">
+          <img src="images/IMG_4544.jpg" alt="Salle à manger et bar" loading="lazy">
+          <img src="images/IMG_4543.jpg" alt="Autre vue salle à manger" loading="lazy">
+          <img src="images/IMG_3487 2.jpg" alt="Cuisine moderne équipée" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Chambres -->
+      <div class="space-section">
+        <h3 class="space-title" data-i18n="space-bedrooms-title">🛏️ Chambres (5 chambres, 10 couchages)</h3>
+        <p class="space-desc muted" data-i18n="space-bedrooms-desc">Chambres confortables avec literie de qualité. Chambre 1 & 4 : lit queen. Chambres 2 & 3 : lit double + canapé-lit.</p>
+        <div class="space-gallery">
+          <img src="images/IMG_9710.jpg" alt="Chambre moderne mur vert" loading="lazy">
+          <img src="images/IMG_9701.jpg" alt="Chambre provençale" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Salles de bain -->
+      <div class="space-section">
+        <h3 class="space-title" data-i18n="space-bathrooms-title">🚿 Salles de bain (3 salles de bain complètes)</h3>
+        <p class="space-desc muted" data-i18n="space-bathrooms-desc">Trois salles de bain modernes avec douche, WC et tous les équipements nécessaires.</p>
+        <div class="space-gallery">
+          <img src="images/IMG_3482 2.jpg" alt="Salle de bain moderne" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Équipements & Extras -->
+      <div class="space-section">
+        <h3 class="space-title" data-i18n="space-extras-title">🎯 Équipements et loisirs</h3>
+        <p class="space-desc muted" data-i18n="space-extras-desc">Table de ping-pong, barbecue, terrasse ombragée et tout le confort pour profiter de vos vacances.</p>
+        <div class="space-gallery">
+          <img src="images/IMG_3468.jpg" alt="Vue d'ensemble propriété" loading="lazy">
+          <img src="images/IMG_3471.jpg" alt="Façade et jardin fleuri" loading="lazy">
+          <img src="images/IMG_4546.jpg" alt="Terrasse pergola" loading="lazy">
+          <img src="images/IMG_4548.jpg" alt="Pelouse et oliviers" loading="lazy">
+          <img src="images/IMG_4545.jpg" alt="Allée jardin arboré" loading="lazy">
+        </div>
       </div>
     </section>
 
     <section class="section" id="amenities">
       <div class="section__header">
-        <p class="eyebrow">Équipements</p>
-        <h2>Ce qui est inclus</h2>
+        <p class="eyebrow" data-i18n="amenities-eyebrow">Équipements</p>
+        <h2 data-i18n="amenities-title">Ce qui est inclus</h2>
       </div>
       <div class="amenities">
         <ul>
-          <li>Climatisation & chauffage</li>
-          <li>Wi-Fi fibre et bureau dédié</li>
-          <li>2 chambres (2 lits queen) + canapé-lit</li>
-          <li>Cuisine équipée (four, lave-vaisselle, Nespresso)</li>
+          <li data-i18n="amenity1">Climatisation intégrale & chauffage</li>
+          <li data-i18n="amenity2">Piscine privée sécurisée</li>
+          <li data-i18n="amenity3">Jardin 2000 m2 (lavande, oliviers)</li>
+          <li data-i18n="amenity4">Wi-Fi haut débit</li>
+          <li data-i18n="amenity5">10 couchages (5 chambres)</li>
+          <li data-i18n="amenity6">Cuisine entièrement équipée</li>
         </ul>
         <ul>
-          <li>Buanderie (lave-linge, sèche-linge)</li>
-          <li>Kit bébé sur demande</li>
-          <li>Parking privé et sécurisé</li>
-          <li>Linge et ménage professionnel</li>
+          <li data-i18n="amenity7">Lave-linge et sèche-linge</li>
+          <li data-i18n="amenity8">Terrasse avec mobilier de jardin</li>
+          <li data-i18n="amenity9">Parking privé</li>
+          <li data-i18n="amenity10">Linge de maison fourni</li>
+          <li data-i18n="amenity11">À 4 km de Saint-Rémy-de-Provence</li>
+          <li data-i18n="amenity12">Proche commerces et restaurants</li>
         </ul>
       </div>
     </section>
 
     <section class="section section--alt" id="localisation">
       <div class="section__header">
-        <p class="eyebrow">Autour de vous</p>
-        <h2>Localisation</h2>
-        <p class="muted">Eyragues, Bouches-du-Rhône. Près des Alpilles, d'Avignon, Arles et des plus beaux marchés de Provence.</p>
+        <p class="eyebrow" data-i18n="location-eyebrow">Autour de vous</p>
+        <h2 data-i18n="location-title">Localisation</h2>
+        <p class="muted" data-i18n="location-subtitle">Eyragues, Bouches-du-Rhône. Idéalement situé à proximité des commerces, à 4 km de Saint-Rémy-de-Provence et au cœur de la Provence.</p>
       </div>
       <div class="map">
         <iframe title="Carte Eyragues" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11263.915266993373!2d4.826!3d43.85!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12b60338716b76e7%3A0x40819a5fd8fc4f0!2s13630%20Eyragues!5e0!3m2!1sfr!2sfr!4v1714912000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         <div class="map__callout">
-          <h3>Temps d'accès</h3>
-          <p>Saint-Rémy : 10 min · Avignon TGV : 20 min · Arles : 30 min · Aéroport Marseille : 55 min</p>
+          <h3 data-i18n="access-title">Temps d'accès</h3>
+          <p data-i18n="access-times">Saint-Rémy : 4 km · Avignon : 15 min · Arles : 30 min · Aéroport Marseille : 1h</p>
         </div>
       </div>
     </section>
 
     <section class="section" id="reservation">
       <div class="section__header">
-        <p class="eyebrow">Réservation</p>
-        <h2>Réservez en direct ou sur Airbnb</h2>
-        <p class="muted">Profitez du meilleur prix en direct. Indiquez vos dates, nous répondons rapidement.</p>
+        <p class="eyebrow" data-i18n="booking-eyebrow">Réservation</p>
+        <h2 data-i18n="booking-title">Réservez en direct ou sur Airbnb</h2>
+        <p class="muted" data-i18n="booking-subtitle">Profitez du meilleur prix en direct. Indiquez vos dates, nous répondons rapidement.</p>
       </div>
       <div class="booking">
         <form class="booking__form" id="bookingForm">
           <label>
-            Prénom et nom
+            <span data-i18n="form-name">Prénom et nom</span>
             <input type="text" name="name" placeholder="Ex : Marie Dupont" required>
           </label>
           <label>
-            Email
+            <span data-i18n="form-email">Email</span>
             <input type="email" name="email" placeholder="vous@email.com" required>
           </label>
           <label class="booking__dates">
-            Arrivée
+            <span data-i18n="form-checkin">Arrivée</span>
             <input type="date" name="checkin" required>
           </label>
           <label class="booking__dates">
-            Départ
+            <span data-i18n="form-checkout">Départ</span>
             <input type="date" name="checkout" required>
           </label>
           <label>
-            Message
+            <span data-i18n="form-message">Message</span>
             <textarea name="message" rows="3" placeholder="Nombre de voyageurs, besoins spécifiques..."></textarea>
           </label>
-          <button type="submit" class="button">Demander une dispo</button>
+          <button type="submit" class="button" data-i18n="form-submit">Demander une disponibilité</button>
         </form>
         <div class="booking__aside">
-          <div class="badge">Réponse rapide</div>
-          <h3>Tarif direct avantageux</h3>
-          <p>Contact direct propriétaire. Caution et contrat simple. Paiement sécurisé via lien ou virement.</p>
+          <div class="badge" data-i18n="badge-quick">Réponse rapide</div>
+          <h3 data-i18n="aside-title">Tarif direct avantageux</h3>
+          <p data-i18n="aside-desc">Contact direct propriétaire. Caution et contrat simple. Paiement sécurisé.</p>
           <div class="booking__cta">
-            <a class="button button--ghost" href="mailto:contact@votre-mail.com?subject=Demande%20de%20réservation%20Eyragues">Écrire un email</a>
-            <a class="button button--ghost" href="https://www.airbnb.fr/rooms/votre-lien" target="_blank" rel="noopener">Voir sur Airbnb</a>
+            <a class="button button--ghost" href="mailto:mas.airaga.contact@gmail.com?subject=Demande%20de%20réservation%20Mas%20Airaga" data-i18n="btn-email">Écrire un email</a>
+            <a class="button button--ghost" href="https://www.airbnb.ae/rooms/11578905" target="_blank" rel="noopener" data-i18n="btn-airbnb">Voir sur Airbnb</a>
           </div>
-          <p class="muted small">Remplacez l'adresse email et le lien Airbnb par vos informations.</p>
+          <p class="muted small" style="margin-top: 12px;">
+            <span data-i18n="contact-owners">Virginie et Flavien</span><br>
+            <a href="tel:+33614325706" style="color: var(--accent);">+33 6 14 32 57 06</a>
+          </p>
         </div>
       </div>
     </section>
@@ -162,16 +337,20 @@
 
   <footer class="footer">
     <div>
-      <p class="eyebrow">Eyragues Escape</p>
-      <p>Maison meublée déclarée. Numéro d'enregistrement : à compléter.</p>
+      <p class="eyebrow">Mas Airaga</p>
+      <p data-i18n="footer-registration">Maison meublée déclarée • Eyragues, Provence</p>
     </div>
     <div class="footer__links">
-      <a href="#atouts">Atouts</a>
-      <a href="#photos">Photos</a>
-      <a href="#reservation">Réserver</a>
+      <a href="#atouts" data-i18n="nav-atouts">Atouts</a>
+      <a href="#photos" data-i18n="nav-photos">Photos</a>
+      <a href="#reservation" data-i18n="nav-book">Réserver</a>
     </div>
     <div>
-      <p class="muted">Contact : <a href="mailto:contact@votre-mail.com">contact@votre-mail.com</a> · +33 6 00 00 00 00</p>
+      <p class="muted">
+        <span data-i18n="footer-contact">Contact :</span>
+        <a href="mailto:mas.airaga.contact@gmail.com">mas.airaga.contact@gmail.com</a> ·
+        <a href="tel:+33614325706">+33 6 14 32 57 06</a>
+      </p>
     </div>
   </footer>
 
