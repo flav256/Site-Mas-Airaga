@@ -246,6 +246,41 @@ p {
   color: white;
 }
 
+/* Hamburger menu button */
+.nav__hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+}
+
+.nav__hamburger span {
+  width: 28px;
+  height: 3px;
+  background: var(--sage);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.nav__hamburger.active span:nth-child(1) {
+  transform: translateY(10px) rotate(45deg);
+}
+
+.nav__hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav__hamburger.active span:nth-child(3) {
+  transform: translateY(-10px) rotate(-45deg);
+}
+
 .hero__content {
   position: relative;
   z-index: 3;
@@ -556,75 +591,190 @@ textarea {
   }
 }
 
-@media (max-width: 640px) {
-  .hero {
-    padding: 28px 6vw 90px;
+/* Tablet optimization */
+@media (max-width: 900px) {
+  .space-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 
+  .space-gallery img {
+    height: 180px;
+  }
+}
+
+/* Mobile optimization */
+@media (max-width: 640px) {
+  /* Reduce overall spacing on mobile */
+  .hero {
+    padding: 20px 5vw 60px;
+    min-height: 85vh;
+  }
+
+  .hero h1 {
+    font-size: clamp(24px, 6vw, 32px);
+    margin-bottom: 8px;
+  }
+
+  .lead {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .hero__ctas {
+    margin: 16px 0 12px;
+  }
+
+  /* Compact navigation */
   .nav {
-    padding: 10px 0;
+    padding: 12px 0;
   }
 
   .nav.scrolled {
-    padding: 8px 0;
+    padding: 10px 0;
   }
 
   .nav__container {
     padding: 0 16px;
-    gap: 12px;
-    flex-wrap: wrap;
+    gap: 0;
+    flex-wrap: nowrap;
   }
 
   .nav__brand {
-    font-size: 16px;
-    gap: 6px;
+    font-size: 18px;
+    gap: 8px;
   }
 
   .nav__logo {
-    height: 24px;
+    height: 28px;
   }
 
   .nav.scrolled .nav__brand {
-    font-size: 15px;
+    font-size: 17px;
   }
 
   .nav.scrolled .nav__logo {
-    height: 22px;
+    height: 26px;
+  }
+
+  /* Show hamburger, hide nav links on mobile */
+  .nav__hamburger {
+    display: flex;
   }
 
   .nav__links {
-    gap: 6px;
-    flex: 1;
-    justify-content: flex-end;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: rgba(250, 248, 245, 0.98);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 80px 24px 24px;
+    gap: 4px;
+    transition: right 0.3s ease;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow-y: auto;
+  }
+
+  .nav__links.active {
+    right: 0;
   }
 
   .nav__links a {
-    padding: 6px 10px;
-    font-size: 13px;
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    text-align: left;
   }
 
-  .nav.scrolled .nav__links a {
-    padding: 5px 8px;
-    font-size: 12px;
+  .nav__links a.button {
+    margin-top: 8px;
+    text-align: center;
   }
 
   .nav__lang-toggle {
-    margin-left: 0;
-    padding: 3px;
-    gap: 2px;
+    width: 100%;
+    margin: 16px 0 0 0;
+    padding: 6px;
+    justify-content: center;
   }
 
   .nav-lang-btn {
-    padding: 4px 8px;
-    font-size: 11px;
+    padding: 8px 20px;
+    font-size: 14px;
   }
 
-  .hero__meta {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  }
-
+  /* Reduce section spacing */
   .section {
-    padding: 70px 6vw;
+    padding: 50px 5vw;
+  }
+
+  .section__header {
+    margin-bottom: 24px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+
+  h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  /* Optimize photo galleries */
+  .space-section {
+    margin-bottom: 40px;
+  }
+
+  .space-title {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+
+  .space-desc {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .space-gallery {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .space-gallery img {
+    height: 240px;
+    object-fit: cover;
+  }
+
+  /* Optimize cards */
+  .card {
+    padding: 20px;
+  }
+
+  .grid {
+    gap: 16px;
+  }
+
+  /* Compact hero meta */
+  .hero__meta {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  /* Reduce review cards spacing */
+  .reviews-grid {
+    gap: 16px;
+  }
+
+  .review-card {
+    padding: 16px;
   }
 }
 
