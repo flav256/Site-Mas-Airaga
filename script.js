@@ -1048,6 +1048,25 @@ if (checkinInput && checkoutInput && adultsInput && childrenInput) {
   childrenInput.addEventListener('change', calculatePrice);
 }
 
+// Fix for iOS Safari image loading issues
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+if (isIOS) {
+  // Remove lazy loading on iOS devices as it can cause rendering issues
+  document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+    img.removeAttribute('loading');
+    // Force image rendering
+    img.style.opacity = '0';
+    img.onload = function() {
+      this.style.transition = 'opacity 0.3s ease';
+      this.style.opacity = '1';
+    };
+    // Trigger load if already cached
+    if (img.complete) {
+      img.style.opacity = '1';
+    }
+  });
+}
+
 // Mobile hamburger menu
 const hamburger = document.getElementById('nav-hamburger');
 const navLinks = document.getElementById('nav-links');
