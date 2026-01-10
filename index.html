@@ -13,7 +13,10 @@
 <body>
   <nav class="nav">
     <div class="nav__container">
-      <div class="nav__brand">Mas Airaga</div>
+      <div class="nav__brand">
+        <img src="images/LOGO.png" alt="Mas Airaga" class="nav__logo">
+        Mas Airaga
+      </div>
       <div class="nav__links">
         <a href="#atouts" data-i18n="nav-atouts">Atouts</a>
         <a href="#photos" data-i18n="nav-photos">Photos</a>
@@ -550,6 +553,10 @@
             <span data-i18n="form-email">Email</span>
             <input type="email" name="email" placeholder="vous@email.com" required>
           </label>
+          <label>
+            <span data-i18n="form-phone">Téléphone</span>
+            <input type="tel" name="phone" placeholder="+33 6 12 34 56 78">
+          </label>
           <label class="booking__dates">
             <span data-i18n="form-checkin">Arrivée</span>
             <input type="date" id="booking-checkin" name="checkin" min="2026-04-17" max="2026-10-03" required>
@@ -558,9 +565,38 @@
             <span data-i18n="form-checkout">Départ</span>
             <input type="date" id="booking-checkout" name="checkout" min="2026-04-17" max="2026-10-03" required>
           </label>
+          <div class="booking__guests">
+            <label style="flex: 1;">
+              <span data-i18n="form-adults">Adultes</span>
+              <input type="number" id="booking-adults" name="adults" min="1" max="10" value="2" required>
+            </label>
+            <label style="flex: 1;">
+              <span data-i18n="form-children">Enfants</span>
+              <input type="number" id="booking-children" name="children" min="0" max="10" value="0">
+            </label>
+          </div>
+          <div id="booking-price-summary" class="booking__price-summary" style="display: none;">
+            <div class="price-line">
+              <span data-i18n="booking-nights">Nuits</span>
+              <span id="booking-nights-value">-</span>
+            </div>
+            <div class="price-line">
+              <span data-i18n="booking-rate">Hébergement</span>
+              <span id="booking-rate-value">-</span>
+            </div>
+            <div class="price-line">
+              <span data-i18n="booking-tax">Taxe de séjour</span>
+              <span id="booking-tax-value">-</span>
+            </div>
+            <div class="price-line price-total">
+              <span data-i18n="booking-total">Total estimé</span>
+              <span id="booking-total-value">-</span>
+            </div>
+            <div id="booking-errors" class="booking-errors"></div>
+          </div>
           <label>
             <span data-i18n="form-message">Message</span>
-            <textarea name="message" rows="3" placeholder="Nombre de voyageurs, besoins spécifiques..."></textarea>
+            <textarea name="message" rows="3" placeholder="Besoins spécifiques..."></textarea>
           </label>
           <button type="submit" class="button" data-i18n="form-submit">Demander une disponibilité</button>
         </form>

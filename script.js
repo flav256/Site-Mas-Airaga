@@ -71,10 +71,17 @@ const translations = {
     "booking-subtitle": "Profitez du meilleur prix en direct. Indiquez vos dates, nous répondons rapidement.",
     "form-name": "Prénom et nom",
     "form-email": "Email",
+    "form-phone": "Téléphone",
+    "form-adults": "Adultes",
+    "form-children": "Enfants",
     "form-checkin": "Arrivée",
     "form-checkout": "Départ",
     "form-message": "Message",
     "form-submit": "Demander une disponibilité",
+    "booking-nights": "Nuits",
+    "booking-rate": "Hébergement",
+    "booking-tax": "Taxe de séjour",
+    "booking-total": "Total estimé",
     "badge-quick": "Réponse rapide",
     "aside-title": "Tarif direct avantageux",
     "aside-desc": "Contact direct propriétaire. Caution et contrat simple. Paiement sécurisé.",
@@ -237,10 +244,17 @@ const translations = {
     "booking-subtitle": "Enjoy the best price by booking direct. Tell us your dates, we'll respond quickly.",
     "form-name": "First and last name",
     "form-email": "Email",
+    "form-phone": "Phone",
+    "form-adults": "Adults",
+    "form-children": "Children",
     "form-checkin": "Check-in",
     "form-checkout": "Check-out",
     "form-message": "Message",
     "form-submit": "Request availability",
+    "booking-nights": "Nights",
+    "booking-rate": "Accommodation",
+    "booking-tax": "Tourist tax",
+    "booking-total": "Estimated total",
     "badge-quick": "Quick response",
     "aside-title": "Advantageous direct rate",
     "aside-desc": "Direct contact with owner. Simple deposit and contract. Secure payment.",
@@ -377,17 +391,318 @@ const browserLang = navigator.language.startsWith('fr') ? 'fr' : 'en';
 const initialLang = savedLang || browserLang;
 setLanguage(initialLang);
 
-// Booking form
+// Booking form with intelligent calendar and automatic price calculation
 const bookingForm = document.getElementById("bookingForm");
+const bookingCheckinInput = document.getElementById("booking-checkin");
+const bookingCheckoutInput = document.getElementById("booking-checkout");
+const bookingAdultsInput = document.getElementById("booking-adults");
+const bookingChildrenInput = document.getElementById("booking-children");
+const bookingPriceSummary = document.getElementById("booking-price-summary");
+const bookingNightsValue = document.getElementById("booking-nights-value");
+const bookingRateValue = document.getElementById("booking-rate-value");
+const bookingTaxValue = document.getElementById("booking-tax-value");
+const bookingTotalValue = document.getElementById("booking-total-value");
+const bookingErrorsDiv = document.getElementById("booking-errors");
+
+let bookingCalculatedData = null;
+
+// Set default value to first available date (April 17, 2026)
+if (bookingCheckinInput) {
+  bookingCheckinInput.value = '2026-04-17';
+}
+
+// Helper function to get next Saturday
+function getNextSaturday(date) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + ((6 - result.getDay() + 7) % 7));
+  return result;
+}
+
+// Helper function to format date as YYYY-MM-DD
+function formatDateInput(date) {
+  return date.toISOString().split('T')[0];
+}
+
+// Helper function to get all Saturdays in high season
+function getHighSeasonSaturdays() {
+  const saturdays = [];
+  const start = new Date('2026-07-04');
+  const end = new Date('2026-08-29');
+
+  let current = getNextSaturday(new Date('2026-07-03'));
+  while (current <= end) {
+    saturdays.push(formatDateInput(current));
+    current.setDate(current.getDate() + 7);
+  }
+
+  return saturdays;
+}
+
+// Calculate booking price
+function calculateBookingPrice() {
+  if (!bookingCheckinInput.value || !bookingCheckoutInput.value) {
+    bookingPriceSummary.style.display = 'none';
+    bookingCalculatedData = null;
+    return;
+  }
+
+  const checkin = new Date(bookingCheckinInput.value);
+  const checkout = new Date(bookingCheckoutInput.value);
+  const adults = parseInt(bookingAdultsInput.value) || 0;
+  const children = parseInt(bookingChildrenInput.value) || 0;
+  const totalGuests = adults + children;
+  const errors = [];
+
+  const nights = Math.round((checkout - checkin) / (1000 * 60 * 60 * 24));
+
+  if (nights <= 0) {
+    bookingPriceSummary.style.display = 'none';
+    bookingCalculatedData = null;
+    return;
+  }
+
+  if (totalGuests > 10) {
+    errors.push(currentLang === 'fr'
+      ? 'Maximum 10 voyageurs.'
+      : 'Maximum 10 guests.');
+  }
+
+  const seasonStart = new Date('2026-04-17');
+  const highSeasonStart = new Date('2026-07-04');
+  const highSeasonEnd = new Date('2026-08-28');
+  const standardSeasonEnd = new Date('2026-10-03');
+
+  if (checkin < seasonStart || checkout > standardSeasonEnd) {
+    errors.push(currentLang === 'fr'
+      ? 'Fermé avant le 17 avril et après le 3 octobre 2026.'
+      : 'Closed before April 17 and after October 3, 2026.');
+  }
+
+  const isHighSeason = checkin >= highSeasonStart && checkout <= highSeasonEnd;
+  const isMixedSeason = checkin < highSeasonStart && checkout > highSeasonStart;
+
+  let price = 0;
+
+  if (isHighSeason) {
+    // Fully in high season
+    const checkinDay = checkin.getDay();
+    const checkoutDay = checkout.getDay();
+
+    if (checkinDay !== 6 || checkoutDay !== 6) {
+      errors.push(currentLang === 'fr'
+        ? 'En haute saison, les arrivées et départs doivent être le samedi.'
+        : 'During high season, check-in and check-out must be on Saturday.');
+    }
+
+    if (nights % 7 !== 0) {
+      errors.push(currentLang === 'fr'
+        ? 'En haute saison, les séjours doivent être par semaine complète (7, 14, 21 nuits...).'
+        : 'During high season, stays must be full weeks (7, 14, 21 nights...).');
+    }
+
+    const weeks = Math.floor(nights / 7);
+    price = weeks * 3900;
+
+  } else if (isMixedSeason) {
+    // Mixed season: starts in standard, extends into high season
+    const checkoutDay = checkout.getDay();
+
+    // Check if checkout is in July/August (high season period)
+    const isCheckoutInHighSeason = checkout >= highSeasonStart && checkout <= highSeasonEnd;
+
+    if (isCheckoutInHighSeason && checkoutDay !== 6) {
+      errors.push(currentLang === 'fr'
+        ? 'Départ en juillet/août uniquement possible le samedi.'
+        : 'Check-out in July/August only allowed on Saturday.');
+    }
+
+    // Calculate split pricing
+    // Standard season nights: from checkin to July 4
+    const standardNights = Math.round((highSeasonStart - checkin) / (1000 * 60 * 60 * 24));
+
+    // High season nights: from July 4 to checkout
+    const highSeasonNights = Math.round((checkout - highSeasonStart) / (1000 * 60 * 60 * 24));
+
+    // Calculate standard season portion
+    let standardPrice = 0;
+    if (standardNights >= 15) {
+      standardPrice = 5000 + ((standardNights - 15) * 333);
+    } else if (standardNights === 7) {
+      standardPrice = 2900;
+    } else if (standardNights === 6) {
+      standardPrice = 2700;
+    } else if (standardNights === 5) {
+      standardPrice = 2400;
+    } else {
+      standardPrice = standardNights * 500;
+    }
+
+    // Calculate high season portion (7-day blocks at 3900€/week)
+    const highSeasonWeeks = Math.floor(highSeasonNights / 7);
+    const highSeasonPrice = highSeasonWeeks * 3900;
+
+    // Remaining nights in high season (less than a week) - not allowed if checkout is in high season
+    const remainingHighSeasonNights = highSeasonNights % 7;
+    if (remainingHighSeasonNights > 0 && isCheckoutInHighSeason) {
+      errors.push(currentLang === 'fr'
+        ? 'En juillet/août, les séjours doivent être par semaine complète (7 jours).'
+        : 'In July/August, stays must be full weeks (7 days).');
+    }
+
+    price = standardPrice + highSeasonPrice;
+
+  } else {
+    // Fully in standard season
+    if (nights < 4) {
+      errors.push(currentLang === 'fr'
+        ? 'Minimum 4 nuits en période normale.'
+        : 'Minimum 4 nights during standard period.');
+    }
+
+    if (nights >= 15) {
+      price = 5000 + ((nights - 15) * 333);
+    } else if (nights === 7) {
+      price = 2900;
+    } else if (nights === 6) {
+      price = 2700;
+    } else if (nights === 5) {
+      price = 2400;
+    } else {
+      price = nights * 500;
+    }
+  }
+
+  const taxPerAdultPerNight = 0.90;
+  const touristTax = adults * nights * taxPerAdultPerNight;
+  const totalPrice = price + touristTax;
+
+  bookingCalculatedData = {
+    checkin: bookingCheckinInput.value,
+    checkout: bookingCheckoutInput.value,
+    nights,
+    adults,
+    children,
+    price,
+    touristTax,
+    totalPrice
+  };
+
+  bookingNightsValue.textContent = nights;
+  bookingRateValue.textContent = `${price.toLocaleString('fr-FR')}€`;
+  bookingTaxValue.textContent = `${touristTax.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€`;
+  bookingTotalValue.textContent = `${totalPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€`;
+
+  if (errors.length > 0) {
+    bookingErrorsDiv.innerHTML = errors.join('<br>');
+  } else {
+    bookingErrorsDiv.textContent = '';
+  }
+
+  bookingPriceSummary.style.display = 'block';
+}
+
+// Intelligent calendar constraints
+if (bookingCheckinInput) {
+  bookingCheckinInput.addEventListener('change', () => {
+    const checkinDate = new Date(bookingCheckinInput.value);
+    const highSeasonStart = new Date('2026-07-04');
+    const highSeasonEnd = new Date('2026-08-28');
+
+    // Check if in high season
+    const isHighSeason = checkinDate >= highSeasonStart && checkinDate <= highSeasonEnd;
+
+    if (isHighSeason) {
+      // High season: only Saturdays
+      const checkinDay = checkinDate.getDay();
+      if (checkinDay !== 6) {
+        // Find next Saturday
+        const nextSat = getNextSaturday(checkinDate);
+        bookingCheckinInput.value = formatDateInput(nextSat);
+      }
+
+      // Set checkout to 7 days later (next Saturday)
+      const checkoutDate = new Date(bookingCheckinInput.value);
+      checkoutDate.setDate(checkoutDate.getDate() + 7);
+      bookingCheckoutInput.value = formatDateInput(checkoutDate);
+      bookingCheckoutInput.min = formatDateInput(checkoutDate);
+
+    } else {
+      // Standard season: minimum 4 nights
+      const minCheckout = new Date(checkinDate);
+      minCheckout.setDate(minCheckout.getDate() + 4);
+      bookingCheckoutInput.min = formatDateInput(minCheckout);
+      bookingCheckoutInput.value = formatDateInput(minCheckout);
+    }
+
+    calculateBookingPrice();
+  });
+}
+
+if (bookingCheckoutInput) {
+  bookingCheckoutInput.addEventListener('change', () => {
+    const checkinDate = new Date(bookingCheckinInput.value);
+    const checkoutDate = new Date(bookingCheckoutInput.value);
+    const highSeasonStart = new Date('2026-07-04');
+    const highSeasonEnd = new Date('2026-08-28');
+
+    // Check if checkout is in high season but checkin is not (mixed season)
+    const isMixedSeason = checkinDate < highSeasonStart && checkoutDate > highSeasonStart;
+    const isCheckoutInHighSeason = checkoutDate >= highSeasonStart && checkoutDate <= highSeasonEnd;
+
+    if (isMixedSeason && isCheckoutInHighSeason) {
+      // If checkout is in July/August, it must be a Saturday
+      const checkoutDay = checkoutDate.getDay();
+      if (checkoutDay !== 6) {
+        // Find next Saturday
+        const nextSat = getNextSaturday(checkoutDate);
+        bookingCheckoutInput.value = formatDateInput(nextSat);
+      }
+    }
+
+    calculateBookingPrice();
+  });
+}
+
+if (bookingAdultsInput) {
+  bookingAdultsInput.addEventListener('change', () => {
+    const adults = parseInt(bookingAdultsInput.value) || 0;
+    const children = parseInt(bookingChildrenInput.value) || 0;
+    if (adults + children > 10) {
+      bookingAdultsInput.value = 10 - children;
+    }
+    calculateBookingPrice();
+  });
+}
+
+if (bookingChildrenInput) {
+  bookingChildrenInput.addEventListener('change', () => {
+    const adults = parseInt(bookingAdultsInput.value) || 0;
+    const children = parseInt(bookingChildrenInput.value) || 0;
+    if (adults + children > 10) {
+      bookingChildrenInput.value = 10 - adults;
+    }
+    calculateBookingPrice();
+  });
+}
+
+// Initial calculation
+calculateBookingPrice();
 
 if (bookingForm) {
   bookingForm.addEventListener("submit", (event) => {
     event.preventDefault();
+
+    if (!bookingCalculatedData) {
+      alert(currentLang === 'fr'
+        ? 'Veuillez sélectionner des dates valides.'
+        : 'Please select valid dates.');
+      return;
+    }
+
     const formData = new FormData(bookingForm);
     const name = formData.get("name");
     const email = formData.get("email");
-    const checkin = formData.get("checkin");
-    const checkout = formData.get("checkout");
+    const phone = formData.get("phone") || "";
     const message = formData.get("message") || "";
 
     const contactEmail = "mas.airaga.contact@gmail.com";
@@ -396,10 +711,13 @@ if (bookingForm) {
         ? "Demande de réservation - Mas Airaga"
         : "Booking request - Mas Airaga"
     );
+
+    const phoneText = phone ? `\n${currentLang === 'fr' ? 'Téléphone' : 'Phone'} : ${phone}` : '';
+
     const body = encodeURIComponent(
       currentLang === 'fr'
-        ? `Nom : ${name}\nEmail : ${email}\nArrivée : ${checkin}\nDépart : ${checkout}\nMessage : ${message}`
-        : `Name: ${name}\nEmail: ${email}\nCheck-in: ${checkin}\nCheck-out: ${checkout}\nMessage: ${message}`
+        ? `Bonjour,\n\nJe souhaite réserver le Mas Airaga avec les informations suivantes :\n\nNom : ${name}\nEmail : ${email}${phoneText}\n\nArrivée : ${bookingCalculatedData.checkin}\nDépart : ${bookingCalculatedData.checkout}\nNombre de nuits : ${bookingCalculatedData.nights}\n\nVoyageurs :\n- Adultes : ${bookingCalculatedData.adults}\n- Enfants : ${bookingCalculatedData.children}\n\nEstimation du prix :\n- Tarif hébergement : ${bookingCalculatedData.price.toLocaleString('fr-FR')}€\n- Taxe de séjour : ${bookingCalculatedData.touristTax.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€\n- Total TTC : ${bookingCalculatedData.totalPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€\n\nMessage : ${message}\n\nCordialement`
+        : `Hello,\n\nI would like to book Mas Airaga with the following information:\n\nName: ${name}\nEmail: ${email}${phoneText}\n\nCheck-in: ${bookingCalculatedData.checkin}\nCheck-out: ${bookingCalculatedData.checkout}\nNumber of nights: ${bookingCalculatedData.nights}\n\nGuests:\n- Adults: ${bookingCalculatedData.adults}\n- Children: ${bookingCalculatedData.children}\n\nPrice estimate:\n- Accommodation rate: €${bookingCalculatedData.price.toLocaleString('fr-FR')}\n- Tourist tax: €${bookingCalculatedData.touristTax.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n- Total incl. tax: €${bookingCalculatedData.totalPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n\nMessage: ${message}\n\nBest regards`
     );
 
     window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
@@ -555,12 +873,13 @@ function calculatePrice() {
 
   // Check if stay is entirely in high season
   const isHighSeason = checkin >= highSeasonStart && checkout <= highSeasonEnd;
+  const isMixedSeason = checkin < highSeasonStart && checkout > highSeasonStart;
 
   let price = 0;
   let rateDescription = '';
 
   if (isHighSeason) {
-    // High season: €3900/week, Saturday to Saturday only, multiple weeks allowed
+    // Fully in high season: €3900/week, Saturday to Saturday only, multiple weeks allowed
     const checkinDay = checkin.getDay();
     const checkoutDay = checkout.getDay();
 
@@ -582,8 +901,59 @@ function calculatePrice() {
       ? (weeks === 1 ? '3 900€ / semaine' : `${weeks} semaines × 3 900€ = ${price.toLocaleString('fr-FR')}€`)
       : (weeks === 1 ? '€3,900 / week' : `${weeks} weeks × €3,900 = €${price.toLocaleString('fr-FR')}`);
 
+  } else if (isMixedSeason) {
+    // Mixed season: starts in standard, extends into high season
+    const checkoutDay = checkout.getDay();
+
+    // Check if checkout is in July/August (high season period)
+    const isCheckoutInHighSeason = checkout >= highSeasonStart && checkout <= highSeasonEnd;
+
+    if (isCheckoutInHighSeason && checkoutDay !== 6) {
+      errors.push(currentLang === 'fr'
+        ? 'Départ en juillet/août uniquement possible le samedi.'
+        : 'Check-out in July/August only allowed on Saturday.');
+    }
+
+    // Calculate split pricing
+    // Standard season nights: from checkin to July 4
+    const standardNights = Math.round((highSeasonStart - checkin) / (1000 * 60 * 60 * 24));
+
+    // High season nights: from July 4 to checkout
+    const highSeasonNights = Math.round((checkout - highSeasonStart) / (1000 * 60 * 60 * 24));
+
+    // Calculate standard season portion
+    let standardPrice = 0;
+    if (standardNights >= 15) {
+      standardPrice = 5000 + ((standardNights - 15) * 333);
+    } else if (standardNights === 7) {
+      standardPrice = 2900;
+    } else if (standardNights === 6) {
+      standardPrice = 2700;
+    } else if (standardNights === 5) {
+      standardPrice = 2400;
+    } else {
+      standardPrice = standardNights * 500;
+    }
+
+    // Calculate high season portion (7-day blocks at 3900€/week)
+    const highSeasonWeeks = Math.floor(highSeasonNights / 7);
+    const highSeasonPrice = highSeasonWeeks * 3900;
+
+    // Remaining nights in high season (less than a week) - not allowed if checkout is in high season
+    const remainingHighSeasonNights = highSeasonNights % 7;
+    if (remainingHighSeasonNights > 0 && isCheckoutInHighSeason) {
+      errors.push(currentLang === 'fr'
+        ? 'En juillet/août, les séjours doivent être par semaine complète (7 jours).'
+        : 'In July/August, stays must be full weeks (7 days).');
+    }
+
+    price = standardPrice + highSeasonPrice;
+    rateDescription = currentLang === 'fr'
+      ? `Standard: ${standardPrice.toLocaleString('fr-FR')}€ + Haute saison: ${highSeasonPrice.toLocaleString('fr-FR')}€`
+      : `Standard: €${standardPrice.toLocaleString('fr-FR')} + High season: €${highSeasonPrice.toLocaleString('fr-FR')}`;
+
   } else {
-    // Standard season pricing
+    // Fully in standard season pricing
     if (nights < 4) {
       errors.push(currentLang === 'fr'
         ? 'Minimum 4 nuits en période normale.'
