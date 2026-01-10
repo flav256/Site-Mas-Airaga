@@ -1077,3 +1077,230 @@ textarea {
     font-size: 28px;
   }
 }
+
+/* Scroll to top button */
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(198, 139, 0, 0.3);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.scroll-to-top.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: all;
+}
+
+.scroll-to-top:hover {
+  background: var(--accent-dark);
+  transform: scale(1.1);
+  box-shadow: 0 6px 25px rgba(198, 139, 0, 0.4);
+}
+
+.scroll-to-top svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lightbox__content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox__content img {
+  max-width: 100%;
+  max-height: calc(90vh - 60px);
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.lightbox__caption {
+  margin-top: 20px;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.lightbox__close,
+.lightbox__prev,
+.lightbox__next {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.lightbox__close:hover,
+.lightbox__prev:hover,
+.lightbox__next:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.lightbox__close {
+  top: 20px;
+  right: 20px;
+}
+
+.lightbox__prev {
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lightbox__prev:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox__next {
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lightbox__next:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Gallery item cursor */
+.gallery-item {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gallery-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer logo */
+.footer__logo {
+  width: 60px;
+  height: auto;
+  margin-bottom: 12px;
+  opacity: 0.8;
+}
+
+/* Subtitles in photos section */
+.space-subtitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sage);
+  margin: 32px 0 8px;
+  font-family: var(--font-display);
+}
+
+.space-subdesc {
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+/* Booking benefits */
+.booking__benefits {
+  margin: 24px 0;
+  padding: 20px;
+  background: rgba(57, 88, 70, 0.05);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.booking__benefits h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sage);
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+}
+
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.benefits-list li {
+  padding-left: 24px;
+  position: relative;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.benefits-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+@media (max-width: 640px) {
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+  }
+
+  .lightbox__prev,
+  .lightbox__next {
+    width: 40px;
+    height: 40px;
+  }
+
+  .lightbox__prev {
+    left: 10px;
+  }
+
+  .lightbox__next {
+    right: 10px;
+  }
+}

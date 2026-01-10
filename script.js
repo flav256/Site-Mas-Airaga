@@ -35,8 +35,14 @@ const translations = {
     "space-living-desc": "Salon lumineux et spacieux avec TV, climatisation et grandes fenêtres donnant sur le jardin.",
     "space-kitchen-title": "Cuisine et salle à manger",
     "space-kitchen-desc": "Cuisine entièrement équipée avec machine à café, lave-vaisselle et grande table à manger pour partager vos repas.",
-    "space-bedrooms-title": "Chambres (5 chambres, 10 couchages)",
-    "space-bedrooms-desc": "Chambres confortables avec literie de qualité. Chambre 1 & 4 : lit queen. Chambres 2 & 3 : lit double + canapé-lit.",
+    "space-bedrooms-title": "Chambres (4 chambres, 10 couchages)",
+    "space-bedrooms-desc": "Chambres confortables avec literie de qualité.",
+    "bedroom1-title": "Chambre 1 (RDC) - Salle de douche en suite",
+    "bedroom1-desc": "Lit queen",
+    "bedroom23-title": "Chambres 2 & 3 (Étage) - Salle de bain attenante",
+    "bedroom23-desc": "Lits queen avec canapés-lits simples",
+    "bedroom4-title": "Chambre 4 (Étage) - Master bedroom, salle de douche en suite",
+    "bedroom4-desc": "Lit queen avec canapé-lit",
     "space-bathrooms-title": "Salles de bain (3 salles de bain complètes)",
     "space-bathrooms-desc": "Trois salles de bain modernes avec douche, WC et tous les équipements nécessaires.",
     "space-extras-title": "Équipements et loisirs",
@@ -47,7 +53,7 @@ const translations = {
     "amenity2": "Piscine privée sécurisée",
     "amenity3": "Jardin 2000 m2 (lavande, oliviers)",
     "amenity4": "Wi-Fi haut débit",
-    "amenity5": "10 couchages (5 chambres)",
+    "amenity5": "10 couchages (4 chambres)",
     "amenity6": "Cuisine entièrement équipée",
     "amenity7": "Lave-linge et sèche-linge",
     "amenity8": "Terrasse avec mobilier de jardin",
@@ -72,6 +78,11 @@ const translations = {
     "badge-quick": "Réponse rapide",
     "aside-title": "Tarif direct avantageux",
     "aside-desc": "Contact direct propriétaire. Caution et contrat simple. Paiement sécurisé.",
+    "benefits-title": "Avantages de la réservation directe",
+    "benefit-1": "Aucun frais Airbnb / Abritel / Booking",
+    "benefit-2": "Contact direct avec les propriétaires",
+    "benefit-3": "Contrat de location fourni",
+    "benefit-4": "Offres spéciales et réductions pour séjours longue durée",
     "btn-email": "Écrire un email",
     "btn-airbnb": "Voir sur Airbnb",
     "contact-owners": "Virginie et Flavien",
@@ -190,8 +201,14 @@ const translations = {
     "space-living-desc": "Bright and spacious living room with TV, air conditioning and large windows overlooking the garden.",
     "space-kitchen-title": "Kitchen and dining room",
     "space-kitchen-desc": "Fully equipped kitchen with coffee machine, dishwasher and large dining table for sharing your meals.",
-    "space-bedrooms-title": "Bedrooms (5 bedrooms, 10 beds)",
-    "space-bedrooms-desc": "Comfortable bedrooms with quality bedding. Bedrooms 1 & 4: queen bed. Bedrooms 2 & 3: double bed + sofa bed.",
+    "space-bedrooms-title": "Bedrooms (4 bedrooms, 10 beds)",
+    "space-bedrooms-desc": "Comfortable bedrooms with quality bedding.",
+    "bedroom1-title": "Bedroom 1 (Ground floor) - Ensuite shower room",
+    "bedroom1-desc": "Queen bed",
+    "bedroom23-title": "Bedrooms 2 & 3 (Upstairs) - Adjacent bathroom",
+    "bedroom23-desc": "Queen beds with single sofa beds",
+    "bedroom4-title": "Bedroom 4 (Upstairs) - Master bedroom, ensuite shower room",
+    "bedroom4-desc": "Queen bed with sofa bed",
     "space-bathrooms-title": "Bathrooms (3 full bathrooms)",
     "space-bathrooms-desc": "Three modern bathrooms with shower, toilet and all necessary amenities.",
     "space-extras-title": "Amenities and leisure",
@@ -202,7 +219,7 @@ const translations = {
     "amenity2": "Private secure swimming pool",
     "amenity3": "2000 m2 garden (lavender, olive trees)",
     "amenity4": "High-speed Wi-Fi",
-    "amenity5": "10 beds (5 bedrooms)",
+    "amenity5": "10 beds (4 bedrooms)",
     "amenity6": "Fully equipped kitchen",
     "amenity7": "Washer and dryer",
     "amenity8": "Terrace with garden furniture",
@@ -227,6 +244,11 @@ const translations = {
     "badge-quick": "Quick response",
     "aside-title": "Advantageous direct rate",
     "aside-desc": "Direct contact with owner. Simple deposit and contract. Secure payment.",
+    "benefits-title": "Benefits of booking direct",
+    "benefit-1": "No Airbnb / Abritel / Booking fees",
+    "benefit-2": "Direct contact with the owners",
+    "benefit-3": "Rental contract provided",
+    "benefit-4": "Special offers and discounts for long stays",
     "btn-email": "Send an email",
     "btn-airbnb": "View on Airbnb",
     "contact-owners": "Virginie and Flavien",
@@ -538,7 +560,7 @@ function calculatePrice() {
   let rateDescription = '';
 
   if (isHighSeason) {
-    // High season: €3900/week, Saturday to Saturday only
+    // High season: €3900/week, Saturday to Saturday only, multiple weeks allowed
     const checkinDay = checkin.getDay();
     const checkoutDay = checkout.getDay();
 
@@ -548,14 +570,17 @@ function calculatePrice() {
         : 'During high season, check-in and check-out must be on Saturday.');
     }
 
-    if (nights !== 7) {
+    if (nights % 7 !== 0) {
       errors.push(currentLang === 'fr'
-        ? 'En haute saison, les séjours doivent être d\'une semaine (7 nuits).'
-        : 'During high season, stays must be one week (7 nights).');
+        ? 'En haute saison, les séjours doivent être par semaine complète (7, 14, 21 nuits...).'
+        : 'During high season, stays must be full weeks (7, 14, 21 nights...).');
     }
 
-    price = 3900;
-    rateDescription = currentLang === 'fr' ? '3 900€ / semaine' : '€3,900 / week';
+    const weeks = Math.floor(nights / 7);
+    price = weeks * 3900;
+    rateDescription = currentLang === 'fr'
+      ? (weeks === 1 ? '3 900€ / semaine' : `${weeks} semaines × 3 900€ = ${price.toLocaleString('fr-FR')}€`)
+      : (weeks === 1 ? '€3,900 / week' : `${weeks} weeks × €3,900 = €${price.toLocaleString('fr-FR')}`);
 
   } else {
     // Standard season pricing
@@ -567,8 +592,11 @@ function calculatePrice() {
 
     // Degressive pricing
     if (nights >= 15) {
-      price = 5000;
-      rateDescription = currentLang === 'fr' ? '5 000€ (15+ nuits)' : '€5,000 (15+ nights)';
+      // 15 nuits = 5000€, puis 333€ par nuit supplémentaire
+      price = 5000 + ((nights - 15) * 333);
+      rateDescription = currentLang === 'fr'
+        ? `5 000€ + ${nights - 15} × 333€ = ${price.toLocaleString('fr-FR')}€`
+        : `€5,000 + ${nights - 15} × €333 = €${price.toLocaleString('fr-FR')}`;
     } else if (nights === 7) {
       price = 2900;
       rateDescription = currentLang === 'fr' ? '2 900€ (7 nuits)' : '€2,900 (7 nights)';
@@ -661,3 +689,107 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     }
   });
 });
+
+// Scroll to top button
+const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+if (scrollToTopBtn) {
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      scrollToTopBtn.classList.add('visible');
+    } else {
+      scrollToTopBtn.classList.remove('visible');
+    }
+  });
+
+  scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+// Lightbox functionality
+const lightbox = document.getElementById('lightbox');
+const lightboxImage = document.getElementById('lightbox-image');
+const lightboxCaption = document.getElementById('lightbox-caption');
+const galleryItems = document.querySelectorAll('.gallery-item');
+const closeBtn = lightbox ? lightbox.querySelector('.lightbox__close') : null;
+const prevBtn = lightbox ? lightbox.querySelector('.lightbox__prev') : null;
+const nextBtn = lightbox ? lightbox.querySelector('.lightbox__next') : null;
+
+let currentImageIndex = 0;
+let currentGalleryImages = [];
+
+if (lightbox && galleryItems.length > 0) {
+  // Add click listeners to all gallery items
+  galleryItems.forEach((item, index) => {
+    item.addEventListener('click', () => {
+      openLightbox(index);
+    });
+  });
+
+  // Close button
+  closeBtn.addEventListener('click', closeLightbox);
+
+  // Previous/Next buttons
+  prevBtn.addEventListener('click', showPrevImage);
+  nextBtn.addEventListener('click', showNextImage);
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.style.display === 'flex') {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showPrevImage();
+      if (e.key === 'ArrowRight') showNextImage();
+    }
+  });
+
+  // Close on background click
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      closeLightbox();
+    }
+  });
+}
+
+function openLightbox(index) {
+  // Convert NodeList to Array for easier manipulation
+  currentGalleryImages = Array.from(galleryItems);
+  currentImageIndex = index;
+
+  const img = currentGalleryImages[currentImageIndex];
+  lightboxImage.src = img.src;
+  lightboxImage.alt = img.alt;
+
+  // Set caption from data-category and alt
+  const category = img.getAttribute('data-category') || '';
+  const alt = img.alt || '';
+  lightboxCaption.textContent = category ? `${category}` : alt;
+
+  lightbox.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lightbox.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function showPrevImage() {
+  currentImageIndex = (currentImageIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+  updateLightboxImage();
+}
+
+function showNextImage() {
+  currentImageIndex = (currentImageIndex + 1) % currentGalleryImages.length;
+  updateLightboxImage();
+}
+
+function updateLightboxImage() {
+  const img = currentGalleryImages[currentImageIndex];
+  lightboxImage.src = img.src;
+  lightboxImage.alt = img.alt;
+
+  const category = img.getAttribute('data-category') || '';
+  const alt = img.alt || '';
+  lightboxCaption.textContent = category ? `${category}` : alt;
+}
