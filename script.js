@@ -5,6 +5,7 @@ const translations = {
     "nav-atouts": "Atouts",
     "nav-photos": "Photos",
     "nav-amenities": "Équipements",
+    "nav-pricing": "Tarifs",
     "nav-location": "Localisation",
     "nav-book": "Réserver",
     "hero-eyebrow": "Villa avec piscine",
@@ -28,17 +29,17 @@ const translations = {
     "photos-eyebrow": "Visite virtuelle",
     "photos-title": "Découvrez chaque espace",
     "photos-subtitle": "Une visite guidée du Mas Airaga, pièce par pièce.",
-    "space-outdoor-title": "🏊 Piscine et extérieurs",
+    "space-outdoor-title": "Piscine et extérieurs",
     "space-outdoor-desc": "Jardin de 2000 m2 avec piscine privée sécurisée, lavande et oliviers. Parfait pour se détendre en plein air.",
-    "space-living-title": "🛋️ Salon et espaces de vie",
+    "space-living-title": "Salon et espaces de vie",
     "space-living-desc": "Salon lumineux et spacieux avec TV, climatisation et grandes fenêtres donnant sur le jardin.",
-    "space-kitchen-title": "🍽️ Cuisine et salle à manger",
+    "space-kitchen-title": "Cuisine et salle à manger",
     "space-kitchen-desc": "Cuisine entièrement équipée avec machine à café, lave-vaisselle et grande table à manger pour partager vos repas.",
-    "space-bedrooms-title": "🛏️ Chambres (5 chambres, 10 couchages)",
+    "space-bedrooms-title": "Chambres (5 chambres, 10 couchages)",
     "space-bedrooms-desc": "Chambres confortables avec literie de qualité. Chambre 1 & 4 : lit queen. Chambres 2 & 3 : lit double + canapé-lit.",
-    "space-bathrooms-title": "🚿 Salles de bain (3 salles de bain complètes)",
+    "space-bathrooms-title": "Salles de bain (3 salles de bain complètes)",
     "space-bathrooms-desc": "Trois salles de bain modernes avec douche, WC et tous les équipements nécessaires.",
-    "space-extras-title": "🎯 Équipements et loisirs",
+    "space-extras-title": "Équipements et loisirs",
     "space-extras-desc": "Table de ping-pong, barbecue, terrasse ombragée et tout le confort pour profiter de vos vacances.",
     "amenities-eyebrow": "Équipements",
     "amenities-title": "Ce qui est inclus",
@@ -91,13 +92,75 @@ const translations = {
     "review5-text": "Maison magnifique, propre et très bien entretenue dans un endroit calme et reposant. Un excellent séjour !",
     "review6-date": "Août 2023",
     "review6-text": "Superbe maison avec piscine. Tous les équipements étaient là. Belle chambre spacieuse et moderne. Parfaite pour les familles !",
-    "reviews-see-all": "Voir les 44 avis sur Airbnb"
+    "reviews-see-all": "Voir les 44 avis sur Airbnb",
+    "pricing-eyebrow": "Tarifs",
+    "pricing-title": "Tarifs & Conditions",
+    "pricing-subtitle": "Tarifs transparents pour votre séjour au Mas Airaga",
+    "pricing-standard-title": "Tarif Standard",
+    "pricing-standard-period": "17 avril au 3 juillet & 29 août au 3 octobre",
+    "pricing-standard-rate": "500€ / nuit",
+    "pricing-standard-min": "Minimum 4 nuits",
+    "pricing-standard-degressive": "Tarif dégressif",
+    "pricing-standard-5nights": "5 nuits : 2 400€",
+    "pricing-standard-6nights": "6 nuits : 2 700€",
+    "pricing-standard-7nights": "7 nuits : 2 900€",
+    "pricing-standard-15nights": "15 nuits : 5 000€",
+    "pricing-high-title": "Haute Saison",
+    "pricing-high-period": "4 juillet au 28 août",
+    "pricing-high-rate": "3 900€ / semaine",
+    "pricing-high-constraint": "Arrivée/départ : samedi uniquement",
+    "pricing-included": "Ménage et linge de maison inclus",
+    "pricing-deposit": "Caution : 1 500€",
+    "pricing-tax": "Tarif hors Taxe de séjour",
+    "pricing-closed": "Fermé avant le 17 avril et après le 3 octobre 2026",
+    "faq-eyebrow": "Questions fréquentes",
+    "faq-title": "Informations pratiques",
+    "faq-checkin-q": "Horaires d'arrivée et de départ",
+    "faq-checkin-a": "Arrivée : 17h - 23h · Départ : 8h - 10h",
+    "faq-pets-q": "Animaux acceptés ?",
+    "faq-pets-a": "Oui, avec supplément de 200€",
+    "faq-smoking-q": "Peut-on fumer ?",
+    "faq-smoking-a": "Interdit à l'intérieur, autorisé en extérieur",
+    "calculator-title": "Calculateur de prix",
+    "calculator-subtitle": "Estimez le coût de votre séjour",
+    "calculator-checkin": "Date d'arrivée",
+    "calculator-checkout": "Date de départ",
+    "calculator-adults": "Adultes (18 ans et +)",
+    "calculator-children": "Enfants (- de 18 ans)",
+    "calculator-nights": "Nombre de nuits",
+    "calculator-guests": "Voyageurs",
+    "calculator-rate": "Tarif hébergement",
+    "calculator-tourism-tax": "Taxe de séjour",
+    "calculator-total": "Total TTC",
+    "calculator-send-email": "Envoyer une demande de réservation",
+    "around-eyebrow": "Les Alentours",
+    "around-title": "Découvrez les Alpilles",
+    "around-subtitle": "Sites naturels, villages perchés et patrimoine provençal à explorer autour du Mas Airaga",
+    "around-nature-title": "Nature & Paysages",
+    "around-nature-desc": "Randonnées dans les Alpilles, champs de lavande, oliveraies centenaires",
+    "around-villages-title": "Villages & Patrimoine",
+    "around-villages-desc": "Les Baux-de-Provence, Saint-Rémy, Arles, Avignon et leurs marchés provençaux",
+    "around-culture-title": "Culture & Art de vivre",
+    "around-culture-desc": "Caves viticoles, moulins à huile, antiquités et gastronomie locale",
+    "around-activity1": "Saint-Rémy-de-Provence",
+    "around-activity1-desc": "Village provençal authentique avec son célèbre marché, à 4 km",
+    "around-activity2": "Les Baux-de-Provence",
+    "around-activity2-desc": "Village médiéval perché classé parmi les plus beaux villages de France",
+    "around-activity3": "Alpilles",
+    "around-activity3-desc": "Parc naturel régional avec sentiers de randonnée et panoramas",
+    "around-activity4": "Avignon",
+    "around-activity4-desc": "Palais des Papes et festival de théâtre, à 15 minutes",
+    "around-activity5": "Arles",
+    "around-activity5-desc": "Arènes romaines et patrimoine Van Gogh, à 30 minutes",
+    "around-activity6": "Vignobles",
+    "around-activity6-desc": "Route des vins des Alpilles et dégustations dans les domaines"
   },
   en: {
     "page-title": "Mas Airaga - Charming House in Eyragues",
     "nav-atouts": "Features",
     "nav-photos": "Photos",
     "nav-amenities": "Amenities",
+    "nav-pricing": "Pricing",
     "nav-location": "Location",
     "nav-book": "Book",
     "hero-eyebrow": "Villa with pool",
@@ -121,17 +184,17 @@ const translations = {
     "photos-eyebrow": "Virtual tour",
     "photos-title": "Discover each space",
     "photos-subtitle": "A guided tour of Mas Airaga, room by room.",
-    "space-outdoor-title": "🏊 Pool and outdoor areas",
+    "space-outdoor-title": "Pool and outdoor areas",
     "space-outdoor-desc": "2000 m2 garden with private secure pool, lavender and olive trees. Perfect for relaxing outdoors.",
-    "space-living-title": "🛋️ Living room and common areas",
+    "space-living-title": "Living room and common areas",
     "space-living-desc": "Bright and spacious living room with TV, air conditioning and large windows overlooking the garden.",
-    "space-kitchen-title": "🍽️ Kitchen and dining room",
+    "space-kitchen-title": "Kitchen and dining room",
     "space-kitchen-desc": "Fully equipped kitchen with coffee machine, dishwasher and large dining table for sharing your meals.",
-    "space-bedrooms-title": "🛏️ Bedrooms (5 bedrooms, 10 beds)",
+    "space-bedrooms-title": "Bedrooms (5 bedrooms, 10 beds)",
     "space-bedrooms-desc": "Comfortable bedrooms with quality bedding. Bedrooms 1 & 4: queen bed. Bedrooms 2 & 3: double bed + sofa bed.",
-    "space-bathrooms-title": "🚿 Bathrooms (3 full bathrooms)",
+    "space-bathrooms-title": "Bathrooms (3 full bathrooms)",
     "space-bathrooms-desc": "Three modern bathrooms with shower, toilet and all necessary amenities.",
-    "space-extras-title": "🎯 Amenities and leisure",
+    "space-extras-title": "Amenities and leisure",
     "space-extras-desc": "Ping-pong table, barbecue, shaded terrace and all the comfort to enjoy your vacation.",
     "amenities-eyebrow": "Amenities",
     "amenities-title": "What's included",
@@ -169,6 +232,33 @@ const translations = {
     "contact-owners": "Virginie and Flavien",
     "footer-registration": "Registered furnished accommodation • Eyragues, Provence",
     "footer-contact": "Contact:",
+    "around-eyebrow": "Surroundings",
+    "around-title": "Discover the Alpilles",
+    "around-subtitle": "Natural sites, hilltop villages and Provencal heritage to explore around Mas Airaga",
+    "around-nature-title": "Nature & Landscapes",
+    "around-nature-desc": "Hiking in the Alpilles, lavender fields, century-old olive groves",
+    "around-villages-title": "Villages & Heritage",
+    "around-villages-desc": "Perched villages, Provencal markets, historical monuments",
+    "around-culture-title": "Culture & Lifestyle",
+    "around-culture-desc": "Wine estates, local crafts, Provencal gastronomy",
+    "around-saintrem-title": "Saint-Rémy-de-Provence",
+    "around-saintrem-desc": "Picturesque town with Provencal market, Van Gogh trail and authentic charm",
+    "around-saintrem-distance": "4 km",
+    "around-lesbaux-title": "Les Baux-de-Provence",
+    "around-lesbaux-desc": "Medieval village perched on a rocky outcrop with breathtaking views",
+    "around-lesbaux-distance": "12 km",
+    "around-alpilles-title": "Alpilles Regional Park",
+    "around-alpilles-desc": "Hiking trails, cycling, exceptional flora and fauna",
+    "around-alpilles-distance": "In the heart",
+    "around-avignon-title": "Avignon",
+    "around-avignon-desc": "Papal City, Palais des Papes, Pont d'Avignon, summer festival",
+    "around-avignon-distance": "25 km",
+    "around-arles-title": "Arles",
+    "around-arles-desc": "Roman arenas, Van Gogh heritage, Camargue gateway",
+    "around-arles-distance": "30 km",
+    "around-vineyards-title": "Vineyards",
+    "around-vineyards-desc": "Wine estates, wine tastings, Châteauneuf-du-Pape and Provence wines",
+    "around-vineyards-distance": "5-20 km",
     "reviews-eyebrow": "Guest reviews",
     "reviews-title": "What our guests think",
     "reviews-count": "44 reviews",
@@ -184,7 +274,47 @@ const translations = {
     "review5-text": "Beautiful house, clean and very well maintained in a quiet and relaxing place. An excellent stay!",
     "review6-date": "August 2023",
     "review6-text": "Superb house with pool. All the equipment was there. Beautiful spacious and modern room. Perfect for families!",
-    "reviews-see-all": "See all 44 reviews on Airbnb"
+    "reviews-see-all": "See all 44 reviews on Airbnb",
+    "pricing-eyebrow": "Pricing",
+    "pricing-title": "Rates & Conditions",
+    "pricing-subtitle": "Transparent pricing for your stay at Mas Airaga",
+    "pricing-standard-title": "Standard Rate",
+    "pricing-standard-period": "April 17 to July 3 & August 29 to October 3",
+    "pricing-standard-rate": "€500 / night",
+    "pricing-standard-min": "Minimum 4 nights",
+    "pricing-standard-degressive": "Degressive rate",
+    "pricing-standard-5nights": "5 nights: €2,400",
+    "pricing-standard-6nights": "6 nights: €2,700",
+    "pricing-standard-7nights": "7 nights: €2,900",
+    "pricing-standard-15nights": "15 nights: €5,000",
+    "pricing-high-title": "High Season",
+    "pricing-high-period": "July 4 to August 28",
+    "pricing-high-rate": "€3,900 / week",
+    "pricing-high-constraint": "Check-in/out: Saturday only",
+    "pricing-included": "Cleaning and linens included",
+    "pricing-deposit": "Deposit: €1,500",
+    "pricing-tax": "Price excluding tourist tax",
+    "pricing-closed": "Closed before April 17 and after October 3, 2026",
+    "faq-eyebrow": "FAQ",
+    "faq-title": "Practical Information",
+    "faq-checkin-q": "Check-in and check-out times",
+    "faq-checkin-a": "Check-in: 5pm - 11pm · Check-out: 8am - 10am",
+    "faq-pets-q": "Pets allowed?",
+    "faq-pets-a": "Yes, with €200 surcharge",
+    "faq-smoking-q": "Smoking allowed?",
+    "faq-smoking-a": "Forbidden indoors, allowed outdoors",
+    "calculator-title": "Price Calculator",
+    "calculator-subtitle": "Estimate the cost of your stay",
+    "calculator-checkin": "Check-in date",
+    "calculator-checkout": "Check-out date",
+    "calculator-adults": "Adults (18 years and over)",
+    "calculator-children": "Children (under 18)",
+    "calculator-nights": "Number of nights",
+    "calculator-guests": "Guests",
+    "calculator-rate": "Accommodation rate",
+    "calculator-tourism-tax": "Tourist tax",
+    "calculator-total": "Total incl. tax",
+    "calculator-send-email": "Send booking request"
   }
 };
 
@@ -204,7 +334,7 @@ function setLanguage(lang) {
   });
 
   // Update active button
-  document.querySelectorAll('.lang-btn').forEach(btn => {
+  document.querySelectorAll('.nav-lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
   });
 
@@ -213,7 +343,7 @@ function setLanguage(lang) {
 }
 
 // Language button listeners
-document.querySelectorAll('.lang-btn').forEach(btn => {
+document.querySelectorAll('.nav-lang-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     setLanguage(btn.getAttribute('data-lang'));
   });
@@ -252,6 +382,272 @@ if (bookingForm) {
 
     window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
   });
+}
+
+// Hero slider
+const slides = document.querySelectorAll('.hero__slide');
+let currentSlide = 0;
+
+function nextSlide() {
+  slides[currentSlide].classList.remove('active');
+  currentSlide = (currentSlide + 1) % slides.length;
+  slides[currentSlide].classList.add('active');
+}
+
+if (slides.length > 0) {
+  setInterval(nextSlide, 5000); // Change slide every 5 seconds
+}
+
+// Scroll arrow
+const scrollArrow = document.querySelector('.hero__scroll-arrow');
+if (scrollArrow) {
+  scrollArrow.addEventListener('click', () => {
+    const firstSection = document.querySelector('#atouts');
+    if (firstSection) {
+      firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+}
+
+// Sticky header shrink on scroll
+const nav = document.querySelector('.nav');
+let lastScroll = 0;
+
+window.addEventListener('scroll', () => {
+  const currentScroll = window.pageYOffset;
+
+  if (currentScroll > 100) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+
+  lastScroll = currentScroll;
+});
+
+// Scroll animations (fade-in, slide-up)
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target); // Only animate once
+    }
+  });
+}, observerOptions);
+
+// Observe all sections
+document.querySelectorAll('.section').forEach(section => {
+  section.classList.add('fade-in');
+  observer.observe(section);
+});
+
+// Observe cards with slide-up animation
+document.querySelectorAll('.atout-card, .pricing-card, .faq-item, .around-category, .around-card, .review-card').forEach((card, index) => {
+  card.classList.add('slide-up');
+
+  // Add stagger effect for cards in the same container
+  const staggerClass = `stagger-${(index % 4) + 1}`;
+  card.classList.add(staggerClass);
+
+  observer.observe(card);
+});
+
+// Price Calculator
+const checkinInput = document.getElementById('calc-checkin');
+const checkoutInput = document.getElementById('calc-checkout');
+const adultsInput = document.getElementById('calc-adults');
+const childrenInput = document.getElementById('calc-children');
+const resultDiv = document.getElementById('calculator-result');
+const nightsSpan = document.getElementById('calc-nights');
+const guestsSpan = document.getElementById('calc-guests');
+const rateSpan = document.getElementById('calc-rate');
+const taxSpan = document.getElementById('calc-tax');
+const totalSpan = document.getElementById('calc-total');
+const errorsDiv = document.getElementById('calc-errors');
+const sendEmailBtn = document.getElementById('calc-send-email');
+
+let calculatedData = null;
+
+function calculatePrice() {
+  if (!checkinInput.value || !checkoutInput.value) {
+    resultDiv.style.display = 'none';
+    sendEmailBtn.style.display = 'none';
+    return;
+  }
+
+  const checkin = new Date(checkinInput.value);
+  const checkout = new Date(checkoutInput.value);
+  const adults = parseInt(adultsInput.value) || 0;
+  const children = parseInt(childrenInput.value) || 0;
+  const totalGuests = adults + children;
+  const errors = [];
+
+  // Calculate number of nights
+  const nights = Math.round((checkout - checkin) / (1000 * 60 * 60 * 24));
+
+  if (nights <= 0) {
+    errorsDiv.textContent = currentLang === 'fr'
+      ? 'La date de départ doit être après la date d\'arrivée.'
+      : 'Check-out date must be after check-in date.';
+    resultDiv.style.display = 'block';
+    nightsSpan.textContent = '-';
+    guestsSpan.textContent = '-';
+    rateSpan.textContent = '-';
+    taxSpan.textContent = '-';
+    totalSpan.textContent = '-';
+    sendEmailBtn.style.display = 'none';
+    return;
+  }
+
+  if (totalGuests > 10) {
+    errors.push(currentLang === 'fr'
+      ? 'Maximum 10 voyageurs.'
+      : 'Maximum 10 guests.');
+  }
+
+  // Define season dates for 2026
+  const seasonStart = new Date('2026-04-17');
+  const highSeasonStart = new Date('2026-07-04');
+  const highSeasonEnd = new Date('2026-08-28');
+  const standardSeasonEnd = new Date('2026-10-03');
+
+  // Check if dates are within valid season
+  if (checkin < seasonStart || checkout > standardSeasonEnd) {
+    errorsDiv.textContent = currentLang === 'fr'
+      ? 'Fermé avant le 17 avril et après le 3 octobre 2026.'
+      : 'Closed before April 17 and after October 3, 2026.';
+    resultDiv.style.display = 'block';
+    nightsSpan.textContent = nights;
+    guestsSpan.textContent = `${adults} adulte(s), ${children} enfant(s)`;
+    rateSpan.textContent = '-';
+    taxSpan.textContent = '-';
+    totalSpan.textContent = '-';
+    sendEmailBtn.style.display = 'none';
+    return;
+  }
+
+  // Check if stay is entirely in high season
+  const isHighSeason = checkin >= highSeasonStart && checkout <= highSeasonEnd;
+
+  let price = 0;
+  let rateDescription = '';
+
+  if (isHighSeason) {
+    // High season: €3900/week, Saturday to Saturday only
+    const checkinDay = checkin.getDay();
+    const checkoutDay = checkout.getDay();
+
+    if (checkinDay !== 6 || checkoutDay !== 6) {
+      errors.push(currentLang === 'fr'
+        ? 'En haute saison, les arrivées et départs doivent être le samedi.'
+        : 'During high season, check-in and check-out must be on Saturday.');
+    }
+
+    if (nights !== 7) {
+      errors.push(currentLang === 'fr'
+        ? 'En haute saison, les séjours doivent être d\'une semaine (7 nuits).'
+        : 'During high season, stays must be one week (7 nights).');
+    }
+
+    price = 3900;
+    rateDescription = currentLang === 'fr' ? '3 900€ / semaine' : '€3,900 / week';
+
+  } else {
+    // Standard season pricing
+    if (nights < 4) {
+      errors.push(currentLang === 'fr'
+        ? 'Minimum 4 nuits en période normale.'
+        : 'Minimum 4 nights during standard period.');
+    }
+
+    // Degressive pricing
+    if (nights >= 15) {
+      price = 5000;
+      rateDescription = currentLang === 'fr' ? '5 000€ (15+ nuits)' : '€5,000 (15+ nights)';
+    } else if (nights === 7) {
+      price = 2900;
+      rateDescription = currentLang === 'fr' ? '2 900€ (7 nuits)' : '€2,900 (7 nights)';
+    } else if (nights === 6) {
+      price = 2700;
+      rateDescription = currentLang === 'fr' ? '2 700€ (6 nuits)' : '€2,700 (6 nights)';
+    } else if (nights === 5) {
+      price = 2400;
+      rateDescription = currentLang === 'fr' ? '2 400€ (5 nuits)' : '€2,400 (5 nights)';
+    } else {
+      price = nights * 500;
+      rateDescription = currentLang === 'fr' ? `500€ × ${nights} nuits` : `€500 × ${nights} nights`;
+    }
+  }
+
+  // Calculate tourist tax (Terre de Provence - meublé non classé)
+  // 0.90€ per adult per night (18 years and over)
+  const taxPerAdultPerNight = 0.90;
+  const touristTax = adults * nights * taxPerAdultPerNight;
+  const totalPrice = price + touristTax;
+
+  // Store calculated data for email
+  calculatedData = {
+    checkin: checkinInput.value,
+    checkout: checkoutInput.value,
+    nights,
+    adults,
+    children,
+    price,
+    touristTax,
+    totalPrice
+  };
+
+  // Display results
+  nightsSpan.textContent = nights;
+  guestsSpan.textContent = currentLang === 'fr'
+    ? `${adults} adulte(s), ${children} enfant(s)`
+    : `${adults} adult(s), ${children} child(ren)`;
+  rateSpan.textContent = `${price.toLocaleString('fr-FR')}€`;
+  taxSpan.textContent = `${touristTax.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€`;
+  totalSpan.textContent = `${totalPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€`;
+
+  if (errors.length > 0) {
+    errorsDiv.innerHTML = errors.join('<br>');
+    sendEmailBtn.style.display = 'none';
+  } else {
+    errorsDiv.textContent = '';
+    sendEmailBtn.style.display = 'block';
+  }
+
+  resultDiv.style.display = 'block';
+}
+
+// Send email button handler
+if (sendEmailBtn) {
+  sendEmailBtn.addEventListener('click', () => {
+    if (!calculatedData) return;
+
+    const subject = encodeURIComponent(
+      currentLang === 'fr'
+        ? "Demande de réservation - Mas Airaga"
+        : "Booking request - Mas Airaga"
+    );
+
+    const body = encodeURIComponent(
+      currentLang === 'fr'
+        ? `Bonjour,\n\nJe souhaite réserver le Mas Airaga avec les informations suivantes :\n\nArrivée : ${calculatedData.checkin}\nDépart : ${calculatedData.checkout}\nNombre de nuits : ${calculatedData.nights}\n\nVoyageurs :\n- Adultes : ${calculatedData.adults}\n- Enfants : ${calculatedData.children}\n\nRécapitulatif des prix :\n- Tarif hébergement : ${calculatedData.price.toLocaleString('fr-FR')}€\n- Taxe de séjour : ${calculatedData.touristTax.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€\n- Total TTC : ${calculatedData.totalPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€\n\nCordialement`
+        : `Hello,\n\nI would like to book Mas Airaga with the following information:\n\nCheck-in: ${calculatedData.checkin}\nCheck-out: ${calculatedData.checkout}\nNumber of nights: ${calculatedData.nights}\n\nGuests:\n- Adults: ${calculatedData.adults}\n- Children: ${calculatedData.children}\n\nPrice summary:\n- Accommodation rate: €${calculatedData.price.toLocaleString('fr-FR')}\n- Tourist tax: €${calculatedData.touristTax.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n- Total incl. tax: €${calculatedData.totalPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n\nBest regards`
+    );
+
+    window.location.href = `mailto:mas.airaga.contact@gmail.com?subject=${subject}&body=${body}`;
+  });
+}
+
+if (checkinInput && checkoutInput && adultsInput && childrenInput) {
+  checkinInput.addEventListener('change', calculatePrice);
+  checkoutInput.addEventListener('change', calculatePrice);
+  adultsInput.addEventListener('change', calculatePrice);
+  childrenInput.addEventListener('change', calculatePrice);
 }
 
 // Smooth scroll for anchor links
