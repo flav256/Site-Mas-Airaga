@@ -418,10 +418,6 @@ p {
   height: 220px;
   object-fit: cover;
   border-radius: 12px;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .amenities {
@@ -755,16 +751,11 @@ textarea {
 
   .space-gallery img {
     width: 100%;
-    height: 240px;
+    height: auto;
     min-height: 240px;
+    aspect-ratio: 4 / 3;
     object-fit: cover;
-    background: var(--panel);
     display: block;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    will-change: auto;
   }
 
   /* Optimize cards */

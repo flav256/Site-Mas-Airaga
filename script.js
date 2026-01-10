@@ -1048,22 +1048,44 @@ if (checkinInput && checkoutInput && adultsInput && childrenInput) {
   childrenInput.addEventListener('change', calculatePrice);
 }
 
-// Fix for iOS Safari image loading issues
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-if (isIOS) {
-  // Remove lazy loading on iOS devices as it can cause rendering issues
-  document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-    img.removeAttribute('loading');
-    // Force image rendering
-    img.style.opacity = '0';
-    img.onload = function() {
-      this.style.transition = 'opacity 0.3s ease';
-      this.style.opacity = '1';
-    };
-    // Trigger load if already cached
-    if (img.complete) {
+// Fix for mobile Safari/Chrome image loading issues
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+if (isMobile) {
+  // Wait for DOM to be fully loaded
+  window.addEventListener('DOMContentLoaded', function() {
+    // Remove lazy loading on mobile devices
+    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+
+    lazyImages.forEach(img => {
+      // Remove lazy loading attribute
+      img.removeAttribute('loading');
+
+      // Force eager loading
+      img.loading = 'eager';
+
+      // Add visibility and rendering hints
+      img.style.visibility = 'visible';
       img.style.opacity = '1';
-    }
+
+      // Force browser to recognize the image
+      const src = img.getAttribute('src');
+      if (src) {
+        img.src = '';
+        img.src = src;
+      }
+    });
+
+    // Additional check after a small delay to ensure images are loaded
+    setTimeout(() => {
+      lazyImages.forEach(img => {
+        if (!img.complete || img.naturalHeight === 0) {
+          const src = img.getAttribute('src');
+          if (src) {
+            img.src = src + '?reload=' + Date.now();
+          }
+        }
+      });
+    }, 100);
   });
 }
 
