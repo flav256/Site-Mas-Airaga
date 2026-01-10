@@ -55,7 +55,7 @@ p {
 
 .hero {
   position: relative;
-  padding: 40px 5vw 120px;
+  padding: 112px 5vw 120px;
   isolation: isolate;
   color: #0b1020;
   overflow: hidden;
@@ -127,8 +127,10 @@ p {
 }
 
 .nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   background: rgba(250, 248, 245, 0.95);
   backdrop-filter: blur(10px);
@@ -606,7 +608,7 @@ textarea {
 @media (max-width: 640px) {
   /* Reduce overall spacing on mobile */
   .hero {
-    padding: 20px 5vw 60px;
+    padding: 72px 5vw 60px;
     min-height: 85vh;
   }
 
@@ -749,7 +751,10 @@ textarea {
 
   .space-gallery img {
     height: 240px;
+    min-height: 240px;
     object-fit: cover;
+    background: var(--panel);
+    display: block;
   }
 
   /* Optimize cards */
