@@ -2603,23 +2603,38 @@ if (lightbox) {
           const bookingAdultsInput = document.getElementById('booking-adults');
           const bookingChildrenInput = document.getElementById('booking-children');
 
+          console.log('📅 Filling booking form with:', {
+            checkin: selectedCheckin,
+            checkout: selectedCheckout
+          });
+
           // Fill the selected dates
           if (selectedCheckin && bookingCheckinInput) {
-            bookingCheckinInput.value = selectedCheckin.toISOString().split('T')[0];
+            const checkinStr = selectedCheckin.toISOString().split('T')[0];
+            bookingCheckinInput.value = checkinStr;
+            console.log('  ✅ Set check-in to:', checkinStr);
           }
           if (selectedCheckout && bookingCheckoutInput) {
-            bookingCheckoutInput.value = selectedCheckout.toISOString().split('T')[0];
+            const checkoutStr = selectedCheckout.toISOString().split('T')[0];
+            bookingCheckoutInput.value = checkoutStr;
+            console.log('  ✅ Set check-out to:', checkoutStr);
           }
 
           // Set default guest values
           if (bookingAdultsInput) bookingAdultsInput.value = '2';
           if (bookingChildrenInput) bookingChildrenInput.value = '0';
 
-          // Trigger price calculation
-          if (bookingCheckinInput) {
-            bookingCheckinInput.dispatchEvent(new Event('change', { bubbles: true }));
-          }
-        }, 800);
+          // Trigger price calculation by dispatching events on both inputs
+          setTimeout(() => {
+            if (bookingCheckinInput) {
+              bookingCheckinInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            if (bookingCheckoutInput) {
+              bookingCheckoutInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            console.log('  ✅ Triggered price calculation');
+          }, 100);
+        }, 1000);
       }
     }
   });
