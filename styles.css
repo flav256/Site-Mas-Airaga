@@ -604,6 +604,11 @@ textarea {
   }
 }
 
+/* Hide mobile carousel on desktop */
+.mobile-photo-tour {
+  display: none;
+}
+
 /* Mobile optimization */
 @media (max-width: 640px) {
   /* Reduce overall spacing on mobile */
@@ -744,17 +749,83 @@ textarea {
     margin-bottom: 16px;
   }
 
+  /* Mobile Photo Tour Carousel */
+  .mobile-photo-tour {
+    display: block;
+    margin: 0 0 32px 0;
+    overflow: visible;
+  }
+
+  .carousel-container {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0 16px 16px 16px;
+  }
+
+  .carousel-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel-card {
+    flex: 0 0 calc(40% - 8px);
+    min-width: calc(40% - 8px);
+    scroll-snap-align: start;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .carousel-card:active {
+    transform: scale(0.98);
+  }
+
+  .carousel-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .carousel-card-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 10px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4), transparent);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  /* Convert galleries to horizontal scroll on mobile */
   .space-gallery {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+  }
+
+  .space-gallery::-webkit-scrollbar {
+    display: none;
   }
 
   .space-gallery img {
-    width: 100%;
-    height: auto;
-    min-height: 240px;
-    aspect-ratio: 4 / 3;
+    flex: 0 0 85%;
+    height: 240px;
     object-fit: cover;
+    border-radius: 12px;
+    scroll-snap-align: start;
     display: block;
   }
 

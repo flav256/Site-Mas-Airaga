@@ -43,7 +43,8 @@
 
   <header class="hero">
     <div class="hero__slider">
-      <div class="hero__slide active" style="background-image: url('images/IMG_9676.jpg')"></div>
+      <div class="hero__slide active" style="background-image: url('images/Photo Exterieur 1.webp')"></div>
+      <div class="hero__slide" style="background-image: url('images/IMG_9676.jpg')"></div>
       <div class="hero__slide" style="background-image: url('images/IMG_3465 2.jpg')"></div>
       <div class="hero__slide" style="background-image: url('images/IMG_3472.jpg')"></div>
       <div class="hero__slide" style="background-image: url('images/IMG_9679.jpg')"></div>
@@ -212,11 +213,42 @@
         <p class="muted" data-i18n="photos-subtitle">Une visite guidée du Mas Airaga, pièce par pièce.</p>
       </div>
 
+      <!-- Mobile Photo Tour Carousel (visible only on mobile) -->
+      <div class="mobile-photo-tour">
+        <div class="carousel-container">
+          <div class="carousel-card" data-target="outdoor">
+            <img src="images/IMG_3465 2.jpg" alt="Piscine et extérieurs">
+            <div class="carousel-card-title">🏊 Piscine et extérieurs</div>
+          </div>
+          <div class="carousel-card" data-target="living">
+            <img src="images/IMG_9692.jpg" alt="Salon et espaces de vie">
+            <div class="carousel-card-title">🛋️ Salon et espaces de vie</div>
+          </div>
+          <div class="carousel-card" data-target="kitchen">
+            <img src="images/IMG_4542.jpg" alt="Cuisine et salle à manger">
+            <div class="carousel-card-title">🍽️ Cuisine et salle à manger</div>
+          </div>
+          <div class="carousel-card" data-target="bedrooms">
+            <img src="images/Bedroom_4a.jpg" alt="Chambres">
+            <div class="carousel-card-title">🛏️ Chambres</div>
+          </div>
+          <div class="carousel-card" data-target="bathrooms">
+            <img src="images/SDB_1a.jpg" alt="Salles de bain">
+            <div class="carousel-card-title">🚿 Salles de bain</div>
+          </div>
+          <div class="carousel-card" data-target="extras">
+            <img src="images/IMG_3322.jpg" alt="Équipements et loisirs">
+            <div class="carousel-card-title">🎯 Équipements et loisirs</div>
+          </div>
+        </div>
+      </div>
+
       <!-- Extérieurs & Piscine -->
-      <div class="space-section">
+      <div class="space-section" id="outdoor">
         <h3 class="space-title" data-i18n="space-outdoor-title">🏊 Piscine et extérieurs</h3>
         <p class="space-desc muted" data-i18n="space-outdoor-desc">Jardin de 2000 m2 avec piscine privée sécurisée, lavande et oliviers. Parfait pour se détendre en plein air.</p>
         <div class="space-gallery">
+          <img src="images/Photo Exterieur 1.webp" alt="Vue panoramique piscine et extérieurs" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
           <img src="images/IMG_3465 2.jpg" alt="Vue magnifique propriété avec piscine" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
           <img src="images/IMG_3472.jpg" alt="Vue aérienne piscine et jardin" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
           <img src="images/IMG_3473.jpg" alt="Piscine avec transats" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
@@ -235,7 +267,7 @@
       </div>
 
       <!-- Salon & Espaces de vie -->
-      <div class="space-section">
+      <div class="space-section" id="living">
         <h3 class="space-title" data-i18n="space-living-title">🛋️ Salon et espaces de vie</h3>
         <p class="space-desc muted" data-i18n="space-living-desc">Salon lumineux et spacieux avec TV, climatisation et grandes fenêtres donnant sur le jardin.</p>
         <div class="space-gallery">
@@ -246,7 +278,7 @@
       </div>
 
       <!-- Cuisine & Salle à manger -->
-      <div class="space-section">
+      <div class="space-section" id="kitchen">
         <h3 class="space-title" data-i18n="space-kitchen-title">🍽️ Cuisine et salle à manger</h3>
         <p class="space-desc muted" data-i18n="space-kitchen-desc">Cuisine entièrement équipée avec machine à café, lave-vaisselle et grande table à manger pour partager vos repas.</p>
         <div class="space-gallery">
@@ -258,7 +290,7 @@
       </div>
 
       <!-- Chambres -->
-      <div class="space-section">
+      <div class="space-section" id="bedrooms">
         <h3 class="space-title" data-i18n="space-bedrooms-title">🛏️ Chambres (4 chambres, 10 couchages)</h3>
         <p class="space-desc muted" data-i18n="space-bedrooms-desc">Chambres confortables avec literie de qualité.</p>
 
@@ -291,7 +323,7 @@
       </div>
 
       <!-- Salles de bain -->
-      <div class="space-section">
+      <div class="space-section" id="bathrooms">
         <h3 class="space-title" data-i18n="space-bathrooms-title">🚿 Salles de bain (3 salles de bain complètes)</h3>
         <p class="space-desc muted" data-i18n="space-bathrooms-desc">Trois salles de bain modernes avec douche, WC et tous les équipements nécessaires.</p>
         <div class="space-gallery">
@@ -305,7 +337,7 @@
       </div>
 
       <!-- Équipements & Extras -->
-      <div class="space-section">
+      <div class="space-section" id="extras">
         <h3 class="space-title" data-i18n="space-extras-title">🎯 Équipements et loisirs</h3>
         <p class="space-desc muted" data-i18n="space-extras-desc">Table de ping-pong, barbecue, terrasse ombragée et tout le confort pour profiter de vos vacances.</p>
         <div class="space-gallery">

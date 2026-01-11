@@ -1234,3 +1234,59 @@ function updateLightboxImage() {
   const alt = img.alt || '';
   lightboxCaption.textContent = category ? `${category}` : alt;
 }
+
+// Mobile carousel navigation
+document.addEventListener('DOMContentLoaded', function() {
+  const carouselCards = document.querySelectorAll('.carousel-card');
+
+  carouselCards.forEach(card => {
+    card.addEventListener('click', function() {
+      const targetId = this.getAttribute('data-target');
+      const targetSection = document.getElementById(targetId);
+
+      if (targetSection) {
+        // Smooth scroll to the section
+        targetSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+});
+
+// Touch gesture support for lightbox (swipe left/right)
+let touchStartX = 0;
+let touchEndX = 0;
+let touchStartY = 0;
+let touchEndY = 0;
+
+function handleSwipeGesture() {
+  const swipeThreshold = 50; // Minimum distance for swipe
+  const deltaX = touchEndX - touchStartX;
+  const deltaY = touchEndY - touchStartY;
+
+  // Only register horizontal swipes (ignore vertical scrolling)
+  if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+    if (deltaX > 0) {
+      // Swipe right - show previous image
+      showPreviousImage();
+    } else {
+      // Swipe left - show next image
+      showNextImage();
+    }
+  }
+}
+
+if (lightbox) {
+  lightbox.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, false);
+
+  lightbox.addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
+    handleSwipeGesture();
+  }, false);
+}
