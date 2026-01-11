@@ -1655,3 +1655,86 @@ if (lightbox) {
     handleSwipeGesture();
   }, false);
 }
+
+// ========================================
+// WebP Support with Automatic Fallback
+// ========================================
+
+/**
+ * Automatically upgrade JPG images to WebP format with fallback
+ * Converts <img src="image.jpg"> to:
+ * <picture>
+ *   <source srcset="image.webp" type="image/webp">
+ *   <img src="image.jpg" ...>
+ * </picture>
+ */
+(function initWebPSupport() {
+  // Check if browser supports WebP
+  const supportsWebP = (function() {
+    const elem = document.createElement('canvas');
+    if (!!(elem.getContext && elem.getContext('2d'))) {
+      return elem.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+    }
+    return false;
+  })();
+
+  // Get all gallery images (not logo or other UI elements)
+  const images = document.querySelectorAll('.gallery-item, .space-gallery img, .hero__slide, .carousel-card img');
+
+  images.forEach(img => {
+    // Skip if already processed or is a WebP
+    if (img.dataset.webpProcessed || img.src.endsWith('.webp')) {
+      return;
+    }
+
+    // For background images on hero slides
+    if (img.classList.contains('hero__slide')) {
+      const bgImage = img.style.backgroundImage;
+      if (bgImage && bgImage.includes('.jpg')) {
+        const jpgPath = bgImage.match(/url\(['"]?([^'"]+)['"]?\)/)?.[1];
+        if (jpgPath) {
+          const webpPath = jpgPath.replace(/\.jpg$/i, '.webp');
+          // Try loading WebP, fallback to JPG if fails
+          const testImg = new Image();
+          testImg.onload = () => {
+            img.style.backgroundImage = `url('${webpPath}')`;
+          };
+          testImg.onerror = () => {
+            // Keep JPG - already set
+          };
+          testImg.src = webpPath;
+        }
+      }
+      img.dataset.webpProcessed = 'true';
+      return;
+    }
+
+    const jpgSrc = img.getAttribute('src');
+    if (!jpgSrc || !jpgSrc.endsWith('.jpg')) {
+      return;
+    }
+
+    // Create WebP path
+    const webpSrc = jpgSrc.replace(/\.jpg$/i, '.webp');
+
+    // If browser supports WebP, just swap the src
+    if (supportsWebP) {
+      // Test if WebP exists
+      const testImg = new Image();
+      testImg.onload = () => {
+        img.src = webpSrc;
+        img.dataset.webpProcessed = 'true';
+      };
+      testImg.onerror = () => {
+        // Keep JPG
+        img.dataset.webpProcessed = 'true';
+      };
+      testImg.src = webpSrc;
+    } else {
+      // Browser doesn't support WebP, keep JPG
+      img.dataset.webpProcessed = 'true';
+    }
+  });
+
+  console.log(`✅ WebP support initialized (Browser supports WebP: ${supportsWebP})`);
+})();

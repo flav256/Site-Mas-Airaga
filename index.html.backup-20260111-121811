@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mas Airaga – Location saisonnière de charme à 4km de Saint Remy De Provence (Alpilles)</title>
+  <meta name="description" content="Mas Airaga, maison, villa, de charme à Eyragues, 4km de saint remy de provence  pour location saisonnière. Calme, Piscine, jardin, climatisation. Entre Alpilles et Avignon.">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav__container">
+      <div class="nav__brand">
+        <img src="images/LOGO.png" alt="Mas Airaga" class="nav__logo">
+        Mas Airaga
+      </div>
+
+      <!-- Hamburger button for mobile -->
+      <button class="nav__hamburger" id="nav-hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="nav__links" id="nav-links">
+        <a href="#atouts" data-i18n="nav-atouts">Atouts</a>
+        <a href="#photos" data-i18n="nav-photos">Photos</a>
+        <a href="#amenities" data-i18n="nav-amenities">Équipements</a>
+        <a href="#pricing" data-i18n="nav-pricing">Tarifs</a>
+        <a href="#localisation" data-i18n="nav-location">Localisation</a>
+        <a href="#reservation" class="button button--ghost" data-i18n="nav-book">Réserver</a>
+        <div class="nav__lang-toggle">
+          <button class="nav-lang-btn active" data-lang="fr" title="Français">🇫🇷</button>
+          <button class="nav-lang-btn" data-lang="en" title="English">🇬🇧</button>
+          <button class="nav-lang-btn" data-lang="nl" title="Nederlands">🇳🇱</button>
+          <button class="nav-lang-btn" data-lang="de" title="Deutsch">🇩🇪</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero__slider">
+      <div class="hero__slide active" style="background-image: url('images/Photo Exterieur 1.webp')"></div>
+      <div class="hero__slide" style="background-image: url('images/IMG_9676.jpg')"></div>
+      <div class="hero__slide" style="background-image: url('images/IMG_3465 2.jpg')"></div>
+      <div class="hero__slide" style="background-image: url('images/IMG_3472.jpg')"></div>
+      <div class="hero__slide" style="background-image: url('images/IMG_9679.jpg')"></div>
+      <div class="hero__slide" style="background-image: url('images/IMG_3473.jpg')"></div>
+    </div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <p class="eyebrow" data-i18n="hero-eyebrow">Villa avec piscine</p>
+      <h1 data-i18n="hero-title">Très beau "Mas Airaga" au calme, à 4 km de St-Rémy</h1>
+      <p class="lead" data-i18n="hero-lead">Mas entièrement climatisé, tout en lumière, 185 m2 habitables. Jardin parfumé à la lavande et aux oliviers d'environ 2000 m2 avec piscine sécurisée. DÉTENTE GARANTIE !</p>
+      <div class="hero__ctas">
+        <a class="button" href="#reservation" data-i18n="cta-book">Réserver en direct</a>
+        <a class="button button--ghost" href="#photos" data-i18n="cta-discover">Découvrir la maison</a>
+      </div>
+      <div class="hero__meta">
+        <span data-i18n="meta-guests">10 voyageurs</span>
+        <span data-i18n="meta-pool">Piscine sécurisée</span>
+        <span data-i18n="meta-parking">Parking privé</span>
+        <span data-i18n="meta-ac">Climatisation</span>
+      </div>
+    </div>
+    <div class="hero__scroll-arrow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="atouts">
+      <div class="section__header">
+        <p class="eyebrow" data-i18n="atouts-eyebrow">Pourquoi ici</p>
+        <h2 data-i18n="atouts-title">Les atouts pour vos séjours</h2>
+        <p class="muted" data-i18n="atouts-subtitle">Un mas provençal de 185 m2 tout en lumière, à proximité des commerces et à 4 km de Saint-Rémy-de-Provence.</p>
+      </div>
+      <div class="grid grid--3">
+        <article class="card">
+          <div class="icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 1.5.33 2.92.92 4.2l-2.86 5.15 5.15-2.86A9.97 9.97 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <h3 data-i18n="atout1-title">Piscine sécurisée</h3>
+          <p data-i18n="atout1-desc">Jardin de 2000 m2 parfumé à la lavande et aux oliviers avec piscine privée et sécurisée pour une détente absolue.</p>
+        </article>
+        <article class="card">
+          <div class="icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <h3 data-i18n="atout2-title">Espace généreux</h3>
+          <p data-i18n="atout2-desc">185 m2 habitables entièrement climatisés avec 10 couchages, idéal pour familles et groupes d'amis.</p>
+        </article>
+        <article class="card">
+          <div class="icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <h3 data-i18n="atout3-title">Emplacement idéal</h3>
+          <p data-i18n="atout3-desc">À 4 km de Saint-Rémy-de-Provence, proche des Alpilles et des plus beaux villages de Provence.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="reviews">
+      <div class="section__header">
+        <p class="eyebrow" data-i18n="reviews-eyebrow">Avis clients</p>
+        <h2 data-i18n="reviews-title">Ce que nos voyageurs en pensent</h2>
+        <div class="reviews-rating">
+          <div class="rating-badge">
+            <span class="rating-number">4.82</span>
+            <span class="rating-stars">★★★★★</span>
+            <span class="rating-count" data-i18n="reviews-count">44 avis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reviews-grid">
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">L</div>
+            <div class="review-author">
+              <h4>Liza</h4>
+              <p class="muted" data-i18n="review1-date">Août 2025</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review1-text">Nous avons passé un excellent moment dans la belle maison de Virginie et Flavien à Eyragues. Elle avait tout ce dont nous avions besoin pour deux jeunes enfants et les hôtes étaient extrêmement réactifs et arrangeants tout au long de notre séjour. Nous avons adoré être à distance de marche du village et à seulement 10 minutes en voiture de Saint-Rémy !</p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">A</div>
+            <div class="review-author">
+              <h4>Amy</h4>
+              <p class="muted" data-i18n="review2-date">Juillet 2025</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review2-text">Nous avons passé un excellent séjour - la maison est spacieuse, confortable et bien équipée. Excellente climatisation dans chaque chambre. Belle zone de piscine avec une table de ping-pong et un BBQ. Distance de marche facile du village voisin. Court trajet en voiture vers St Rémy, une ville provençale classique.</p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">B</div>
+            <div class="review-author">
+              <h4>Bonnie</h4>
+              <p class="muted" data-i18n="review3-date">Août 2025</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review3-text">Nous avons séjourné ici une semaine avec une grande famille. Les quatre chambres étaient toutes grandes et spacieuses pour nos 7 invités. Le jardin était très impressionnant avec une piscine de belle taille. La table de ping-pong était un bel ajout. L'hôte a fourni un lit bébé de bonne qualité pour notre nouveau-né.</p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">T</div>
+            <div class="review-author">
+              <h4>Thomas</h4>
+              <p class="muted" data-i18n="review4-date">Août 2024</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review4-text">Notre séjour était assez idyllique - belle maison dans un quartier charmant. La maison était exceptionnellement bien équipée et Virginie était très réactive. Eyragues est un peu léger sur les endroits où manger mais plus loin (St Rémy) le choix était excellent.</p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">V</div>
+            <div class="review-author">
+              <h4>Vivienne</h4>
+              <p class="muted" data-i18n="review5-date">Juillet 2023</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review5-text">Nous avons passé un séjour magique en Provence. C'était l'endroit idéal pour explorer les villes et villages et tout ce que cette région a à offrir tout en ayant un endroit où revenir pour se détendre et se rafraîchir. La maison était parfaite pour notre famille et nos enfants - belle, propre et Virginie était une hôte merveilleuse.</p>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">L</div>
+            <div class="review-author">
+              <h4>Liam</h4>
+              <p class="muted" data-i18n="review6-date">Août 2023</p>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <p class="review-text" data-i18n="review6-text">Cette maison est incroyable. Elle a dépassé nos attentes en termes d'emplacement. Eyragues est un village brillant avec tout ce dont vous avez besoin : boulangerie, magasin, bar, restaurants. La maison est impeccable. Chambres et salles de bains magnifiques et les espaces extérieurs sont parfaits.</p>
+        </article>
+      </div>
+
+      <div class="reviews-cta">
+        <a class="button button--ghost" href="https://www.airbnb.ae/rooms/11578905" target="_blank" rel="noopener" data-i18n="reviews-see-all">Voir tous les 44 avis sur Airbnb</a>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="photos">
+      <div class="section__header">
+        <p class="eyebrow" data-i18n="photos-eyebrow">Visite virtuelle</p>
+        <h2 data-i18n="photos-title">Découvrez chaque espace</h2>
+        <p class="muted" data-i18n="photos-subtitle">Une visite guidée du Mas Airaga, pièce par pièce.</p>
+      </div>
+
+      <!-- Mobile Photo Tour Carousel (visible only on mobile) -->
+      <div class="mobile-photo-tour">
+        <div class="carousel-container">
+          <div class="carousel-card" data-target="outdoor">
+            <img src="images/IMG_3465 2.jpg" alt="Piscine et extérieurs">
+            <div class="carousel-card-title">🏊 Piscine et extérieurs</div>
+          </div>
+          <div class="carousel-card" data-target="living">
+            <img src="images/IMG_9692.jpg" alt="Salon et espaces de vie">
+            <div class="carousel-card-title">🛋️ Salon et espaces de vie</div>
+          </div>
+          <div class="carousel-card" data-target="kitchen">
+            <img src="images/IMG_4542.jpg" alt="Cuisine et salle à manger">
+            <div class="carousel-card-title">🍽️ Cuisine et salle à manger</div>
+          </div>
+          <div class="carousel-card" data-target="bedrooms">
+            <img src="images/Bedroom_4a.jpg" alt="Chambres">
+            <div class="carousel-card-title">🛏️ Chambres</div>
+          </div>
+          <div class="carousel-card" data-target="bathrooms">
+            <img src="images/SDB_1a.jpg" alt="Salles de bain">
+            <div class="carousel-card-title">🚿 Salles de bain</div>
+          </div>
+          <div class="carousel-card" data-target="extras">
+            <img src="images/IMG_3322.jpg" alt="Équipements et loisirs">
+            <div class="carousel-card-title">🎯 Équipements et loisirs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Extérieurs & Piscine -->
+      <div class="space-section" id="outdoor">
+        <h3 class="space-title" data-i18n="space-outdoor-title">🏊 Piscine et extérieurs</h3>
+        <p class="space-desc muted" data-i18n="space-outdoor-desc">Jardin de 2000 m2 avec piscine privée sécurisée, lavande et oliviers. Parfait pour se détendre en plein air.</p>
+        <div class="space-gallery">
+          <img src="images/Photo Exterieur 1.webp" alt="Vue panoramique piscine et extérieurs" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_3465 2.jpg" alt="Vue magnifique propriété avec piscine" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_3472.jpg" alt="Vue aérienne piscine et jardin" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_3473.jpg" alt="Piscine avec transats" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_4551.jpg" alt="Vue panoramique propriété" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_9679.jpg" alt="Pool house et terrasse" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_9675.jpg" alt="Vue depuis terrasse couverte" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_3474 2.jpg" alt="Piscine avec mobilier détente" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_3476.jpg" alt="Salon extérieur élégant" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_4547.jpg" alt="Jardin verdoyant" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_4546.jpg" alt="Table pergola vue piscine" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_4544.jpg" alt="Pergola mobilier jardin" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_3466 2.jpg" alt="Pergola table à manger" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_3471.jpg" alt="Façade jardin fleuri" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+          <img src="images/IMG_3468.jpg" alt="Vue aérienne propriété" loading="lazy" class="gallery-item" data-category="Piscine et extérieurs">
+        </div>
+      </div>
+
+      <!-- Salon & Espaces de vie -->
+      <div class="space-section" id="living">
+        <h3 class="space-title" data-i18n="space-living-title">🛋️ Salon et espaces de vie</h3>
+        <p class="space-desc muted" data-i18n="space-living-desc">Salon lumineux et spacieux avec TV, climatisation et grandes fenêtres donnant sur le jardin.</p>
+        <div class="space-gallery">
+          <img src="images/IMG_9692.jpg" alt="Salon spacieux avec canapés design" loading="lazy" class="gallery-item" data-category="Salon et espaces de vie">
+          <img src="images/IMG_9694.jpg" alt="Vue ouverte salon-salle à manger-cuisine" loading="lazy" class="gallery-item" data-category="Salon et espaces de vie">
+          <img src="images/IMG_3479 2.jpg" alt="Escalier élégant" loading="lazy" class="gallery-item" data-category="Salon et espaces de vie">
+        </div>
+      </div>
+
+      <!-- Cuisine & Salle à manger -->
+      <div class="space-section" id="kitchen">
+        <h3 class="space-title" data-i18n="space-kitchen-title">🍽️ Cuisine et salle à manger</h3>
+        <p class="space-desc muted" data-i18n="space-kitchen-desc">Cuisine entièrement équipée avec machine à café, lave-vaisselle et grande table à manger pour partager vos repas.</p>
+        <div class="space-gallery">
+          <img src="images/IMG_4542.jpg" alt="Salle à manger spacieuse" loading="lazy" class="gallery-item" data-category="Cuisine et salle à manger">
+          <img src="images/IMG_4545.jpg" alt="Salle à manger avec cuisine" loading="lazy" class="gallery-item" data-category="Cuisine et salle à manger">
+          <img src="images/IMG_3487 2.jpg" alt="Cuisine moderne blanche" loading="lazy" class="gallery-item" data-category="Cuisine et salle à manger">
+          <img src="images/IMG_3488.jpg" alt="Vue ouverte cuisine-salle à manger" loading="lazy" class="gallery-item" data-category="Cuisine et salle à manger">
+        </div>
+      </div>
+
+      <!-- Chambres -->
+      <div class="space-section" id="bedrooms">
+        <h3 class="space-title" data-i18n="space-bedrooms-title">🛏️ Chambres (4 chambres, 10 couchages)</h3>
+        <p class="space-desc muted" data-i18n="space-bedrooms-desc">Chambres confortables avec literie de qualité.</p>
+
+        <h4 class="space-subtitle" data-i18n="bedroom1-title">Chambre 1 (RDC) - Salle de douche en suite</h4>
+        <p class="space-subdesc muted" data-i18n="bedroom1-desc">Lit queen</p>
+        <div class="space-gallery">
+          <img src="images/Bedroom_1a.jpg" alt="Chambre 1 - lit queen" loading="lazy" class="gallery-item" data-category="Chambre 1 (RDC)">
+          <img src="images/Bedroom_1b.jpg" alt="Chambre 1 - vue 2" loading="lazy" class="gallery-item" data-category="Chambre 1 (RDC)">
+          <img src="images/Bedroom_1c.jpg" alt="Chambre 1 - vue 3" loading="lazy" class="gallery-item" data-category="Chambre 1 (RDC)">
+        </div>
+
+        <h4 class="space-subtitle" data-i18n="bedroom23-title">Chambres 2 & 3 (Étage) - Salle de bain attenante</h4>
+        <p class="space-subdesc muted" data-i18n="bedroom23-desc">Lits queen avec canapés-lits simples</p>
+        <div class="space-gallery">
+          <img src="images/Bedroom_2&3.jpg" alt="Vue chambres 2 et 3" loading="lazy" class="gallery-item" data-category="Chambres 2 & 3 (Étage)">
+          <img src="images/Bedroom_2a.jpg" alt="Chambre 2 - lit queen" loading="lazy" class="gallery-item" data-category="Chambres 2 & 3 (Étage)">
+          <img src="images/Bedroom_2b.jpg" alt="Chambre 2 - vue 2" loading="lazy" class="gallery-item" data-category="Chambres 2 & 3 (Étage)">
+          <img src="images/Bedroom_3a.jpg" alt="Chambre 3 - lit queen" loading="lazy" class="gallery-item" data-category="Chambres 2 & 3 (Étage)">
+          <img src="images/Bedroom_3b.jpg" alt="Chambre 3 - vue 2" loading="lazy" class="gallery-item" data-category="Chambres 2 & 3 (Étage)">
+          <img src="images/Bedroom_3c.jpg" alt="Chambre 3 - vue 3" loading="lazy" class="gallery-item" data-category="Chambres 2 & 3 (Étage)">
+        </div>
+
+        <h4 class="space-subtitle" data-i18n="bedroom4-title">Chambre 4 (Étage) - Master bedroom, salle de douche en suite</h4>
+        <p class="space-subdesc muted" data-i18n="bedroom4-desc">Lit queen avec canapé-lit</p>
+        <div class="space-gallery">
+          <img src="images/Bedroom_4a.jpg" alt="Chambre 4 master - lit queen" loading="lazy" class="gallery-item" data-category="Chambre 4 (Étage) - Master">
+          <img src="images/Bedroom_4b.jpg" alt="Chambre 4 master - vue 2" loading="lazy" class="gallery-item" data-category="Chambre 4 (Étage) - Master">
+          <img src="images/Bedroom_4c.jpg" alt="Chambre 4 master - vue 3" loading="lazy" class="gallery-item" data-category="Chambre 4 (Étage) - Master">
+        </div>
+      </div>
+
+      <!-- Salles de bain -->
+      <div class="space-section" id="bathrooms">
+        <h3 class="space-title" data-i18n="space-bathrooms-title">🚿 Salles de bain (3 salles de bain complètes)</h3>
+        <p class="space-desc muted" data-i18n="space-bathrooms-desc">Trois salles de bain modernes avec douche, WC et tous les équipements nécessaires.</p>
+        <div class="space-gallery">
+          <img src="images/SDB_1a.jpg" alt="Salle de bain 1" loading="lazy" class="gallery-item" data-category="Salles de bain">
+          <img src="images/SDB_1b.jpg" alt="Salle de bain 1 - détail" loading="lazy" class="gallery-item" data-category="Salles de bain">
+          <img src="images/SDB_2.jpg" alt="Salle de bain 2" loading="lazy" class="gallery-item" data-category="Salles de bain">
+          <img src="images/SDB_3a.jpg" alt="Salle de bain 3" loading="lazy" class="gallery-item" data-category="Salles de bain">
+          <img src="images/SDB_3b.jpg" alt="Salle de bain 3 - douche" loading="lazy" class="gallery-item" data-category="Salles de bain">
+          <img src="images/SDB_3c.jpg" alt="Salle de bain 3 - lavabo" loading="lazy" class="gallery-item" data-category="Salles de bain">
+        </div>
+      </div>
+
+      <!-- Équipements & Extras -->
+      <div class="space-section" id="extras">
+        <h3 class="space-title" data-i18n="space-extras-title">🎯 Équipements et loisirs</h3>
+        <p class="space-desc muted" data-i18n="space-extras-desc">Table de ping-pong, barbecue, terrasse ombragée et tout le confort pour profiter de vos vacances.</p>
+        <div class="space-gallery">
+          <img src="images/IMG_3322.jpg" alt="Table de ping-pong" loading="lazy" class="gallery-item" data-category="Équipements et loisirs">
+          <img src="images/IMG_4548.jpg" alt="Espace loisirs extérieur" loading="lazy" class="gallery-item" data-category="Équipements et loisirs">
+          <img src="images/IMG_9672.jpg" alt="Terrasse et jardin" loading="lazy" class="gallery-item" data-category="Équipements et loisirs">
+          <img src="images/IMG_9676.jpg" alt="Piscine et espace détente" loading="lazy" class="gallery-item" data-category="Équipements et loisirs">
+          <img src="images/IMG_9679.jpg" alt="Coin détente piscine" loading="lazy" class="gallery-item" data-category="Équipements et loisirs">
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="amenities">
+      <div class="section__header">
+        <p class="eyebrow" data-i18n="amenities-eyebrow">Équipements</p>
+        <h2 data-i18n="amenities-title">Ce qui est inclus</h2>
+      </div>
+      <div class="amenities">
+        <ul>
+          <li data-i18n="amenity1">Climatisation intégrale & chauffage</li>
+          <li data-i18n="amenity2">Piscine privée sécurisée</li>
+          <li data-i18n="amenity3">Jardin 2000 m2 (lavande, oliviers)</li>
+          <li data-i18n="amenity4">Wi-Fi haut débit</li>
+          <li data-i18n="amenity5">10 couchages (4 chambres)</li>
+          <li data-i18n="amenity6">Cuisine entièrement équipée</li>
+        </ul>
+        <ul>
+          <li data-i18n="amenity8">Terrasse avec mobilier de jardin</li>
+          <li data-i18n="amenity9">Parking privé</li>
+          <li data-i18n="amenity10">Linge de maison fourni</li>
+          <li data-i18n="amenity11">À 4 km de Saint-Rémy-de-Provence</li>
+          <li data-i18n="amenity12">Proche commerces et restaurants</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="localisation">
+      <div class="section__header">
+        <p class="eyebrow" data-i18n="location-eyebrow">Autour de vous</p>
+        <h2 data-i18n="location-title">Localisation</h2>
+        <p class="muted" data-i18n="location-subtitle">Eyragues, Bouches-du-Rhône. Idéalement situé à proximité des commerces, à 4 km de Saint-Rémy-de-Provence et au cœur de la Provence.</p>
+      </div>
+      <div class="map">
+        <iframe title="Carte Eyragues" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11263.915266993373!2d4.826!3d43.85!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12b60338716b76e7%3A0x40819a5fd8fc4f0!2s13630%20Eyragues!5e0!3m2!1sfr!2sfr!4v1714912000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="map__callout">
+          <h3 data-i18n="access-title">Temps d'accès</h3>
+          <p data-i18n="access-times">Saint-Rémy : 4 km · Avignon : 15 min · Arles : 30 min · Aéroport Marseille : 1h</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pricing">
+      <div class="section__header">
+        <p class="eyebrow" data-i18n="pricing-eyebrow">Tarifs</p>
+        <h2 data-i18n="pricing-title">Tarifs & Conditions</h2>
+        <p class="muted" data-i18n="pricing-subtitle">Tarifs transparents pour votre séjour au Mas Airaga</p>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3 class="pricing-card__title" data-i18n="pricing-standard-title">Tarif Standard</h3>
+          <p class="pricing-card__period muted" data-i18n="pricing-standard-period">17 avril au 3 juillet & 29 août au 3 octobre</p>
+          <div class="pricing-card__rate" data-i18n="pricing-standard-rate">500€ / nuit</div>
+          <p class="pricing-card__min" data-i18n="pricing-standard-min">Minimum 4 nuits</p>
+          <div class="pricing-card__degressive">
+            <p class="small" style="font-weight: 600; margin-bottom: 8px;" data-i18n="pricing-standard-degressive">Tarif dégressif</p>
+            <ul class="pricing-list">
+              <li data-i18n="pricing-standard-5nights">5 nuits : 2 400€</li>
+              <li data-i18n="pricing-standard-6nights">6 nuits : 2 700€</li>
+              <li data-i18n="pricing-standard-7nights">7 nuits : 2 900€</li>
+              <li data-i18n="pricing-standard-15nights">15 nuits : 5 000€</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pricing-card pricing-card--highlight">
+          <div class="pricing-badge">Haute Saison</div>
+          <h3 class="pricing-card__title" data-i18n="pricing-high-title">Haute Saison</h3>
+          <p class="pricing-card__period muted" data-i18n="pricing-high-period">4 juillet au 28 août</p>
+          <div class="pricing-card__rate" data-i18n="pricing-high-rate">3 900€ / semaine</div>
+          <p class="pricing-card__constraint" data-i18n="pricing-high-constraint">Arrivée/départ : samedi uniquement</p>
+        </div>
+      </div>
+
+      <div class="pricing-info">
+        <p data-i18n="pricing-included">Ménage et linge de maison inclus</p>
+        <p data-i18n="pricing-deposit">Caution : 1 500€</p>
+        <p data-i18n="pricing-tax">Tarif hors Taxe de séjour</p>
+        <p class="muted small" data-i18n="pricing-closed">Fermé avant le 17 avril et après le 3 octobre 2026</p>
+      </div>
+
+      <div class="price-calculator">
+        <h3 data-i18n="calculator-title">Calculateur de prix</h3>
+        <p class="muted" data-i18n="calculator-subtitle">Estimez le coût de votre séjour</p>
+
+        <div class="calculator-inputs">
+          <div class="calculator-field">
+            <label data-i18n="calculator-checkin">Date d'arrivée</label>
+            <input type="date" id="calc-checkin" min="2026-04-17" max="2026-10-03">
+          </div>
+          <div class="calculator-field">
+            <label data-i18n="calculator-checkout">Date de départ</label>
+            <input type="date" id="calc-checkout" min="2026-04-17" max="2026-10-03">
+          </div>
+          <div class="calculator-field">
+            <label data-i18n="calculator-adults">Adultes (18 ans et +)</label>
+            <input type="number" id="calc-adults" min="1" max="10" value="2">
+          </div>
+          <div class="calculator-field">
+            <label data-i18n="calculator-children">Enfants (- de 18 ans)</label>
+            <input type="number" id="calc-children" min="0" max="10" value="0">
+          </div>
+        </div>
+
+        <div id="calculator-result" class="calculator-result" style="display: none;">
+          <div class="calculator-breakdown">
+            <div class="calculator-line">
+              <span data-i18n="calculator-nights">Nombre de nuits</span>
+              <span id="calc-nights">-</span>
+            </div>
+            <div class="calculator-line">
+              <span data-i18n="calculator-guests">Voyageurs</span>
+              <span id="calc-guests">-</span>
+            </div>
+            <div class="calculator-line">
+              <span data-i18n="calculator-rate">Tarif hébergement</span>
+              <span id="calc-rate">-</span>
+            </div>
+            <div class="calculator-line">
+              <span data-i18n="calculator-tourism-tax">Taxe de séjour</span>
+              <span id="calc-tax">-</span>
+            </div>
+            <div class="calculator-line calculator-total">
+              <span data-i18n="calculator-total">Total TTC</span>
+              <span id="calc-total">-</span>
+            </div>
+          </div>
+          <div id="calc-errors" class="calculator-errors"></div>
+          <button id="calc-send-email" class="button" style="width: 100%; margin-top: 16px; display: none;" data-i18n="calculator-send-email">Envoyer une demande de réservation</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="faq">
+      <div class="section__header">
+        <p class="eyebrow" data-i18n="faq-eyebrow">Questions fréquentes</p>
+        <h2 data-i18n="faq-title">Informations pratiques</h2>
+      </div>
+
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3 class="faq-question" data-i18n="faq-checkin-q">Horaires d'arrivée et de départ</h3>
+          <p class="faq-answer" data-i18n="faq-checkin-a">Arrivée : 17h - 23h · Départ : 8h - 10h</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question" data-i18n="faq-pets-q">Animaux acceptés ?</h3>
+          <p class="faq-answer" data-i18n="faq-pets-a">Oui, avec supplément de 200€</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question" data-i18n="faq-smoking-q">Peut-on fumer ?</h3>
+          <p class="faq-answer" data-i18n="faq-smoking-a">Interdit à l'intérieur, autorisé en extérieur</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="alentours">
+      <div class="section__header">
+        <p class="eyebrow" data-i18n="around-eyebrow">Les Alentours</p>
+        <h2 data-i18n="around-title">Découvrez les Alpilles</h2>
+        <p class="muted" data-i18n="around-subtitle">Sites naturels, villages perchés et patrimoine provençal à explorer autour du Mas Airaga</p>
+      </div>
+
+      <div class="around-categories">
+        <div class="around-category">
+          <div class="around-category__icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <h3 data-i18n="around-nature-title">Nature & Paysages</h3>
+          <p data-i18n="around-nature-desc">Randonnées dans les Alpilles, champs de lavande, oliveraies centenaires</p>
+        </div>
+        <div class="around-category">
+          <div class="around-category__icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
+            </svg>
+          </div>
+          <h3 data-i18n="around-villages-title">Villages & Patrimoine</h3>
+          <p data-i18n="around-villages-desc">Villages perchés, marchés provençaux, monuments historiques</p>
+        </div>
+        <div class="around-category">
+          <div class="around-category__icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
+              <path d="M12 6v6l4 2"/>
+              <circle cx="12" cy="12" r="1"/>
+            </svg>
+          </div>
+          <h3 data-i18n="around-culture-title">Culture & Art de vivre</h3>
+          <p data-i18n="around-culture-desc">Domaines viticoles, artisanat local, gastronomie provençale</p>
+        </div>
+      </div>
+
+      <div class="around-grid">
+        <div class="around-card">
+          <h3 data-i18n="around-saintrem-title">Saint-Rémy-de-Provence</h3>
+          <p data-i18n="around-saintrem-desc">Ville pittoresque avec marché provençal, chemin Van Gogh et charme authentique</p>
+          <span class="around-distance" data-i18n="around-saintrem-distance">4 km</span>
+        </div>
+        <div class="around-card">
+          <h3 data-i18n="around-lesbaux-title">Les Baux-de-Provence</h3>
+          <p data-i18n="around-lesbaux-desc">Village médiéval perché sur un éperon rocheux avec vues imprenables</p>
+          <span class="around-distance" data-i18n="around-lesbaux-distance">12 km</span>
+        </div>
+        <div class="around-card">
+          <h3 data-i18n="around-alpilles-title">Parc Naturel des Alpilles</h3>
+          <p data-i18n="around-alpilles-desc">Sentiers de randonnée, cyclisme, faune et flore exceptionnelles</p>
+          <span class="around-distance" data-i18n="around-alpilles-distance">Au cœur</span>
+        </div>
+        <div class="around-card">
+          <h3 data-i18n="around-avignon-title">Avignon</h3>
+          <p data-i18n="around-avignon-desc">Cité des Papes, Palais des Papes, Pont d'Avignon, festival d'été</p>
+          <span class="around-distance" data-i18n="around-avignon-distance">25 km</span>
+        </div>
+        <div class="around-card">
+          <h3 data-i18n="around-arles-title">Arles</h3>
+          <p data-i18n="around-arles-desc">Arènes romaines, patrimoine Van Gogh, porte de la Camargue</p>
+          <span class="around-distance" data-i18n="around-arles-distance">30 km</span>
+        </div>
+        <div class="around-card">
+          <h3 data-i18n="around-vineyards-title">Vignobles</h3>
+          <p data-i18n="around-vineyards-desc">Domaines viticoles, dégustations, Châteauneuf-du-Pape et vins de Provence</p>
+          <span class="around-distance" data-i18n="around-vineyards-distance">5-20 km</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="reservation">
+      <div class="section__header">
+        <p class="eyebrow" data-i18n="booking-eyebrow">Réservation</p>
+        <h2 data-i18n="booking-title">Réservez en direct ou sur Airbnb</h2>
+        <p class="muted" data-i18n="booking-subtitle">Profitez du meilleur prix en direct. Indiquez vos dates, nous répondons rapidement.</p>
+      </div>
+      <div class="booking">
+        <form class="booking__form" id="bookingForm">
+          <label>
+            <span data-i18n="form-name">Prénom et nom</span>
+            <input type="text" name="name" placeholder="Ex : Marie Dupont" required>
+          </label>
+          <label>
+            <span data-i18n="form-email">Email</span>
+            <input type="email" name="email" placeholder="vous@email.com" required>
+          </label>
+          <label>
+            <span data-i18n="form-phone">Téléphone</span>
+            <input type="tel" name="phone" placeholder="+33 6 12 34 56 78">
+          </label>
+          <label class="booking__dates">
+            <span data-i18n="form-checkin">Arrivée</span>
+            <input type="date" id="booking-checkin" name="checkin" min="2026-04-17" max="2026-10-03" required>
+          </label>
+          <label class="booking__dates">
+            <span data-i18n="form-checkout">Départ</span>
+            <input type="date" id="booking-checkout" name="checkout" min="2026-04-17" max="2026-10-03" required>
+          </label>
+          <div class="booking__guests">
+            <label style="flex: 1;">
+              <span data-i18n="form-adults">Adultes</span>
+              <input type="number" id="booking-adults" name="adults" min="1" max="10" value="2" required>
+            </label>
+            <label style="flex: 1;">
+              <span data-i18n="form-children">Enfants</span>
+              <input type="number" id="booking-children" name="children" min="0" max="10" value="0">
+            </label>
+          </div>
+          <div id="booking-price-summary" class="booking__price-summary" style="display: none;">
+            <div class="price-line">
+              <span data-i18n="booking-nights">Nuits</span>
+              <span id="booking-nights-value">-</span>
+            </div>
+            <div class="price-line">
+              <span data-i18n="booking-rate">Hébergement</span>
+              <span id="booking-rate-value">-</span>
+            </div>
+            <div class="price-line">
+              <span data-i18n="booking-tax">Taxe de séjour</span>
+              <span id="booking-tax-value">-</span>
+            </div>
+            <div class="price-line price-total">
+              <span data-i18n="booking-total">Total estimé</span>
+              <span id="booking-total-value">-</span>
+            </div>
+            <div id="booking-errors" class="booking-errors"></div>
+          </div>
+          <label>
+            <span data-i18n="form-message">Message</span>
+            <textarea name="message" rows="3" placeholder="Besoins spécifiques..."></textarea>
+          </label>
+          <button type="submit" class="button" data-i18n="form-submit">Demander une disponibilité</button>
+        </form>
+        <div class="booking__aside">
+          <div class="badge" data-i18n="badge-quick">Réponse rapide</div>
+          <h3 data-i18n="aside-title">Tarif direct avantageux</h3>
+          <p data-i18n="aside-desc">Contact direct propriétaire. Caution et contrat simple. Paiement sécurisé.</p>
+
+          <div class="booking__benefits">
+            <h4 data-i18n="benefits-title">Avantages de la réservation directe</h4>
+            <ul class="benefits-list">
+              <li data-i18n="benefit-1">Aucun frais Airbnb / Abritel / Booking</li>
+              <li data-i18n="benefit-2">Contact direct avec les propriétaires</li>
+              <li data-i18n="benefit-3">Contrat de location fourni</li>
+              <li data-i18n="benefit-4">Offres spéciales et réductions pour séjours longue durée</li>
+            </ul>
+          </div>
+
+          <div class="booking__cta">
+            <a class="button button--ghost" href="mailto:mas.airaga.contact@gmail.com?subject=Demande%20de%20réservation%20Mas%20Airaga" data-i18n="btn-email">Écrire un email</a>
+            <a class="button button--ghost" href="https://www.airbnb.ae/rooms/11578905" target="_blank" rel="noopener" data-i18n="btn-airbnb">Voir sur Airbnb</a>
+          </div>
+          <p class="muted small" style="margin-top: 12px;">
+            <span data-i18n="contact-owners">Virginie et Flavien</span><br>
+            <a href="tel:+33614325706" style="color: var(--accent);">+33 6 14 32 57 06</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bouton retour en haut -->
+  <button id="scroll-to-top" class="scroll-to-top" aria-label="Retour en haut">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <!-- Lightbox pour les photos -->
+  <div id="lightbox" class="lightbox" style="display: none;">
+    <button class="lightbox__close" aria-label="Fermer">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <button class="lightbox__prev" aria-label="Précédent">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <button class="lightbox__next" aria-label="Suivant">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+    <div class="lightbox__content">
+      <img id="lightbox-image" src="" alt="">
+      <div class="lightbox__caption" id="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div>
+      <img src="images/LOGO.png" alt="Mas Airaga Logo" class="footer__logo">
+      <p class="eyebrow">Mas Airaga</p>
+      <p data-i18n="footer-registration">Maison meublée déclarée • Eyragues, Provence</p>
+    </div>
+    <div class="footer__links">
+      <a href="#atouts" data-i18n="nav-atouts">Atouts</a>
+      <a href="#photos" data-i18n="nav-photos">Photos</a>
+      <a href="#reservation" data-i18n="nav-book">Réserver</a>
+    </div>
+    <div>
+      <p class="muted">
+        <span data-i18n="footer-contact">Contact :</span>
+        <a href="mailto:mas.airaga.contact@gmail.com">mas.airaga.contact@gmail.com</a> ·
+        <a href="tel:+33614325706">+33 6 14 32 57 06</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
