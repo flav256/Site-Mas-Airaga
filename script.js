@@ -157,6 +157,11 @@ const translations = {
     "legend-available": "Disponible",
     "legend-blocked": "Réservé",
     "legend-closed": "Fermé",
+    "selection-checkin": "Arrivée",
+    "selection-checkout": "Départ",
+    "selection-nights": "nuits",
+    "selection-reset": "Modifier les dates",
+    "selection-validate": "Voir le tarif et réserver",
     "around-eyebrow": "Les Alentours",
     "around-title": "Découvrez les Alpilles",
     "around-subtitle": "Sites naturels, villages perchés et patrimoine provençal à explorer autour du Mas Airaga",
@@ -363,6 +368,11 @@ const translations = {
     "legend-available": "Available",
     "legend-blocked": "Reserved",
     "legend-closed": "Closed",
+    "selection-checkin": "Check-in",
+    "selection-checkout": "Check-out",
+    "selection-nights": "nights",
+    "selection-reset": "Change dates",
+    "selection-validate": "View price and book",
   },
   nl: {
     "page-title": "Mas Airaga - Charmant vakantiehuis in Eyragues",
@@ -521,6 +531,11 @@ const translations = {
     "legend-available": "Beschikbaar",
     "legend-blocked": "Gereserveerd",
     "legend-closed": "Gesloten",
+    "selection-checkin": "Aankomst",
+    "selection-checkout": "Vertrek",
+    "selection-nights": "nachten",
+    "selection-reset": "Datums wijzigen",
+    "selection-validate": "Prijs bekijken en reserveren",
     "around-eyebrow": "De omgeving",
     "around-title": "Ontdek de Alpilles",
     "around-subtitle": "Natuurgebieden, bergdorpen en Provençaals erfgoed om te verkennen rond Mas Airaga",
@@ -706,6 +721,11 @@ const translations = {
     "legend-available": "Verfügbar",
     "legend-blocked": "Reserviert",
     "legend-closed": "Geschlossen",
+    "selection-checkin": "Anreise",
+    "selection-checkout": "Abreise",
+    "selection-nights": "Nächte",
+    "selection-reset": "Daten ändern",
+    "selection-validate": "Preis ansehen und buchen",
     "around-eyebrow": "Die Umgebung",
     "around-title": "Entdecken Sie die Alpilles",
     "around-subtitle": "Naturgebiete, Bergdörfer und provenzalisches Erbe rund um Mas Airaga",
@@ -1082,9 +1102,13 @@ if (bookingForm) {
     event.preventDefault();
 
     if (!bookingCalculatedData) {
-      alert(currentLang === 'fr'
-        ? 'Veuillez sélectionner des dates valides.'
-        : 'Please select valid dates.');
+      const messages = {
+        fr: 'Veuillez sélectionner des dates valides.',
+        en: 'Please select valid dates.',
+        nl: 'Selecteer geldige datums.',
+        de: 'Bitte wählen Sie gültige Daten.'
+      };
+      alert(messages[currentLang] || messages.fr);
       return;
     }
 
@@ -1984,72 +2008,223 @@ if (lightbox) {
     return 'standard';
   }
 
+  // Check if a date range contains any blocked dates (existing reservations)
+  function hasBlockedDatesInRange(startDate, endDate) {
+    for (const blocked of blockedDates) {
+      // Check if there's any overlap between the range and blocked period
+      // Overlap exists if: (start < blocked.end) AND (end > blocked.start)
+      if (startDate < blocked.end && endDate > blocked.start) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Find the next blocked date after a given date (or null if none)
+  function getNextBlockedDate(fromDate) {
+    let nextBlocked = null;
+    for (const blocked of blockedDates) {
+      if (blocked.start > fromDate) {
+        if (!nextBlocked || blocked.start < nextBlocked) {
+          nextBlocked = blocked.start;
+        }
+      }
+    }
+    return nextBlocked;
+  }
+
+  // Find the next unavailable date (blocked or closed) after a given date
+  function getNextUnavailableDate(fromDate) {
+    const startDate = new Date(2026, 3, 17); // April 17, 2026
+    const endDate = new Date(2026, 9, 3); // October 3, 2026
+
+    let nextUnavailable = null;
+    let currentDate = new Date(fromDate);
+    currentDate.setDate(currentDate.getDate() + 1); // Start checking from the next day
+
+    // Check each day until we find an unavailable one
+    while (currentDate <= endDate) {
+      // Check if closed (outside season)
+      if (currentDate < startDate || currentDate > endDate) {
+        return currentDate;
+      }
+
+      // Check if blocked by Airbnb
+      if (isDateBlocked(currentDate)) {
+        return currentDate;
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // If we've gone past the end of the season, return the day after season end
+    if (currentDate > endDate) {
+      const dayAfterEnd = new Date(endDate);
+      dayAfterEnd.setDate(dayAfterEnd.getDate() + 1);
+      return dayAfterEnd;
+    }
+
+    return nextUnavailable;
+  }
+
+  // Check if a date can be a valid arrival date
+  function isValidArrivalDate(date) {
+    const season = getSeason(date);
+    // High season: only Saturdays
+    if (season === 'high') {
+      return isSaturday(date);
+    }
+    // Standard season: any day
+    return true;
+  }
+
   // Check if a date is selectable based on current selection and rules
   function isDateSelectable(date, isCheckout = false) {
+    console.log(`🔍 isDateSelectable called: date=${date.toDateString()}, isCheckout=${isCheckout}, selectedCheckin=${selectedCheckin?.toDateString()}`);
+
     // If selecting check-in (no selection yet)
     if (!selectedCheckin && !isCheckout) {
-      const season = getSeason(date);
-      // High season: only Saturdays allowed for check-in
-      if (season === 'high') {
-        return isSaturday(date);
+      console.log('  → Path: Selecting initial check-in');
+      // Don't allow dates in the past (before today)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (date < today) {
+        console.log('  ❌ Date is in the past');
+        return false;
       }
-      // Standard season: any available date
+
+      // Must be a valid arrival date (Saturdays in high season, any day in standard)
+      if (!isValidArrivalDate(date)) {
+        console.log('  ❌ Not a valid arrival date');
+        return false;
+      }
+
+      console.log('  ✅ Valid arrival date');
       return true;
     }
 
     // If selecting check-out (check-in already selected)
     if (selectedCheckin && !selectedCheckout && isCheckout) {
+      console.log('  → Path: Selecting check-out');
+
+      // Cannot select a date before or equal to check-in
+      if (date <= selectedCheckin) {
+        console.log('  ❌ Date is before or equal to check-in');
+        return false;
+      }
+
+      const daysDiff = Math.round((date - selectedCheckin) / (1000 * 60 * 60 * 24));
       const checkinSeason = getSeason(selectedCheckin);
       const checkoutSeason = getSeason(date);
 
-      // High season rules
-      if (checkinSeason === 'high') {
-        // Must be Saturday
-        if (!isSaturday(date)) {
-          return false;
-        }
-        // Must be exactly 7 days after check-in
-        const daysDiff = Math.round((date - selectedCheckin) / (1000 * 60 * 60 * 24));
-        return daysDiff === 7;
+      // CRITICAL: Check if there are blocked dates between check-in and check-out
+      if (hasBlockedDatesInRange(selectedCheckin, date)) {
+        console.log('  ❌ Blocked dates exist in range');
+        return false;
       }
 
-      // Standard season rules
-      if (checkinSeason === 'standard') {
-        // Must be at least 4 nights
-        const daysDiff = Math.round((date - selectedCheckin) / (1000 * 60 * 60 * 24));
-        if (daysDiff < 4) {
-          return false;
-        }
+      // Get the next unavailable date (blocked or closed) after check-in
+      const nextUnavailable = getNextUnavailableDate(selectedCheckin);
+      if (nextUnavailable && date > nextUnavailable) {
+        console.log('  ❌ Checkout is after next unavailable date (blocked or closed)');
+        return false;
+      }
 
-        // Cannot cross into high season without proper Saturday alignment
-        // Check if any date in range is in high season
-        let currentDate = new Date(selectedCheckin);
-        while (currentDate <= date) {
-          if (getSeason(currentDate) === 'high' && !isSaturday(currentDate)) {
-            // If we cross into high season, the boundary must be on a Saturday
+      // HIGH SEASON CHECK-IN RULES
+      if (checkinSeason === 'high') {
+        console.log('  → Check-in is in high season');
+
+        // If checkout is in high season (July 4 - Aug 28)
+        if (checkoutSeason === 'high') {
+          // Must be a Saturday
+          if (!isSaturday(date)) {
+            console.log('  ❌ High season checkout must be Saturday');
             return false;
           }
-          currentDate.setDate(currentDate.getDate() + 1);
+          // Must be 7, 14, 21... days (multiples of 7)
+          if (daysDiff % 7 !== 0) {
+            console.log(`  ❌ High season must be multiples of 7 days (got ${daysDiff})`);
+            return false;
+          }
+          console.log(`  ✅ Valid high season checkout (${daysDiff} days)`);
+          return true;
+        }
+        // If checkout is in September (Aug 29+)
+        else {
+          // Can checkout any day in September if continuous (no blocked dates)
+          console.log(`  ✅ High season to September checkout (${daysDiff} days)`);
+          return true;
+        }
+      }
+
+      // STANDARD SEASON CHECK-IN RULES
+      if (checkinSeason === 'standard') {
+        console.log('  → Check-in is in standard season');
+
+        // Minimum 4 nights
+        if (daysDiff < 4) {
+          console.log(`  ❌ Standard season requires minimum 4 nights (got ${daysDiff})`);
+          return false;
         }
 
-        return true;
+        // If checkout is in standard season
+        if (checkoutSeason === 'standard') {
+          // Any date after 4 nights is OK if continuous
+          console.log(`  ✅ Standard season checkout (${daysDiff} days)`);
+          return true;
+        }
+
+        // If checkout is in high season
+        if (checkoutSeason === 'high') {
+          // Can extend to high season Saturdays if continuous
+          // This creates a mixed reservation (standard + high season)
+          if (!isSaturday(date)) {
+            console.log('  ❌ Checkout in high season must be Saturday');
+            return false;
+          }
+
+          // Find the boundary between standard and high season
+          const highSeasonStart = new Date(selectedCheckin.getFullYear(), 6, 4); // July 4
+
+          // Check if the transition happens on a Saturday
+          if (!isSaturday(highSeasonStart)) {
+            // If July 4 is not a Saturday, we need to ensure proper alignment
+            // For mixed reservations, the checkout must align with high season rules
+            const daysInHighSeason = Math.round((date - highSeasonStart) / (1000 * 60 * 60 * 24));
+            if (daysInHighSeason % 7 !== 0) {
+              console.log('  ❌ Mixed reservation: high season portion must be multiples of 7');
+              return false;
+            }
+          }
+
+          console.log(`  ✅ Mixed reservation (standard to high season, ${daysDiff} days total)`);
+          return true;
+        }
       }
+
+      return false;
     }
 
     return false;
   }
 
   function handleDateClick(date) {
+    console.log('🔵 handleDateClick called with date:', date.toDateString());
+
     // If both dates are already selected, reset and start over
     if (selectedCheckin && selectedCheckout) {
+      console.log('🔄 Both dates selected, resetting...');
       selectedCheckin = null;
       selectedCheckout = null;
     }
 
     // If no check-in selected, set it
     if (!selectedCheckin) {
+      console.log('📅 No check-in selected yet, validating date...');
       // Validate check-in date
-      if (!isDateSelectable(date, false)) {
+      const isValid = isDateSelectable(date, false);
+      console.log('✅ Validation result:', isValid);
+      if (!isValid) {
         const season = getSeason(date);
         const lang = document.documentElement.lang || 'fr';
         const messages = {
@@ -2071,6 +2246,7 @@ if (lightbox) {
       }
       selectedCheckin = date;
       selectedCheckout = null;
+      console.log('✅ Check-in set to:', selectedCheckin.toDateString());
     }
     // If check-in is selected but no check-out
     else if (!selectedCheckout) {
@@ -2119,6 +2295,7 @@ if (lightbox) {
       }
 
       selectedCheckout = date;
+      console.log('✅ Check-out set to:', selectedCheckout.toDateString());
     }
 
     // Update form inputs
@@ -2140,8 +2317,52 @@ if (lightbox) {
       calcCheckoutInput.value = formatDateForInput(selectedCheckout);
     }
 
+    // Update selection summary UI
+    updateSelectionSummary();
+
     // Re-render calendar to update visual state
     renderCalendar();
+  }
+
+  function updateSelectionSummary() {
+    const summaryDiv = document.getElementById('calendar-selection-summary');
+    const checkinDateSpan = document.getElementById('selection-checkin-date');
+    const checkoutDateSpan = document.getElementById('selection-checkout-date');
+    const nightsCountSpan = document.getElementById('selection-nights-count');
+
+    if (!summaryDiv) return;
+
+    // Show/hide based on selection state
+    if (selectedCheckin && selectedCheckout) {
+      // Both dates selected - show summary
+      summaryDiv.style.display = 'block';
+
+      // Auto-scroll to selection summary
+      setTimeout(() => {
+        summaryDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+
+      // Format dates for display
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+      const lang = document.documentElement.lang || 'fr';
+      const locale = lang === 'fr' ? 'fr-FR' : lang === 'en' ? 'en-US' : lang === 'nl' ? 'nl-NL' : 'de-DE';
+
+      if (checkinDateSpan) {
+        checkinDateSpan.textContent = selectedCheckin.toLocaleDateString(locale, options);
+      }
+      if (checkoutDateSpan) {
+        checkoutDateSpan.textContent = selectedCheckout.toLocaleDateString(locale, options);
+      }
+
+      // Calculate nights
+      const nights = Math.round((selectedCheckout - selectedCheckin) / (1000 * 60 * 60 * 24));
+      if (nightsCountSpan) {
+        nightsCountSpan.textContent = nights;
+      }
+    } else {
+      // Not both dates selected - hide summary
+      summaryDiv.style.display = 'none';
+    }
   }
 
   function renderCalendar() {
@@ -2221,22 +2442,29 @@ if (lightbox) {
         // Determine if date can be selected and if it should be grayed out
         let canSelect = false;
         let shouldGrayOut = false;
+        let isPossibleArrival = false;
 
         if (isAvailable) {
           if (!selectedCheckin) {
             // No selection yet - only allow valid check-in dates
             canSelect = isDateSelectable(date, false);
+            isPossibleArrival = canSelect; // Mark possible arrival dates
+            console.log(`Date ${date.toDateString()}: isAvailable=${isAvailable}, canSelect=${canSelect}, isPossibleArrival=${isPossibleArrival}`);
           } else if (!selectedCheckout) {
             // Check-in selected, now selecting check-out
-            if (date <= selectedCheckin) {
-              // Can click same date or earlier to reset selection
+            if (date < selectedCheckin) {
+              // Dates before check-in should be grayed out and not clickable
+              shouldGrayOut = true;
+              canSelect = false;
+            } else if (date.toDateString() === selectedCheckin.toDateString()) {
+              // Can click check-in date to reset selection
               canSelect = true;
             } else {
-              // Check if valid check-out based on rules
+              // Date is after check-in - check if valid check-out based on rules
               const isValidCheckout = isDateSelectable(date, true);
               canSelect = isValidCheckout;
 
-              // Gray out invalid checkout dates
+              // Gray out invalid checkout dates (too soon or invalid based on rules)
               if (!isValidCheckout) {
                 shouldGrayOut = true;
               }
@@ -2250,6 +2478,11 @@ if (lightbox) {
         // Apply gray-out visual effect for impossible dates
         if (shouldGrayOut) {
           dayDiv.classList.add('calendar-day--disabled');
+        }
+
+        // Make possible arrival dates BOLD
+        if (isPossibleArrival && !selectedCheckin) {
+          dayDiv.classList.add('calendar-day--possible-arrival');
         }
 
         // Check if this date is selected (blue highlighting)
@@ -2273,7 +2506,18 @@ if (lightbox) {
         // Set cursor and click handler
         if (canSelect) {
           dayDiv.style.cursor = 'pointer';
-          dayDiv.addEventListener('click', () => handleDateClick(date));
+          dayDiv.addEventListener('click', (e) => {
+            e.stopPropagation(); // CRITICAL: Prevent the global click listener from resetting the selection
+            console.log('🎯 CLICK EVENT FIRED for date:', date.toDateString());
+            try {
+              console.log('→ About to call handleDateClick...');
+              handleDateClick(date);
+              console.log('→ handleDateClick returned successfully');
+            } catch (error) {
+              console.error('❌ Error in handleDateClick:', error);
+            }
+          });
+          console.log('✅ Event listener attached to', date.toDateString());
         } else if (isAvailable) {
           // Available but not selectable - show not-allowed cursor
           dayDiv.style.cursor = 'not-allowed';
@@ -2306,13 +2550,76 @@ if (lightbox) {
     const calendarElement = document.querySelector('.availability-calendar');
     if (!calendarElement) return;
 
+    console.log('🌐 Global click detected, target:', e.target.className);
+
     // Check if click is outside the calendar
     if (!calendarElement.contains(e.target)) {
+      console.log('→ Click is OUTSIDE calendar');
       // Only reset if there's an active selection
       if (selectedCheckin || selectedCheckout) {
+        console.log('→ Resetting selection...');
         selectedCheckin = null;
         selectedCheckout = null;
-        renderCalendar();
+        updateDateInputs();
+      }
+    } else {
+      console.log('→ Click is INSIDE calendar');
+    }
+  });
+
+  // Selection summary button handlers (using event delegation)
+  document.addEventListener('click', (e) => {
+    // Reset button
+    if (e.target && e.target.id === 'calendar-reset-btn') {
+      console.log('🔄 Reset button clicked');
+      e.preventDefault();
+      e.stopPropagation();
+      selectedCheckin = null;
+      selectedCheckout = null;
+      updateDateInputs();
+
+      // Scroll to the calendar
+      const calendar = document.querySelector('.availability-calendar');
+      if (calendar) {
+        calendar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // Validate button
+    if (e.target && e.target.id === 'calendar-validate-btn') {
+      console.log('✅ Validate button clicked');
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Scroll to the booking form section
+      const bookingForm = document.getElementById('bookingForm');
+      if (bookingForm) {
+        bookingForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Wait for scroll, then fill form with selected dates and base values
+        setTimeout(() => {
+          const bookingCheckinInput = document.getElementById('booking-checkin');
+          const bookingCheckoutInput = document.getElementById('booking-checkout');
+          const bookingAdultsInput = document.getElementById('booking-adults');
+          const bookingChildrenInput = document.getElementById('booking-children');
+
+          // Fill the selected dates
+          if (selectedCheckin && bookingCheckinInput) {
+            bookingCheckinInput.value = selectedCheckin.toISOString().split('T')[0];
+          }
+          if (selectedCheckout && bookingCheckoutInput) {
+            bookingCheckoutInput.value = selectedCheckout.toISOString().split('T')[0];
+          }
+
+          // Set default guest values
+          if (bookingAdultsInput) bookingAdultsInput.value = '2';
+          if (bookingChildrenInput) bookingChildrenInput.value = '0';
+
+          // Trigger price calculation
+          if (bookingCheckinInput) {
+            bookingCheckinInput.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        }, 800);
       }
     }
   });

@@ -680,12 +680,13 @@ textarea {
     backdrop-filter: blur(20px);
     flex-direction: column;
     align-items: flex-start;
-    padding: 80px 24px 24px;
+    padding: 80px 24px 120px;
     gap: 4px;
     transition: right 0.3s ease;
     box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     overflow-y: auto;
+    justify-content: flex-start;
   }
 
   .nav__links.active {
@@ -698,18 +699,21 @@ textarea {
     font-size: 16px;
     border-radius: 8px;
     text-align: left;
+    order: 1;
   }
 
   .nav__links a.button {
     margin-top: 8px;
     text-align: center;
+    order: 2;
   }
 
   .nav__lang-toggle {
     width: 100%;
-    margin: 16px 0 0 0;
+    margin: 0 0 16px 0;
     padding: 6px;
     justify-content: center;
+    order: 0;
   }
 
   .nav-lang-btn {
@@ -1718,6 +1722,116 @@ textarea {
 .calendar-day--available:hover {
   background: rgba(57, 88, 70, 0.2);
   transform: scale(1.1);
+}
+
+/* Possible arrival dates (bold) */
+.calendar-day--possible-arrival {
+  font-weight: 700 !important;
+}
+
+/* Calendar Selection Summary */
+.calendar-selection-summary {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+  border: 2px solid #3b82f6;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selection-summary-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.selection-summary-dates {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.selection-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.selection-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.selection-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e40af;
+  font-family: var(--font-display);
+}
+
+.selection-arrow {
+  font-size: 24px;
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.selection-nights {
+  background: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.selection-summary-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.selection-summary-actions .button {
+  min-width: 180px;
+}
+
+@media (max-width: 640px) {
+  .calendar-selection-summary {
+    padding: 16px;
+  }
+
+  .selection-summary-dates {
+    gap: 12px;
+  }
+
+  .selection-value {
+    font-size: 16px;
+  }
+
+  .selection-summary-actions {
+    flex-direction: column;
+  }
+
+  .selection-summary-actions .button {
+    width: 100%;
+  }
 }
 
 .calendar-day--blocked {
