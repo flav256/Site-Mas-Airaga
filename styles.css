@@ -1623,7 +1623,212 @@ textarea {
   display: none;
 }
 
+/* Availability Calendar */
+.availability-calendar {
+  max-width: 1000px;
+  margin: 0 auto 48px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.availability-calendar h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--sage);
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  text-align: center;
+}
+
+.availability-calendar .muted {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.calendar-month {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.calendar-month-header {
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--sage);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.calendar-weekday {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 4px 0;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.calendar-day--empty {
+  visibility: hidden;
+}
+
+.calendar-day--available {
+  background: rgba(57, 88, 70, 0.1);
+  color: var(--sage);
+  font-weight: 600;
+}
+
+.calendar-day--available:hover {
+  background: rgba(57, 88, 70, 0.2);
+  transform: scale(1.1);
+}
+
+.calendar-day--blocked {
+  background: rgba(198, 139, 0, 0.15);
+  color: var(--accent-dark);
+  cursor: not-allowed;
+}
+
+.calendar-day--closed {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.calendar-day--disabled {
+  opacity: 0.4;
+  cursor: not-allowed !important;
+  position: relative;
+}
+
+.calendar-day--disabled:hover {
+  background: rgba(57, 88, 70, 0.1) !important;
+  transform: none !important;
+}
+
+.calendar-day--today {
+  border: 2px solid var(--accent);
+  font-weight: 700;
+}
+
+/* Selected dates (blue coloring) */
+.calendar-day--selected {
+  background: rgba(59, 130, 246, 0.2) !important;
+  border: 2px solid #3b82f6 !important;
+  color: #1e40af !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.calendar-day--selected:hover {
+  background: rgba(59, 130, 246, 0.3) !important;
+  transform: scale(1.15);
+}
+
+/* In-range dates (light blue) */
+.calendar-day--in-range {
+  background: rgba(59, 130, 246, 0.1) !important;
+  color: #3b82f6 !important;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.calendar-day--in-range:hover {
+  background: rgba(59, 130, 246, 0.15) !important;
+  transform: scale(1.05);
+}
+
+.calendar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.legend-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.legend-dot--available {
+  background: rgba(57, 88, 70, 0.2);
+  border: 2px solid var(--sage);
+}
+
+.legend-dot--blocked {
+  background: rgba(198, 139, 0, 0.2);
+  border: 2px solid var(--accent);
+}
+
+.legend-dot--closed {
+  background: rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--muted);
+}
+
 @media (max-width: 640px) {
+  .availability-calendar {
+    padding: 20px;
+    margin-bottom: 32px;
+  }
+
+  .calendar-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .calendar-legend {
+    gap: 16px;
+  }
+
   .scroll-to-top {
     bottom: 20px;
     right: 20px;

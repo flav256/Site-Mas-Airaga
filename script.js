@@ -151,6 +151,12 @@ const translations = {
     "calculator-tourism-tax": "Taxe de séjour",
     "calculator-total": "Total TTC",
     "calculator-send-email": "Envoyer une demande de réservation",
+    "calendarBlocked": "Cette date n'est pas disponible. Veuillez en choisir une autre.",
+    "calendar-title": "Calendrier des disponibilités",
+    "calendar-subtitle": "Dates disponibles et réservées",
+    "legend-available": "Disponible",
+    "legend-blocked": "Réservé",
+    "legend-closed": "Fermé",
     "around-eyebrow": "Les Alentours",
     "around-title": "Découvrez les Alpilles",
     "around-subtitle": "Sites naturels, villages perchés et patrimoine provençal à explorer autour du Mas Airaga",
@@ -350,7 +356,13 @@ const translations = {
     "calculator-rate": "Accommodation rate",
     "calculator-tourism-tax": "Tourist tax",
     "calculator-total": "Total incl. tax",
-    "calculator-send-email": "Send booking request"
+    "calculator-send-email": "Send booking request",
+    "calendarBlocked": "This date is not available. Please choose another one.",
+    "calendar-title": "Availability Calendar",
+    "calendar-subtitle": "Available and reserved dates",
+    "legend-available": "Available",
+    "legend-blocked": "Reserved",
+    "legend-closed": "Closed",
   },
   nl: {
     "page-title": "Mas Airaga - Charmant vakantiehuis in Eyragues",
@@ -503,6 +515,12 @@ const translations = {
     "calculator-tourism-tax": "Toeristenbelasting",
     "calculator-total": "Totaal incl. belasting",
     "calculator-send-email": "Reserveringsverzoek versturen",
+    "calendarBlocked": "Deze datum is niet beschikbaar. Kies een andere datum.",
+    "calendar-title": "Beschikbaarheidskalender",
+    "calendar-subtitle": "Beschikbare en gereserveerde data",
+    "legend-available": "Beschikbaar",
+    "legend-blocked": "Gereserveerd",
+    "legend-closed": "Gesloten",
     "around-eyebrow": "De omgeving",
     "around-title": "Ontdek de Alpilles",
     "around-subtitle": "Natuurgebieden, bergdorpen en Provençaals erfgoed om te verkennen rond Mas Airaga",
@@ -682,6 +700,12 @@ const translations = {
     "calculator-tourism-tax": "Kurtaxe",
     "calculator-total": "Gesamt inkl. Steuer",
     "calculator-send-email": "Buchungsanfrage senden",
+    "calendarBlocked": "Dieses Datum ist nicht verfügbar. Bitte wählen Sie ein anderes.",
+    "calendar-title": "Verfügbarkeitskalender",
+    "calendar-subtitle": "Verfügbare und reservierte Termine",
+    "legend-available": "Verfügbar",
+    "legend-blocked": "Reserviert",
+    "legend-closed": "Geschlossen",
     "around-eyebrow": "Die Umgebung",
     "around-title": "Entdecken Sie die Alpilles",
     "around-subtitle": "Naturgebiete, Bergdörfer und provenzalisches Erbe rund um Mas Airaga",
@@ -1682,8 +1706,8 @@ if (lightbox) {
   const images = document.querySelectorAll('.gallery-item, .space-gallery img, .hero__slide, .carousel-card img');
 
   images.forEach(img => {
-    // Skip if already processed or is a WebP
-    if (img.dataset.webpProcessed || img.src.endsWith('.webp')) {
+    // Skip if already processed
+    if (img.dataset.webpProcessed) {
       return;
     }
 
@@ -1711,6 +1735,7 @@ if (lightbox) {
 
     const jpgSrc = img.getAttribute('src');
     if (!jpgSrc || !jpgSrc.endsWith('.jpg')) {
+      img.dataset.webpProcessed = 'true';
       return;
     }
 
@@ -1737,4 +1762,579 @@ if (lightbox) {
   });
 
   console.log(`✅ WebP support initialized (Browser supports WebP: ${supportsWebP})`);
+})();
+
+// ========================================
+// Airbnb Calendar Sync (iCal)
+// ========================================
+
+/**
+ * Fetch and parse Airbnb iCal calendar to get blocked dates
+ */
+(function initAirbnbCalendar() {
+  const ICAL_URL = 'https://www.airbnb.com/calendar/ical/11578905.ics?t=a3a2aff205c847e8b1ddbabf18d0ec55&locale=en';
+  const CORS_PROXY = 'https://api.allorigins.win/raw?url='; // Free CORS proxy
+  const CACHE_KEY = 'mas-airaga-blocked-dates';
+  const CACHE_DURATION = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+
+  let blockedDates = [];
+
+  /**
+   * Parse iCal format to extract blocked date ranges
+   */
+  function parseICalendar(icalData) {
+    const blocked = [];
+    const lines = icalData.split(/\r?\n/);
+    let currentEvent = {};
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+
+      if (line === 'BEGIN:VEVENT') {
+        currentEvent = {};
+      } else if (line === 'END:VEVENT') {
+        // Process the event
+        if (currentEvent.dtstart && currentEvent.dtend) {
+          // Parse dates (format: YYYYMMDD or YYYYMMDDTHHMMSSZ)
+          const startDate = parseDateFromIcal(currentEvent.dtstart);
+          const endDate = parseDateFromIcal(currentEvent.dtend);
+
+          if (startDate && endDate) {
+            blocked.push({ start: startDate, end: endDate });
+          }
+        }
+        currentEvent = {};
+      } else if (line.startsWith('DTSTART')) {
+        const match = line.match(/DTSTART[;:](.+)/);
+        if (match) currentEvent.dtstart = match[1];
+      } else if (line.startsWith('DTEND')) {
+        const match = line.match(/DTEND[;:](.+)/);
+        if (match) currentEvent.dtend = match[1];
+      }
+    }
+
+    return blocked;
+  }
+
+  /**
+   * Parse iCal date format to JavaScript Date
+   */
+  function parseDateFromIcal(dateStr) {
+    // Handle VALUE=DATE format (YYYYMMDD)
+    const cleanStr = dateStr.replace(/^VALUE=DATE:/, '');
+
+    if (cleanStr.length === 8) {
+      // YYYYMMDD format
+      const year = parseInt(cleanStr.substring(0, 4));
+      const month = parseInt(cleanStr.substring(4, 6)) - 1; // JS months are 0-indexed
+      const day = parseInt(cleanStr.substring(6, 8));
+      return new Date(year, month, day);
+    } else if (cleanStr.includes('T')) {
+      // YYYYMMDDTHHMMSSZ format
+      const year = parseInt(cleanStr.substring(0, 4));
+      const month = parseInt(cleanStr.substring(4, 6)) - 1;
+      const day = parseInt(cleanStr.substring(6, 8));
+      return new Date(year, month, day);
+    }
+
+    return null;
+  }
+
+  /**
+   * Check if a date is blocked
+   */
+  function isDateBlocked(date) {
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+
+    return blockedDates.some(range => {
+      const start = new Date(range.start);
+      const end = new Date(range.end);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(0, 0, 0, 0);
+
+      // Check if date falls within blocked range (inclusive)
+      return checkDate >= start && checkDate < end;
+    });
+  }
+
+  /**
+   * Format date as YYYY-MM-DD
+   */
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  /**
+   * Fetch calendar data from Airbnb
+   */
+  async function fetchCalendar() {
+    try {
+      // Check cache first
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { data, timestamp } = JSON.parse(cached);
+        const age = Date.now() - timestamp;
+
+        if (age < CACHE_DURATION) {
+          console.log('✅ Using cached calendar data');
+          return data;
+        }
+      }
+
+      // Fetch fresh data
+      console.log('⬇️ Fetching Airbnb calendar...');
+      const response = await fetch(CORS_PROXY + encodeURIComponent(ICAL_URL));
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const icalData = await response.text();
+      const parsed = parseICalendar(icalData);
+
+      // Cache the result
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        data: parsed,
+        timestamp: Date.now()
+      }));
+
+      console.log(`✅ Calendar synced: ${parsed.length} blocked periods found`);
+      return parsed;
+
+    } catch (error) {
+      console.warn('⚠️ Failed to fetch Airbnb calendar:', error);
+
+      // Fallback to cached data if available
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { data } = JSON.parse(cached);
+        console.log('ℹ️ Using stale cache as fallback');
+        return data;
+      }
+
+      return [];
+    }
+  }
+
+  /**
+   * Update date inputs to disable blocked dates
+   */
+  function updateDateInputs() {
+    const checkinInput = document.getElementById('booking-checkin');
+    const checkoutInput = document.getElementById('booking-checkout');
+    const calcCheckinInput = document.getElementById('calc-checkin');
+    const calcCheckoutInput = document.getElementById('calc-checkout');
+
+    if (!checkinInput) return;
+
+    // Add change listeners to validate selected dates
+    const validateDate = (input) => {
+      if (!input.value) return;
+
+      const selectedDate = new Date(input.value);
+      if (isDateBlocked(selectedDate)) {
+        alert(translations[currentLang].calendarBlocked || 'Cette date n\'est pas disponible. Veuillez en choisir une autre.');
+        input.value = '';
+      }
+    };
+
+    [checkinInput, checkoutInput, calcCheckinInput, calcCheckoutInput].forEach(input => {
+      if (input) {
+        input.addEventListener('change', () => validateDate(input));
+      }
+    });
+  }
+
+  /**
+   * Initialize calendar sync
+   */
+  /**
+   * Render visual availability calendar
+   */
+  // Selection state
+  let selectedCheckin = null;
+  let selectedCheckout = null;
+
+  function formatDateForInput(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Check if date is a Saturday
+  function isSaturday(date) {
+    return date.getDay() === 6;
+  }
+
+  // Determine pricing season for a date
+  function getSeason(date) {
+    const month = date.getMonth();
+    const day = date.getDate();
+
+    // High season: July 4 - August 28
+    if ((month === 6 && day >= 4) || (month === 7 && day <= 28)) {
+      return 'high';
+    }
+    // Standard season: April 17 - July 3 & August 29 - October 3
+    return 'standard';
+  }
+
+  // Check if a date is selectable based on current selection and rules
+  function isDateSelectable(date, isCheckout = false) {
+    // If selecting check-in (no selection yet)
+    if (!selectedCheckin && !isCheckout) {
+      const season = getSeason(date);
+      // High season: only Saturdays allowed for check-in
+      if (season === 'high') {
+        return isSaturday(date);
+      }
+      // Standard season: any available date
+      return true;
+    }
+
+    // If selecting check-out (check-in already selected)
+    if (selectedCheckin && !selectedCheckout && isCheckout) {
+      const checkinSeason = getSeason(selectedCheckin);
+      const checkoutSeason = getSeason(date);
+
+      // High season rules
+      if (checkinSeason === 'high') {
+        // Must be Saturday
+        if (!isSaturday(date)) {
+          return false;
+        }
+        // Must be exactly 7 days after check-in
+        const daysDiff = Math.round((date - selectedCheckin) / (1000 * 60 * 60 * 24));
+        return daysDiff === 7;
+      }
+
+      // Standard season rules
+      if (checkinSeason === 'standard') {
+        // Must be at least 4 nights
+        const daysDiff = Math.round((date - selectedCheckin) / (1000 * 60 * 60 * 24));
+        if (daysDiff < 4) {
+          return false;
+        }
+
+        // Cannot cross into high season without proper Saturday alignment
+        // Check if any date in range is in high season
+        let currentDate = new Date(selectedCheckin);
+        while (currentDate <= date) {
+          if (getSeason(currentDate) === 'high' && !isSaturday(currentDate)) {
+            // If we cross into high season, the boundary must be on a Saturday
+            return false;
+          }
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function handleDateClick(date) {
+    // If both dates are already selected, reset and start over
+    if (selectedCheckin && selectedCheckout) {
+      selectedCheckin = null;
+      selectedCheckout = null;
+    }
+
+    // If no check-in selected, set it
+    if (!selectedCheckin) {
+      // Validate check-in date
+      if (!isDateSelectable(date, false)) {
+        const season = getSeason(date);
+        const lang = document.documentElement.lang || 'fr';
+        const messages = {
+          fr: season === 'high'
+            ? 'En haute saison, les arrivées sont uniquement possibles le samedi.'
+            : 'Cette date ne peut pas être sélectionnée comme date d\'arrivée.',
+          en: season === 'high'
+            ? 'In high season, check-in is only allowed on Saturdays.'
+            : 'This date cannot be selected as check-in date.',
+          nl: season === 'high'
+            ? 'In het hoogseizoen is inchecken alleen mogelijk op zaterdag.'
+            : 'Deze datum kan niet worden geselecteerd als incheckdatum.',
+          de: season === 'high'
+            ? 'In der Hochsaison ist der Check-in nur samstags möglich.'
+            : 'Dieses Datum kann nicht als Check-in-Datum ausgewählt werden.'
+        };
+        alert(messages[lang] || messages.fr);
+        return;
+      }
+      selectedCheckin = date;
+      selectedCheckout = null;
+    }
+    // If check-in is selected but no check-out
+    else if (!selectedCheckout) {
+      // Check if trying to select earlier date (reset selection)
+      if (date <= selectedCheckin) {
+        selectedCheckin = date;
+        selectedCheckout = null;
+        renderCalendar();
+        return;
+      }
+
+      // Validate check-out date
+      if (!isDateSelectable(date, true)) {
+        const season = getSeason(selectedCheckin);
+        const daysDiff = Math.round((date - selectedCheckin) / (1000 * 60 * 60 * 24));
+        const lang = document.documentElement.lang || 'fr';
+
+        let message = '';
+        if (season === 'high') {
+          const messages = {
+            fr: 'En haute saison, le départ doit être un samedi (séjour de 7 nuits exactement).',
+            en: 'In high season, check-out must be on Saturday (exactly 7 nights).',
+            nl: 'In het hoogseizoen moet uitchecken op zaterdag (precies 7 nachten).',
+            de: 'In der Hochsaison muss der Check-out samstags sein (genau 7 Nächte).'
+          };
+          message = messages[lang] || messages.fr;
+        } else if (daysDiff < 4) {
+          const messages = {
+            fr: 'Le séjour doit être de minimum 4 nuits.',
+            en: 'Stay must be minimum 4 nights.',
+            nl: 'Verblijf moet minimaal 4 nachten zijn.',
+            de: 'Aufenthalt muss mindestens 4 Nächte betragen.'
+          };
+          message = messages[lang] || messages.fr;
+        } else {
+          const messages = {
+            fr: 'Cette date de départ n\'est pas valide selon les règles de réservation.',
+            en: 'This check-out date is not valid according to booking rules.',
+            nl: 'Deze uitcheckdatum is niet geldig volgens de boekingsregels.',
+            de: 'Dieses Check-out-Datum ist gemäß den Buchungsregeln nicht gültig.'
+          };
+          message = messages[lang] || messages.fr;
+        }
+        alert(message);
+        return;
+      }
+
+      selectedCheckout = date;
+    }
+
+    // Update form inputs
+    const checkinInput = document.getElementById('booking-checkin');
+    const checkoutInput = document.getElementById('booking-checkout');
+    const calcCheckinInput = document.getElementById('calc-checkin');
+    const calcCheckoutInput = document.getElementById('calc-checkout');
+
+    if (checkinInput && selectedCheckin) {
+      checkinInput.value = formatDateForInput(selectedCheckin);
+    }
+    if (checkoutInput && selectedCheckout) {
+      checkoutInput.value = formatDateForInput(selectedCheckout);
+    }
+    if (calcCheckinInput && selectedCheckin) {
+      calcCheckinInput.value = formatDateForInput(selectedCheckin);
+    }
+    if (calcCheckoutInput && selectedCheckout) {
+      calcCheckoutInput.value = formatDateForInput(selectedCheckout);
+    }
+
+    // Re-render calendar to update visual state
+    renderCalendar();
+  }
+
+  function renderCalendar() {
+    const calendarGrid = document.getElementById('availability-calendar-grid');
+    if (!calendarGrid) return;
+
+    calendarGrid.innerHTML = '';
+
+    const today = new Date();
+    const startDate = new Date(2026, 3, 17); // April 17, 2026
+    const endDate = new Date(2026, 9, 3); // October 3, 2026
+
+    const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+    const weekdayNames = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+
+    let currentMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+
+    while (currentMonth <= endDate) {
+      const monthDiv = document.createElement('div');
+      monthDiv.className = 'calendar-month';
+
+      // Month header
+      const header = document.createElement('div');
+      header.className = 'calendar-month-header';
+      header.textContent = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
+      monthDiv.appendChild(header);
+
+      // Weekday headers
+      const weekdaysDiv = document.createElement('div');
+      weekdaysDiv.className = 'calendar-weekdays';
+      weekdayNames.forEach(day => {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'calendar-weekday';
+        dayDiv.textContent = day;
+        weekdaysDiv.appendChild(dayDiv);
+      });
+      monthDiv.appendChild(weekdaysDiv);
+
+      // Days grid
+      const daysDiv = document.createElement('div');
+      daysDiv.className = 'calendar-days';
+
+      const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+      const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+      const startDay = firstDay.getDay();
+
+      // Empty cells before first day
+      for (let i = 0; i < startDay; i++) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'calendar-day calendar-day--empty';
+        daysDiv.appendChild(emptyDiv);
+      }
+
+      // Days of month
+      for (let day = 1; day <= lastDay.getDate(); day++) {
+        const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'calendar-day';
+        dayDiv.textContent = day;
+
+        // Determine base availability (color from Airbnb data)
+        let isAvailable = false;
+
+        if (date < startDate || date > endDate) {
+          // Closed period
+          dayDiv.classList.add('calendar-day--closed');
+        } else if (isDateBlocked(date)) {
+          // Blocked/reserved
+          dayDiv.classList.add('calendar-day--blocked');
+        } else {
+          // Available date - keep original green color
+          isAvailable = true;
+          dayDiv.classList.add('calendar-day--available');
+        }
+
+        // Determine if date can be selected and if it should be grayed out
+        let canSelect = false;
+        let shouldGrayOut = false;
+
+        if (isAvailable) {
+          if (!selectedCheckin) {
+            // No selection yet - only allow valid check-in dates
+            canSelect = isDateSelectable(date, false);
+          } else if (!selectedCheckout) {
+            // Check-in selected, now selecting check-out
+            if (date <= selectedCheckin) {
+              // Can click same date or earlier to reset selection
+              canSelect = true;
+            } else {
+              // Check if valid check-out based on rules
+              const isValidCheckout = isDateSelectable(date, true);
+              canSelect = isValidCheckout;
+
+              // Gray out invalid checkout dates
+              if (!isValidCheckout) {
+                shouldGrayOut = true;
+              }
+            }
+          } else {
+            // Both selected - can click any available to reset
+            canSelect = true;
+          }
+        }
+
+        // Apply gray-out visual effect for impossible dates
+        if (shouldGrayOut) {
+          dayDiv.classList.add('calendar-day--disabled');
+        }
+
+        // Check if this date is selected (blue highlighting)
+        const dateStr = date.toDateString();
+        if (selectedCheckin && dateStr === selectedCheckin.toDateString()) {
+          dayDiv.classList.add('calendar-day--selected');
+          dayDiv.classList.add('calendar-day--checkin');
+        } else if (selectedCheckout && dateStr === selectedCheckout.toDateString()) {
+          dayDiv.classList.add('calendar-day--selected');
+          dayDiv.classList.add('calendar-day--checkout');
+        } else if (selectedCheckin && selectedCheckout && date > selectedCheckin && date < selectedCheckout) {
+          // Dates in between check-in and check-out (light blue)
+          dayDiv.classList.add('calendar-day--in-range');
+        }
+
+        // Highlight today
+        if (date.toDateString() === today.toDateString()) {
+          dayDiv.classList.add('calendar-day--today');
+        }
+
+        // Set cursor and click handler
+        if (canSelect) {
+          dayDiv.style.cursor = 'pointer';
+          dayDiv.addEventListener('click', () => handleDateClick(date));
+        } else if (isAvailable) {
+          // Available but not selectable - show not-allowed cursor
+          dayDiv.style.cursor = 'not-allowed';
+        }
+
+        daysDiv.appendChild(dayDiv);
+      }
+
+      monthDiv.appendChild(daysDiv);
+      calendarGrid.appendChild(monthDiv);
+
+      // Move to next month
+      currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+    }
+  }
+
+  async function init() {
+    try {
+      blockedDates = await fetchCalendar();
+      updateDateInputs();
+      renderCalendar();
+      console.log('✅ Airbnb calendar integration initialized');
+    } catch (error) {
+      console.error('❌ Calendar initialization failed:', error);
+    }
+  }
+
+  // Reset selection when clicking outside calendar
+  document.addEventListener('click', (e) => {
+    const calendarElement = document.querySelector('.availability-calendar');
+    if (!calendarElement) return;
+
+    // Check if click is outside the calendar
+    if (!calendarElement.contains(e.target)) {
+      // Only reset if there's an active selection
+      if (selectedCheckin || selectedCheckout) {
+        selectedCheckin = null;
+        selectedCheckout = null;
+        renderCalendar();
+      }
+    }
+  });
+
+  // Initialize on page load
+  init();
+
+  // Re-sync every 6 hours
+  setInterval(() => {
+    console.log('🔄 Re-syncing Airbnb calendar...');
+    init();
+  }, CACHE_DURATION);
+
+  // Expose for debugging
+  window.MasAiraga = {
+    isDateBlocked,
+    getBlockedDates: () => blockedDates,
+    refreshCalendar: init,
+    resetSelection: () => {
+      selectedCheckin = null;
+      selectedCheckout = null;
+      renderCalendar();
+    }
+  };
 })();
