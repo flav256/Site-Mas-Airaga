@@ -91,7 +91,9 @@ const translations = {
     "benefit-3": "Contrat de location fourni",
     "benefit-4": "Offres spéciales et réductions pour séjours longue durée",
     "btn-email": "Écrire un email",
+    "btn-whatsapp": "WhatsApp",
     "btn-airbnb": "Voir sur Airbnb",
+    "whatsapp-float": "Besoin d'aide ?",
     "contact-owners": "Virginie et Flavien",
     "footer-registration": "Maison meublée déclarée • Eyragues, Provence",
     "footer-contact": "Contact :",
@@ -275,7 +277,9 @@ const translations = {
     "benefit-3": "Rental contract provided",
     "benefit-4": "Special offers and discounts for long stays",
     "btn-email": "Send an email",
+    "btn-whatsapp": "WhatsApp",
     "btn-airbnb": "View on Airbnb",
+    "whatsapp-float": "Need help?",
     "contact-owners": "Virginie and Flavien",
     "footer-registration": "Registered furnished accommodation • Eyragues, Provence",
     "footer-contact": "Contact:",
@@ -465,7 +469,9 @@ const translations = {
     "benefit-3": "Huurcontract verstrekt",
     "benefit-4": "Speciale aanbiedingen en kortingen voor langdurig verblijf",
     "btn-email": "E-mail versturen",
+    "btn-whatsapp": "WhatsApp",
     "btn-airbnb": "Bekijk op Airbnb",
+    "whatsapp-float": "Hulp nodig?",
     "contact-owners": "Virginie en Flavien",
     "footer-registration": "Gemeubileerd huis gedeclareerd • Eyragues, Provence",
     "footer-contact": "Contact:",
@@ -655,7 +661,9 @@ const translations = {
     "benefit-3": "Mietvertrag bereitgestellt",
     "benefit-4": "Sonderangebote und Ermäßigungen für Langzeitaufenthalte",
     "btn-email": "E-Mail senden",
+    "btn-whatsapp": "WhatsApp",
     "btn-airbnb": "Auf Airbnb ansehen",
+    "whatsapp-float": "Brauchen Sie Hilfe?",
     "contact-owners": "Virginie und Flavien",
     "footer-registration": "Möbliertes Haus deklariert • Eyragues, Provence",
     "footer-contact": "Kontakt:",
@@ -1236,13 +1244,15 @@ const taxSpan = document.getElementById('calc-tax');
 const totalSpan = document.getElementById('calc-total');
 const errorsDiv = document.getElementById('calc-errors');
 const sendEmailBtn = document.getElementById('calc-send-email');
+const sendWhatsAppBtn = document.getElementById('calc-send-whatsapp');
 
 let calculatedData = null;
 
 function calculatePrice() {
   if (!checkinInput.value || !checkoutInput.value) {
     resultDiv.style.display = 'none';
-    sendEmailBtn.style.display = 'none';
+    if (sendEmailBtn) sendEmailBtn.style.display = 'none';
+    if (sendWhatsAppBtn) sendWhatsAppBtn.style.display = 'none';
     return;
   }
 
@@ -1266,7 +1276,8 @@ function calculatePrice() {
     rateSpan.textContent = '-';
     taxSpan.textContent = '-';
     totalSpan.textContent = '-';
-    sendEmailBtn.style.display = 'none';
+    if (sendEmailBtn) sendEmailBtn.style.display = 'none';
+    if (sendWhatsAppBtn) sendWhatsAppBtn.style.display = 'none';
     return;
   }
 
@@ -1293,7 +1304,8 @@ function calculatePrice() {
     rateSpan.textContent = '-';
     taxSpan.textContent = '-';
     totalSpan.textContent = '-';
-    sendEmailBtn.style.display = 'none';
+    if (sendEmailBtn) sendEmailBtn.style.display = 'none';
+    if (sendWhatsAppBtn) sendWhatsAppBtn.style.display = 'none';
     return;
   }
 
@@ -1437,10 +1449,12 @@ function calculatePrice() {
 
   if (errors.length > 0) {
     errorsDiv.innerHTML = errors.join('<br>');
-    sendEmailBtn.style.display = 'none';
+    if (sendEmailBtn) sendEmailBtn.style.display = 'none';
+    if (sendWhatsAppBtn) sendWhatsAppBtn.style.display = 'none';
   } else {
     errorsDiv.textContent = '';
-    sendEmailBtn.style.display = 'block';
+    if (sendEmailBtn) sendEmailBtn.style.display = 'block';
+    if (sendWhatsAppBtn) sendWhatsAppBtn.style.display = 'block';
   }
 
   resultDiv.style.display = 'block';
@@ -2727,4 +2741,128 @@ if (lightbox) {
       renderCalendar();
     }
   };
+})();
+
+// =======================
+// WhatsApp Integration
+// =======================
+(function() {
+  const WHATSAPP_NUMBER = '33614325706'; // Virginie et Flavien's number
+
+  /**
+   * Generate WhatsApp message based on current form data and language
+   */
+  function generateWhatsAppMessage() {
+    const lang = document.documentElement.lang || 'fr';
+    const checkin = document.getElementById('booking-checkin')?.value || '';
+    const checkout = document.getElementById('booking-checkout')?.value || '';
+    const adults = document.getElementById('booking-adults')?.value || '2';
+    const children = document.getElementById('booking-children')?.value || '0';
+    const email = document.querySelector('input[name="email"]')?.value || '';
+    const phone = document.querySelector('input[name="phone"]')?.value || '';
+    const name = document.querySelector('input[name="name"]')?.value || '';
+
+    // Message templates by language
+    const templates = {
+      fr: {
+        greeting: "Bonjour,",
+        intro: "Je souhaite obtenir des informations sur le Mas Airaga.",
+        dates: checkin && checkout ? `\n\nDates souhaitées:\n• Arrivée: ${formatDateForDisplay(checkin)}\n• Départ: ${formatDateForDisplay(checkout)}` : '',
+        guests: `\n\nNombre de voyageurs:\n• Adultes: ${adults}\n• Enfants: ${children}`,
+        contact: name || email || phone ? `\n\nMes coordonnées:\n${name ? `• Nom: ${name}\n` : ''}${email ? `• Email: ${email}\n` : ''}${phone ? `• Téléphone: ${phone}` : ''}` : '',
+        closing: "\n\nMerci !"
+      },
+      en: {
+        greeting: "Hello,",
+        intro: "I would like to get information about Mas Airaga.",
+        dates: checkin && checkout ? `\n\nDesired dates:\n• Check-in: ${formatDateForDisplay(checkin)}\n• Check-out: ${formatDateForDisplay(checkout)}` : '',
+        guests: `\n\nNumber of guests:\n• Adults: ${adults}\n• Children: ${children}`,
+        contact: name || email || phone ? `\n\nMy contact details:\n${name ? `• Name: ${name}\n` : ''}${email ? `• Email: ${email}\n` : ''}${phone ? `• Phone: ${phone}` : ''}` : '',
+        closing: "\n\nThank you!"
+      },
+      nl: {
+        greeting: "Hallo,",
+        intro: "Ik zou graag informatie willen over Mas Airaga.",
+        dates: checkin && checkout ? `\n\nGewenste datums:\n• Aankomst: ${formatDateForDisplay(checkin)}\n• Vertrek: ${formatDateForDisplay(checkout)}` : '',
+        guests: `\n\nAantal gasten:\n• Volwassenen: ${adults}\n• Kinderen: ${children}`,
+        contact: name || email || phone ? `\n\nMijn contactgegevens:\n${name ? `• Naam: ${name}\n` : ''}${email ? `• E-mail: ${email}\n` : ''}${phone ? `• Telefoon: ${phone}` : ''}` : '',
+        closing: "\n\nDank u!"
+      },
+      de: {
+        greeting: "Hallo,",
+        intro: "Ich möchte gerne Informationen über das Mas Airaga erhalten.",
+        dates: checkin && checkout ? `\n\nGewünschte Daten:\n• Anreise: ${formatDateForDisplay(checkin)}\n• Abreise: ${formatDateForDisplay(checkout)}` : '',
+        guests: `\n\nAnzahl der Gäste:\n• Erwachsene: ${adults}\n• Kinder: ${children}`,
+        contact: name || email || phone ? `\n\nMeine Kontaktdaten:\n${name ? `• Name: ${name}\n` : ''}${email ? `• E-Mail: ${email}\n` : ''}${phone ? `• Telefon: ${phone}` : ''}` : '',
+        closing: "\n\nVielen Dank!"
+      }
+    };
+
+    const template = templates[lang] || templates.fr;
+    const message = template.greeting + '\n' + template.intro + template.dates + template.guests + template.contact + template.closing;
+
+    return encodeURIComponent(message);
+  }
+
+  /**
+   * Format date for display (DD/MM/YYYY)
+   */
+  function formatDateForDisplay(dateString) {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
+  }
+
+  /**
+   * Open WhatsApp with pre-filled message
+   */
+  function openWhatsApp() {
+    const message = generateWhatsAppMessage();
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+    window.open(url, '_blank');
+  }
+
+  // Create floating WhatsApp button
+  const floatingBtn = document.createElement('a');
+  floatingBtn.id = 'whatsapp-float';
+  floatingBtn.className = 'whatsapp-float';
+  floatingBtn.href = '#';
+  floatingBtn.setAttribute('aria-label', 'Contact via WhatsApp');
+  floatingBtn.innerHTML = `
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 0C7.163 0 0 7.163 0 16c0 2.825.744 5.488 2.038 7.8L.7 30.012l6.363-1.663A15.938 15.938 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0z" fill="#25D366"/>
+      <path d="M25.2 22.488c-.375 1.062-1.862 1.95-3.05 2.2-.825.162-1.9.3-5.525-1.188-4.638-1.9-7.625-6.587-7.863-6.887-.237-.3-1.937-2.588-1.937-4.938 0-2.35 1.225-3.5 1.662-3.987.438-.488.963-.613 1.288-.613.325 0 .65.012.925.025.3.013.7-.113 1.1.837.412 1 1.412 3.463 1.537 3.713.125.25.212.538.038.838-.175.3-.262.487-.525.787-.262.3-.55.675-.787.9-.25.25-.513.538-.225.987.288.45 1.275 2.113 2.738 3.413 1.875 1.675 3.462 2.2 3.962 2.438.5.237.788.2 1.075-.125.288-.325 1.225-1.438 1.55-1.938.325-.5.65-.413 1.088-.238.437.175 2.775 1.313 3.25 1.55.475.238.788.35.9.55.113.2.113 1.15-.262 2.2z" fill="#fff"/>
+    </svg>
+    <span class="whatsapp-float-text" data-i18n="whatsapp-float"></span>
+  `;
+
+  floatingBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    openWhatsApp();
+  });
+
+  document.body.appendChild(floatingBtn);
+
+  // Update button text with translation
+  function updateWhatsAppFloatText() {
+    const textSpan = floatingBtn.querySelector('.whatsapp-float-text');
+    if (textSpan) {
+      const lang = document.documentElement.lang || 'fr';
+      const text = translations[lang]?.['whatsapp-float'] || translations.fr['whatsapp-float'];
+      textSpan.textContent = text;
+    }
+  }
+
+  // Initial text update
+  updateWhatsAppFloatText();
+
+  // Update on language change
+  document.querySelectorAll('.nav-lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setTimeout(updateWhatsAppFloatText, 100);
+    });
+  });
+
+  // Expose WhatsApp function globally
+  window.openWhatsApp = openWhatsApp;
 })();

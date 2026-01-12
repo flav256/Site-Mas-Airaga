@@ -1969,3 +1969,76 @@ textarea {
     gap: 0;
   }
 }
+
+/* WhatsApp Floating Button */
+.whatsapp-float {
+  position: fixed;
+  bottom: 90px;
+  right: 30px;
+  width: auto;
+  min-width: 60px;
+  height: 60px;
+  background: #25D366;
+  color: white;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 20px;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+  cursor: pointer;
+  z-index: 998;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5);
+  background: #128C7E;
+}
+
+.whatsapp-float svg {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.whatsapp-float-text {
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  color: white;
+}
+
+@media (max-width: 640px) {
+  .whatsapp-float {
+    bottom: 70px;
+    right: 20px;
+    min-width: 50px;
+    height: 50px;
+    padding: 0 16px;
+  }
+
+  .whatsapp-float svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .whatsapp-float-text {
+    font-size: 13px;
+  }
+}
+
+/* WhatsApp Button inline (next to email/airbnb buttons) */
+.btn-whatsapp {
+  background: #25D366 !important;
+  color: white !important;
+  border: none !important;
+}
+
+.btn-whatsapp:hover {
+  background: #128C7E !important;
+  color: white !important;
+}

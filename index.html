@@ -478,7 +478,10 @@
             </div>
           </div>
           <div id="calc-errors" class="calculator-errors"></div>
-          <button id="calc-send-email" class="button" style="width: 100%; margin-top: 16px; display: none;" data-i18n="calculator-send-email">Envoyer une demande de réservation</button>
+          <div style="display: flex; gap: 12px; margin-top: 16px;">
+            <button id="calc-send-email" class="button" style="flex: 1; display: none;" data-i18n="calculator-send-email">Envoyer une demande de réservation</button>
+            <button id="calc-send-whatsapp" class="button btn-whatsapp" onclick="window.openWhatsApp(); return false;" style="flex: 1; display: none;" data-i18n="btn-whatsapp">WhatsApp</button>
+          </div>
         </div>
       </div>
     </section>
@@ -690,7 +693,10 @@
             <span data-i18n="form-message">Message</span>
             <textarea name="message" rows="3" placeholder="Besoins spécifiques..."></textarea>
           </label>
-          <button type="submit" class="button" data-i18n="form-submit">Demander une disponibilité</button>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="submit" class="button" style="flex: 1; min-width: 200px;" data-i18n="form-submit">Demander une disponibilité</button>
+            <button type="button" class="button btn-whatsapp" onclick="window.openWhatsApp(); return false;" style="flex: 1; min-width: 200px;" data-i18n="btn-whatsapp">WhatsApp</button>
+          </div>
         </form>
         <div class="booking__aside">
           <div class="badge" data-i18n="badge-quick">Réponse rapide</div>
@@ -709,6 +715,7 @@
 
           <div class="booking__cta">
             <a class="button button--ghost" href="mailto:mas.airaga.contact@gmail.com?subject=Demande%20de%20réservation%20Mas%20Airaga" data-i18n="btn-email">Écrire un email</a>
+            <a class="button button--ghost btn-whatsapp" href="#" onclick="window.openWhatsApp(); return false;" data-i18n="btn-whatsapp">WhatsApp</a>
             <a class="button button--ghost" href="https://www.airbnb.ae/rooms/11578905" target="_blank" rel="noopener" data-i18n="btn-airbnb">Voir sur Airbnb</a>
           </div>
           <p class="muted small" style="margin-top: 12px;">
