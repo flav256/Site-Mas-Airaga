@@ -1010,6 +1010,9 @@ function calculateBookingPrice() {
   bookingPriceSummary.style.display = 'block';
 }
 
+// Flag to prevent auto-setting checkout when dates are set from calendar
+let isSettingFromCalendar = false;
+
 // Intelligent calendar constraints
 if (bookingCheckinInput) {
   bookingCheckinInput.addEventListener('change', () => {
@@ -1029,10 +1032,16 @@ if (bookingCheckinInput) {
         bookingCheckinInput.value = formatDateInput(nextSat);
       }
 
-      // Set checkout to 7 days later (next Saturday)
+      // Only auto-set checkout if not being set from calendar
+      if (!isSettingFromCalendar) {
+        // Set checkout to 7 days later (next Saturday)
+        const checkoutDate = new Date(bookingCheckinInput.value);
+        checkoutDate.setDate(checkoutDate.getDate() + 7);
+        bookingCheckoutInput.value = formatDateInput(checkoutDate);
+      }
+
       const checkoutDate = new Date(bookingCheckinInput.value);
       checkoutDate.setDate(checkoutDate.getDate() + 7);
-      bookingCheckoutInput.value = formatDateInput(checkoutDate);
       bookingCheckoutInput.min = formatDateInput(checkoutDate);
 
     } else {
@@ -1040,7 +1049,11 @@ if (bookingCheckinInput) {
       const minCheckout = new Date(checkinDate);
       minCheckout.setDate(minCheckout.getDate() + 4);
       bookingCheckoutInput.min = formatDateInput(minCheckout);
-      bookingCheckoutInput.value = formatDateInput(minCheckout);
+
+      // Only auto-set checkout if not being set from calendar
+      if (!isSettingFromCalendar) {
+        bookingCheckoutInput.value = formatDateInput(minCheckout);
+      }
     }
 
     calculateBookingPrice();
@@ -2244,6 +2257,27 @@ if (lightbox) {
         alert(messages[lang] || messages.fr);
         return;
       }
+
+      // In standard season, check if there are blocked dates within 3 days (need 4-night minimum)
+      const season = getSeason(date);
+      if (season === 'standard') {
+        const nextUnavailable = getNextUnavailableDate(date);
+        if (nextUnavailable) {
+          const daysDiff = Math.round((nextUnavailable - date) / (1000 * 60 * 60 * 24));
+          if (daysDiff < 4) {
+            const lang = document.documentElement.lang || 'fr';
+            const messages = {
+              fr: 'Cette date ne peut pas être sélectionnée car il n\'y a pas assez de jours disponibles avant la prochaine réservation. Minimum 4 nuits requis en saison standard.',
+              en: 'This date cannot be selected as there are not enough available days before the next booking. Minimum 4 nights required in standard season.',
+              nl: 'Deze datum kan niet worden geselecteerd omdat er niet genoeg beschikbare dagen zijn voor de volgende boeking. Minimaal 4 nachten vereist in het standaardseizoen.',
+              de: 'Dieses Datum kann nicht ausgewählt werden, da nicht genügend verfügbare Tage vor der nächsten Buchung vorhanden sind. Mindestens 4 Nächte in der Standardsaison erforderlich.'
+            };
+            alert(messages[lang] || messages.fr);
+            return;
+          }
+        }
+      }
+
       selectedCheckin = date;
       selectedCheckout = null;
       console.log('✅ Check-in set to:', selectedCheckin.toDateString());
@@ -2298,7 +2332,9 @@ if (lightbox) {
       console.log('✅ Check-out set to:', selectedCheckout.toDateString());
     }
 
-    // Update form inputs
+    // Update form inputs with flag to prevent auto-setting
+    isSettingFromCalendar = true;
+
     const checkinInput = document.getElementById('booking-checkin');
     const checkoutInput = document.getElementById('booking-checkout');
     const calcCheckinInput = document.getElementById('calc-checkin');
@@ -2316,6 +2352,11 @@ if (lightbox) {
     if (calcCheckoutInput && selectedCheckout) {
       calcCheckoutInput.value = formatDateForInput(selectedCheckout);
     }
+
+    // Reset flag
+    setTimeout(() => {
+      isSettingFromCalendar = false;
+    }, 50);
 
     // Update selection summary UI
     updateSelectionSummary();
@@ -2448,6 +2489,19 @@ if (lightbox) {
           if (!selectedCheckin) {
             // No selection yet - only allow valid check-in dates
             canSelect = isDateSelectable(date, false);
+
+            // In standard season, also check if there are at least 4 days before next blocked date
+            if (canSelect && getSeason(date) === 'standard') {
+              const nextUnavailable = getNextUnavailableDate(date);
+              if (nextUnavailable) {
+                const daysDiff = Math.round((nextUnavailable - date) / (1000 * 60 * 60 * 24));
+                if (daysDiff < 4) {
+                  canSelect = false;
+                  shouldGrayOut = true;
+                }
+              }
+            }
+
             isPossibleArrival = canSelect; // Mark possible arrival dates
             console.log(`Date ${date.toDateString()}: isAvailable=${isAvailable}, canSelect=${canSelect}, isPossibleArrival=${isPossibleArrival}`);
           } else if (!selectedCheckout) {
@@ -2480,8 +2534,8 @@ if (lightbox) {
           dayDiv.classList.add('calendar-day--disabled');
         }
 
-        // Make possible arrival dates BOLD
-        if (isPossibleArrival && !selectedCheckin) {
+        // Make possible arrival dates BOLD (always show, even after selection)
+        if (isPossibleArrival) {
           dayDiv.classList.add('calendar-day--possible-arrival');
         }
 
@@ -2550,7 +2604,13 @@ if (lightbox) {
     const calendarElement = document.querySelector('.availability-calendar');
     if (!calendarElement) return;
 
-    console.log('🌐 Global click detected, target:', e.target.className);
+    console.log('🌐 Global click detected, target:', e.target.className, 'id:', e.target.id);
+
+    // Don't reset if clicking on the validate or reset buttons
+    if (e.target.id === 'calendar-validate-btn' || e.target.id === 'calendar-reset-btn') {
+      console.log('→ Click is on calendar control button, NOT resetting selection');
+      return;
+    }
 
     // Check if click is outside the calendar
     if (!calendarElement.contains(e.target)) {
@@ -2608,14 +2668,17 @@ if (lightbox) {
             checkout: selectedCheckout
           });
 
-          // Fill the selected dates
+          // Set flag to prevent auto-setting checkout in change listeners
+          isSettingFromCalendar = true;
+
+          // Fill the selected dates using formatDateForInput to avoid timezone issues
           if (selectedCheckin && bookingCheckinInput) {
-            const checkinStr = selectedCheckin.toISOString().split('T')[0];
+            const checkinStr = formatDateForInput(selectedCheckin);
             bookingCheckinInput.value = checkinStr;
             console.log('  ✅ Set check-in to:', checkinStr);
           }
           if (selectedCheckout && bookingCheckoutInput) {
-            const checkoutStr = selectedCheckout.toISOString().split('T')[0];
+            const checkoutStr = formatDateForInput(selectedCheckout);
             bookingCheckoutInput.value = checkoutStr;
             console.log('  ✅ Set check-out to:', checkoutStr);
           }
@@ -2624,7 +2687,7 @@ if (lightbox) {
           if (bookingAdultsInput) bookingAdultsInput.value = '2';
           if (bookingChildrenInput) bookingChildrenInput.value = '0';
 
-          // Trigger price calculation by dispatching events on both inputs
+          // Trigger price calculation BEFORE resetting flag
           setTimeout(() => {
             if (bookingCheckinInput) {
               bookingCheckinInput.dispatchEvent(new Event('change', { bubbles: true }));
@@ -2633,6 +2696,11 @@ if (lightbox) {
               bookingCheckoutInput.dispatchEvent(new Event('change', { bubbles: true }));
             }
             console.log('  ✅ Triggered price calculation');
+
+            // Reset flag AFTER triggering price calculation
+            setTimeout(() => {
+              isSettingFromCalendar = false;
+            }, 50);
           }, 100);
         }, 1000);
       }
