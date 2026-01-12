@@ -154,6 +154,8 @@ const translations = {
     "calculator-total": "Total TTC",
     "calculator-send-email": "Envoyer une demande de réservation",
     "calendarBlocked": "Cette date n'est pas disponible. Veuillez en choisir une autre.",
+    "calendarInsufficientDays": "Cette date ne peut pas être sélectionnée comme date d'arrivée. Minimum 4 nuits requis en tarif standard.",
+    "calendarHighSeasonSaturday": "En haute saison (4 juillet - 28 août), les arrivées et départs sont uniquement le samedi.",
     "calendar-title": "Calendrier des disponibilités",
     "calendar-subtitle": "Dates disponibles et réservées",
     "legend-available": "Disponible",
@@ -367,6 +369,8 @@ const translations = {
     "calculator-total": "Total incl. tax",
     "calculator-send-email": "Send booking request",
     "calendarBlocked": "This date is not available. Please choose another one.",
+    "calendarInsufficientDays": "This date cannot be selected as arrival date. Minimum 4 nights required during standard rate.",
+    "calendarHighSeasonSaturday": "During high season (July 4 - August 28), arrivals and departures are only on Saturdays.",
     "calendar-title": "Availability Calendar",
     "calendar-subtitle": "Available and reserved dates",
     "legend-available": "Available",
@@ -532,6 +536,8 @@ const translations = {
     "calculator-total": "Totaal incl. belasting",
     "calculator-send-email": "Reserveringsverzoek versturen",
     "calendarBlocked": "Deze datum is niet beschikbaar. Kies een andere datum.",
+    "calendarInsufficientDays": "Deze datum kan niet worden geselecteerd als aankomstdatum. Minimaal 4 nachten vereist tijdens standaardtarief.",
+    "calendarHighSeasonSaturday": "Tijdens het hoogseizoen (4 juli - 28 augustus) zijn aankomst en vertrek alleen op zaterdag.",
     "calendar-title": "Beschikbaarheidskalender",
     "calendar-subtitle": "Beschikbare en gereserveerde data",
     "legend-available": "Beschikbaar",
@@ -724,6 +730,8 @@ const translations = {
     "calculator-total": "Gesamt inkl. Steuer",
     "calculator-send-email": "Buchungsanfrage senden",
     "calendarBlocked": "Dieses Datum ist nicht verfügbar. Bitte wählen Sie ein anderes.",
+    "calendarInsufficientDays": "Dieses Datum kann nicht als Ankunftsdatum ausgewählt werden. Mindestens 4 Nächte erforderlich während des Standardtarifs.",
+    "calendarHighSeasonSaturday": "In der Hochsaison (4. Juli - 28. August) sind An- und Abreise nur samstags möglich.",
     "calendar-title": "Verfügbarkeitskalender",
     "calendar-subtitle": "Verfügbare und reservierte Termine",
     "legend-available": "Verfügbar",
@@ -2036,11 +2044,20 @@ if (lightbox) {
   }
 
   // Check if a date range contains any blocked dates (existing reservations)
+  // IMPORTANT: Checkout on the first day of a blocked period is ALLOWED
+  // (guests leave in morning, new guests arrive in afternoon)
   function hasBlockedDatesInRange(startDate, endDate) {
     for (const blocked of blockedDates) {
       // Check if there's any overlap between the range and blocked period
       // Overlap exists if: (start < blocked.end) AND (end > blocked.start)
+      // BUT: Allow checkout on blocked.start (first day of blocked period)
       if (startDate < blocked.end && endDate > blocked.start) {
+        // Exception: If endDate equals blocked.start, it's allowed (checkout on arrival day)
+        if (endDate.toDateString() === blocked.start.toDateString()) {
+          console.log(`  ℹ️ Checkout ${endDate.toDateString()} equals blocked period start ${blocked.start.toDateString()} - ALLOWED`);
+          continue; // This overlap is OK - checkout on blocked start date
+        }
+        console.log(`  ⚠️ Range ${startDate.toDateString()} to ${endDate.toDateString()} overlaps with blocked ${blocked.start.toDateString()} to ${blocked.end.toDateString()}`);
         return true;
       }
     }
@@ -2061,6 +2078,8 @@ if (lightbox) {
   }
 
   // Find the next unavailable date (blocked or closed) after a given date
+  // IMPORTANT: Returns the day AFTER the first blocked date starts
+  // (since checkout on the first day of a blocked period is allowed)
   function getNextUnavailableDate(fromDate) {
     const startDate = new Date(2026, 3, 17); // April 17, 2026
     const endDate = new Date(2026, 9, 3); // October 3, 2026
@@ -2078,7 +2097,11 @@ if (lightbox) {
 
       // Check if blocked by Airbnb
       if (isDateBlocked(currentDate)) {
-        return currentDate;
+        // Return the day AFTER this blocked date starts
+        // (checkout is allowed on the first day of blocked period)
+        const dayAfterBlocked = new Date(currentDate);
+        dayAfterBlocked.setDate(dayAfterBlocked.getDate() + 1);
+        return dayAfterBlocked;
       }
 
       currentDate.setDate(currentDate.getDate() + 1);
@@ -2092,6 +2115,68 @@ if (lightbox) {
     }
 
     return nextUnavailable;
+  }
+
+  // Check if a blocked date is the FIRST day of a blocked period
+  // (only the first day of a blocked period can be used as checkout)
+  function isFirstDayOfBlockedPeriod(date) {
+    if (!isDateBlocked(date)) {
+      return false;
+    }
+
+    // Check the day before - if it's NOT blocked, then this IS the first day
+    const dayBefore = new Date(date);
+    dayBefore.setDate(dayBefore.getDate() - 1);
+
+    return !isDateBlocked(dayBefore);
+  }
+
+  // Find the last possible checkout date before a blocked/closed period
+  // This is used for minimum nights validation when selecting check-in
+  // Returns the blocked date itself (not the day after), since checkout is allowed on first day of blocked period
+  function getLastPossibleCheckout(fromDate) {
+    const startDate = new Date(2026, 3, 17); // April 17, 2026
+    const endDate = new Date(2026, 9, 3); // October 3, 2026
+
+    let currentDate = new Date(fromDate);
+    currentDate.setDate(currentDate.getDate() + 1); // Start checking from the next day
+
+    // Check each day until we find an unavailable one
+    while (currentDate <= endDate) {
+      // Check if closed (outside season)
+      if (currentDate < startDate || currentDate > endDate) {
+        return currentDate;
+      }
+
+      // Check if blocked by Airbnb
+      if (isDateBlocked(currentDate)) {
+        // Only return this date if it's the FIRST day of a blocked period
+        // (checkout is only allowed on the first day, not subsequent blocked days)
+        if (isFirstDayOfBlockedPeriod(currentDate)) {
+          return currentDate;
+        }
+        // If not first day, continue to find the start of this blocked period
+        // by going backward to find where it starts
+        const blockStart = new Date(currentDate);
+        while (isDateBlocked(blockStart) && blockStart >= fromDate) {
+          blockStart.setDate(blockStart.getDate() - 1);
+        }
+        // Now blockStart is the last unblocked date, so the next day is the first blocked day
+        blockStart.setDate(blockStart.getDate() + 1);
+        return blockStart;
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // If we've gone past the end of the season, return the day after season end
+    if (currentDate > endDate) {
+      const dayAfterEnd = new Date(endDate);
+      dayAfterEnd.setDate(dayAfterEnd.getDate() + 1);
+      return dayAfterEnd;
+    }
+
+    return null;
   }
 
   // Check if a date can be a valid arrival date
@@ -2275,9 +2360,9 @@ if (lightbox) {
       // In standard season, check if there are blocked dates within 3 days (need 4-night minimum)
       const season = getSeason(date);
       if (season === 'standard') {
-        const nextUnavailable = getNextUnavailableDate(date);
-        if (nextUnavailable) {
-          const daysDiff = Math.round((nextUnavailable - date) / (1000 * 60 * 60 * 24));
+        const lastPossibleCheckout = getLastPossibleCheckout(date);
+        if (lastPossibleCheckout) {
+          const daysDiff = Math.round((lastPossibleCheckout - date) / (1000 * 60 * 60 * 24));
           if (daysDiff < 4) {
             const lang = document.documentElement.lang || 'fr';
             const messages = {
@@ -2498,26 +2583,55 @@ if (lightbox) {
         let canSelect = false;
         let shouldGrayOut = false;
         let isPossibleArrival = false;
+        let blockReason = null; // Track why date cannot be selected
+
+        // SPECIAL CASE: Blocked dates can be checkout dates ONLY if they're the first day of a blocked period
+        // (guests leave in morning, new guests arrive in afternoon)
+        if (!isAvailable && selectedCheckin && !selectedCheckout) {
+          // This is a blocked date, but check if it can be a valid checkout
+          console.log(`🔍 Checking blocked date ${date.toDateString()} as potential checkout from ${selectedCheckin.toDateString()}`);
+
+          // CRITICAL: Only allow checkout on FIRST day of blocked period
+          if (!isFirstDayOfBlockedPeriod(date)) {
+            console.log(`   ❌ Blocked date ${date.toDateString()} is NOT the first day of blocked period`);
+            canSelect = false;
+          } else {
+            const isValidCheckout = isDateSelectable(date, true);
+            console.log(`   Result: isValidCheckout = ${isValidCheckout}`);
+            if (isValidCheckout) {
+              canSelect = true;
+              console.log(`   ✅ Blocked date ${date.toDateString()} IS allowed as checkout (first day of blocked period)`);
+              // Don't gray out - allow it to be selected
+            } else {
+              console.log(`   ❌ Blocked date ${date.toDateString()} is NOT allowed as checkout`);
+            }
+          }
+        }
 
         if (isAvailable) {
           if (!selectedCheckin) {
             // No selection yet - only allow valid check-in dates
             canSelect = isDateSelectable(date, false);
 
-            // In standard season, also check if there are at least 4 days before next blocked date
+            // In standard season, check if there are at least 4 days before next blocked date
             if (canSelect && getSeason(date) === 'standard') {
-              const nextUnavailable = getNextUnavailableDate(date);
-              if (nextUnavailable) {
-                const daysDiff = Math.round((nextUnavailable - date) / (1000 * 60 * 60 * 24));
+              const lastPossibleCheckout = getLastPossibleCheckout(date);
+              if (lastPossibleCheckout) {
+                const daysDiff = Math.round((lastPossibleCheckout - date) / (1000 * 60 * 60 * 24));
                 if (daysDiff < 4) {
                   canSelect = false;
-                  shouldGrayOut = true;
+                  blockReason = 'insufficientDays'; // Don't grey out, show popup instead
                 }
               }
             }
 
+            // High season: check if it's not a Saturday
+            if (canSelect === false && !blockReason && getSeason(date) === 'high' && !isSaturday(date)) {
+              blockReason = 'highSeasonSaturday';
+            }
+
             isPossibleArrival = canSelect; // Mark possible arrival dates
-            console.log(`Date ${date.toDateString()}: isAvailable=${isAvailable}, canSelect=${canSelect}, isPossibleArrival=${isPossibleArrival}`);
+            console.log(`Date ${date.toDateString()}: isAvailable=${isAvailable}, canSelect=${canSelect}, isPossibleArrival=${isPossibleArrival}, blockReason=${blockReason}`);
           } else if (!selectedCheckout) {
             // Check-in selected, now selecting check-out
             if (date < selectedCheckin) {
@@ -2543,8 +2657,8 @@ if (lightbox) {
           }
         }
 
-        // Apply gray-out visual effect for impossible dates
-        if (shouldGrayOut) {
+        // Apply gray-out visual effect for impossible dates (EXCEPT for dates with blockReason)
+        if (shouldGrayOut && !blockReason) {
           dayDiv.classList.add('calendar-day--disabled');
         }
 
@@ -2586,6 +2700,17 @@ if (lightbox) {
             }
           });
           console.log('✅ Event listener attached to', date.toDateString());
+        } else if (blockReason) {
+          // Date is available but has a blocking reason - show popup on click
+          dayDiv.style.cursor = 'pointer';
+          dayDiv.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const lang = document.documentElement.lang || 'fr';
+            const message = blockReason === 'insufficientDays'
+              ? translations[lang].calendarInsufficientDays
+              : translations[lang].calendarHighSeasonSaturday;
+            alert(message);
+          });
         } else if (isAvailable) {
           // Available but not selectable - show not-allowed cursor
           dayDiv.style.cursor = 'not-allowed';
