@@ -1718,7 +1718,7 @@ function handleSwipeGesture() {
   if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
     if (deltaX > 0) {
       // Swipe right - show previous image
-      showPreviousImage();
+      showPrevImage();
     } else {
       // Swipe left - show next image
       showNextImage();
