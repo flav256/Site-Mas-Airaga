@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Localisation – Mas Airaga | Eyragues, Provence, près Saint-Rémy</title>
+  <meta name="description" content="Mas Airaga à Eyragues, 4 km de Saint-Rémy-de-Provence. Situation idéale entre Alpilles et Avignon. Plan d'accès et carte interactive.">
+  <link rel="canonical" href="https://mas-airaga.com/location.html">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav__container">
+      <!-- Back arrow for mobile -->
+      <a href="index.html" class="nav__back-arrow" aria-label="Retour">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </a>
+
+      <div class="nav__brand">
+        <a href="index.html">
+          <img src="images/LOGO.png" alt="Mas Airaga" class="nav__logo">
+          Mas Airaga
+        </a>
+      </div>
+
+      <!-- Hamburger button for mobile -->
+      <button class="nav__hamburger" id="nav-hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="nav__links" id="nav-links">
+        <a href="index.html" class="button button--ghost" data-i18n="back-home">← Retour à la page principale</a>
+        <div class="nav__lang-toggle">
+          <button class="nav-lang-btn active" data-lang="fr" title="Français">🇫🇷</button>
+          <button class="nav-lang-btn" data-lang="en" title="English">🇬🇧</button>
+          <button class="nav-lang-btn" data-lang="nl" title="Nederlands">🇳🇱</button>
+          <button class="nav-lang-btn" data-lang="de" title="Deutsch">🇩🇪</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 120px;">
+    <div class="container">
+      <h1 data-i18n="location-title">Localisation</h1>
+      <p class="lead" data-i18n="location-subtitle">Mas Airaga, au cœur de la Provence, entre Alpilles et Avignon</p>
+
+      <div style="margin-top: 60px;">
+        <h2 data-i18n="location-address-title">📍 Adresse</h2>
+        <p style="font-size: 1.2rem; margin-top: 20px;">
+          Eyragues, 13630<br>
+          À 4 km de Saint-Rémy-de-Provence<br>
+          Provence, France
+        </p>
+      </div>
+
+      <div style="margin-top: 60px;">
+        <h2 data-i18n="location-distances-title">🚗 Distances depuis Mas Airaga</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 30px;">
+          <div class="card">
+            <h3>Saint-Rémy-de-Provence</h3>
+            <p>4 km • 5 minutes</p>
+          </div>
+          <div class="card">
+            <h3>Avignon</h3>
+            <p>15 km • 20 minutes</p>
+          </div>
+          <div class="card">
+            <h3>Les Baux-de-Provence</h3>
+            <p>12 km • 15 minutes</p>
+          </div>
+          <div class="card">
+            <h3>Arles</h3>
+            <p>25 km • 25 minutes</p>
+          </div>
+          <div class="card">
+            <h3>Nîmes</h3>
+            <p>45 km • 40 minutes</p>
+          </div>
+          <div class="card">
+            <h3>Marseille</h3>
+            <p>75 km • 1h</p>
+          </div>
+          <div class="card">
+            <h3>Aéroport Marseille</h3>
+            <p>65 km • 50 minutes</p>
+          </div>
+          <div class="card">
+            <h3>Aéroport Avignon</h3>
+            <p>20 km • 20 minutes</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 60px;">
+        <h2 data-i18n="location-map-title">🗺️ Carte</h2>
+        <div style="margin-top: 30px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d46229.38!2d4.84!3d43.84!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12b5f3e8d8d8d8d8%3A0x0!2sEyragues!5e0!3m2!1sfr!2sfr!4v1234567890"
+            width="100%"
+            height="450"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+
+      <div style="margin-top: 60px; text-align: center;">
+        <a href="index.html#reservation" class="button" data-i18n="location-book-btn">Réserver maintenant</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>
+      <img src="images/LOGO.png" alt="Mas Airaga Logo" class="footer__logo">
+      <p class="eyebrow">Mas Airaga</p>
+      <p data-i18n="footer-registration">Maison meublée déclarée • Eyragues, Provence</p>
+    </div>
+    <div class="footer__links">
+      <a href="index.html" data-i18n="footer-home">Accueil</a>
+      <a href="gallery.html">Galerie</a>
+      <a href="location.html">Localisation</a>
+      <a href="around.html">Aux alentours</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div>
+      <p class="muted">
+        <span data-i18n="footer-contact">Contact :</span>
+        <a href="mailto:mas.airaga.contact@gmail.com">mas.airaga.contact@gmail.com</a> ·
+        <a href="tel:+33614325706">+33 6 14 32 57 06</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

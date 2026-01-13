@@ -9,7 +9,7 @@ const translations = {
     "nav-location": "Localisation",
     "nav-book": "Réserver",
     "hero-eyebrow": "Villa avec piscine",
-    "hero-title": "Très beau \"Mas Airaga\" au calme, à 4 km de St-Rémy",
+    "hero-title": "Mas Airaga – Location de Vacances avec Piscine en Provence",
     "hero-lead": "Mas entièrement climatisé, tout en lumière, 185 m2 habitables. Jardin parfumé à la lavande et aux oliviers d'environ 2000 m2 avec piscine sécurisée. DÉTENTE GARANTIE !",
     "cta-book": "Réserver en direct",
     "cta-discover": "Découvrir la maison",
@@ -97,6 +97,43 @@ const translations = {
     "contact-owners": "Virginie et Flavien",
     "footer-registration": "Maison meublée déclarée • Eyragues, Provence",
     "footer-contact": "Contact :",
+    "footer-gallery": "Galerie",
+    "footer-location": "Localisation",
+    "footer-around": "Aux alentours",
+    "footer-contact-page": "Contact",
+    "footer-home": "Accueil",
+    "back-home": "← Retour à la page principale",
+    "contact-title": "Contactez-nous",
+    "contact-subtitle": "Nous sommes à votre disposition pour toute question ou réservation.",
+    "contact-email-title": "📧 Email",
+    "contact-phone-title": "📞 Téléphone",
+    "contact-whatsapp-title": "💬 WhatsApp",
+    "contact-whatsapp-btn": "Ouvrir WhatsApp",
+    "contact-address-title": "📍 Adresse",
+    "contact-address-line1": "Eyragues, Provence",
+    "contact-address-line2": "À 4 km de Saint-Rémy-de-Provence",
+    "contact-address-line3": "Entre Alpilles et Avignon",
+    "contact-book-btn": "Faire une réservation",
+    "gallery-title": "Galerie Photos",
+    "gallery-subtitle": "Découvrez chaque espace du Mas Airaga en images",
+    "gallery-pool-title": "Piscine et Extérieurs",
+    "gallery-living-title": "Salon et Espaces de Vie",
+    "gallery-kitchen-title": "Cuisine et Salle à Manger",
+    "gallery-bedrooms-title": "Chambres",
+    "gallery-book-btn": "Réserver maintenant",
+    "location-title": "Localisation",
+    "location-subtitle": "Mas Airaga, au cœur de la Provence, entre Alpilles et Avignon",
+    "location-address-title": "📍 Adresse",
+    "location-distances-title": "🚗 Distances depuis Mas Airaga",
+    "location-map-title": "🗺️ Carte",
+    "location-book-btn": "Réserver maintenant",
+    "around-title": "Découvrez la Provence",
+    "around-subtitle": "Sites incontournables, marchés provençaux et activités autour du Mas Airaga",
+    "around-historical-title": "🏛️ Sites Historiques",
+    "around-wine-title": "🍷 Vignobles & Gastronomie",
+    "around-nature-title": "🌿 Nature & Activités",
+    "around-culture-title": "🎨 Culture & Événements",
+    "around-book-btn": "Réserver votre séjour",
     "reviews-eyebrow": "Avis clients",
     "reviews-title": "Ce que nos voyageurs en pensent",
     "reviews-count": "44 avis",
@@ -197,7 +234,7 @@ const translations = {
     "nav-location": "Location",
     "nav-book": "Book",
     "hero-eyebrow": "Villa with pool",
-    "hero-title": "Very nice \"Mas Airaga\" in a quiet location, 4 km from St-Rémy",
+    "hero-title": "Mas Airaga – Holiday Rental with Pool in Provence",
     "hero-lead": "Fully air-conditioned farmhouse, full of light, 185 m2 of living space. Garden scented with lavender and olive trees on approximately 2000 m2 with secure swimming pool. RELAXATION GUARANTEED!",
     "cta-book": "Book direct",
     "cta-discover": "Discover the house",
@@ -285,6 +322,43 @@ const translations = {
     "contact-owners": "Virginie and Flavien",
     "footer-registration": "Registered furnished accommodation • Eyragues, Provence",
     "footer-contact": "Contact:",
+    "footer-gallery": "Gallery",
+    "footer-location": "Location",
+    "footer-around": "Around",
+    "footer-contact-page": "Contact",
+    "footer-home": "Home",
+    "back-home": "← Back to main page",
+    "contact-title": "Contact Us",
+    "contact-subtitle": "We are at your disposal for any questions or reservations.",
+    "contact-email-title": "📧 Email",
+    "contact-phone-title": "📞 Phone",
+    "contact-whatsapp-title": "💬 WhatsApp",
+    "contact-whatsapp-btn": "Open WhatsApp",
+    "contact-address-title": "📍 Address",
+    "contact-address-line1": "Eyragues, Provence",
+    "contact-address-line2": "4 km from Saint-Rémy-de-Provence",
+    "contact-address-line3": "Between Alpilles and Avignon",
+    "contact-book-btn": "Make a reservation",
+    "gallery-title": "Photo Gallery",
+    "gallery-subtitle": "Discover every space of Mas Airaga in images",
+    "gallery-pool-title": "Pool and Outdoors",
+    "gallery-living-title": "Living Room and Living Spaces",
+    "gallery-kitchen-title": "Kitchen and Dining Room",
+    "gallery-bedrooms-title": "Bedrooms",
+    "gallery-book-btn": "Book now",
+    "location-title": "Location",
+    "location-subtitle": "Mas Airaga, in the heart of Provence, between Alpilles and Avignon",
+    "location-address-title": "📍 Address",
+    "location-distances-title": "🚗 Distances from Mas Airaga",
+    "location-map-title": "🗺️ Map",
+    "location-book-btn": "Book now",
+    "around-title": "Discover Provence",
+    "around-subtitle": "Must-see sites, Provencal markets and activities around Mas Airaga",
+    "around-historical-title": "🏛️ Historical Sites",
+    "around-wine-title": "🍷 Vineyards & Gastronomy",
+    "around-nature-title": "🌿 Nature & Activities",
+    "around-culture-title": "🎨 Culture & Events",
+    "around-book-btn": "Book your stay",
     "around-eyebrow": "Surroundings",
     "around-title": "Discover the Alpilles",
     "around-subtitle": "Natural sites, hilltop villages and Provencal heritage to explore around Mas Airaga",
@@ -391,7 +465,7 @@ const translations = {
     "nav-location": "Locatie",
     "nav-book": "Reserveren",
     "hero-eyebrow": "Villa met zwembad",
-    "hero-title": "Prachtige \"Mas Airaga\" in alle rust, 4 km van St-Rémy",
+    "hero-title": "Mas Airaga – Vakantieverhuur met Zwembad in de Provence",
     "hero-lead": "Volledig geklimatiseerde mas, vol licht, 185 m2 woonoppervlak. Geparfumeerde tuin met lavendel en olijfbomen van ca. 2000 m2 met beveiligd zwembad. ONTSPANNING GEGARANDEERD!",
     "cta-book": "Direct reserveren",
     "cta-discover": "Ontdek het huis",
@@ -479,6 +553,43 @@ const translations = {
     "contact-owners": "Virginie en Flavien",
     "footer-registration": "Gemeubileerd huis gedeclareerd • Eyragues, Provence",
     "footer-contact": "Contact:",
+    "footer-gallery": "Galerij",
+    "footer-location": "Locatie",
+    "footer-around": "In de omgeving",
+    "footer-contact-page": "Contact",
+    "footer-home": "Home",
+    "back-home": "← Terug naar hoofdpagina",
+    "contact-title": "Neem contact met ons op",
+    "contact-subtitle": "Wij staan tot uw beschikking voor vragen of reserveringen.",
+    "contact-email-title": "📧 Email",
+    "contact-phone-title": "📞 Telefoon",
+    "contact-whatsapp-title": "💬 WhatsApp",
+    "contact-whatsapp-btn": "Open WhatsApp",
+    "contact-address-title": "📍 Adres",
+    "contact-address-line1": "Eyragues, Provence",
+    "contact-address-line2": "4 km van Saint-Rémy-de-Provence",
+    "contact-address-line3": "Tussen Alpilles en Avignon",
+    "contact-book-btn": "Maak een reservering",
+    "gallery-title": "Fotogalerij",
+    "gallery-subtitle": "Ontdek elke ruimte van Mas Airaga in beeld",
+    "gallery-pool-title": "Zwembad en Buitenruimtes",
+    "gallery-living-title": "Woonkamer en Leefruimtes",
+    "gallery-kitchen-title": "Keuken en Eetkamer",
+    "gallery-bedrooms-title": "Slaapkamers",
+    "gallery-book-btn": "Nu boeken",
+    "location-title": "Locatie",
+    "location-subtitle": "Mas Airaga, in het hart van de Provence, tussen Alpilles en Avignon",
+    "location-address-title": "📍 Adres",
+    "location-distances-title": "🚗 Afstanden vanaf Mas Airaga",
+    "location-map-title": "🗺️ Kaart",
+    "location-book-btn": "Nu boeken",
+    "around-title": "Ontdek de Provence",
+    "around-subtitle": "Must-see bezienswaardigheden, Provençaalse markten en activiteiten rond Mas Airaga",
+    "around-historical-title": "🏛️ Historische Plaatsen",
+    "around-wine-title": "🍷 Wijngaarden & Gastronomie",
+    "around-nature-title": "🌿 Natuur & Activiteiten",
+    "around-culture-title": "🎨 Cultuur & Evenementen",
+    "around-book-btn": "Boek uw verblijf",
     "reviews-eyebrow": "Klantbeoordelingen",
     "reviews-title": "Wat onze gasten ervan vinden",
     "reviews-count": "44 beoordelingen",
@@ -585,7 +696,7 @@ const translations = {
     "nav-location": "Lage",
     "nav-book": "Buchen",
     "hero-eyebrow": "Villa mit Pool",
-    "hero-title": "Wunderschönes \"Mas Airaga\" in Ruhe, 4 km von St-Rémy",
+    "hero-title": "Mas Airaga – Ferienvermietung mit Pool in der Provence",
     "hero-lead": "Voll klimatisiertes Mas, lichtdurchflutet, 185 m2 Wohnfläche. Nach Lavendel und Olivenbäumen duftender Garten von ca. 2000 m2 mit gesichertem Pool. ENTSPANNUNG GARANTIERT!",
     "cta-book": "Direkt buchen",
     "cta-discover": "Haus entdecken",
@@ -673,6 +784,43 @@ const translations = {
     "contact-owners": "Virginie und Flavien",
     "footer-registration": "Möbliertes Haus deklariert • Eyragues, Provence",
     "footer-contact": "Kontakt:",
+    "footer-gallery": "Galerie",
+    "footer-location": "Lage",
+    "footer-around": "In der Umgebung",
+    "footer-contact-page": "Kontakt",
+    "footer-home": "Startseite",
+    "back-home": "← Zurück zur Hauptseite",
+    "contact-title": "Kontaktieren Sie uns",
+    "contact-subtitle": "Wir stehen Ihnen für Fragen oder Reservierungen zur Verfügung.",
+    "contact-email-title": "📧 E-Mail",
+    "contact-phone-title": "📞 Telefon",
+    "contact-whatsapp-title": "💬 WhatsApp",
+    "contact-whatsapp-btn": "WhatsApp öffnen",
+    "contact-address-title": "📍 Adresse",
+    "contact-address-line1": "Eyragues, Provence",
+    "contact-address-line2": "4 km von Saint-Rémy-de-Provence",
+    "contact-address-line3": "Zwischen Alpilles und Avignon",
+    "contact-book-btn": "Reservierung vornehmen",
+    "gallery-title": "Fotogalerie",
+    "gallery-subtitle": "Entdecken Sie jeden Raum von Mas Airaga in Bildern",
+    "gallery-pool-title": "Pool und Außenbereiche",
+    "gallery-living-title": "Wohnzimmer und Wohnbereiche",
+    "gallery-kitchen-title": "Küche und Esszimmer",
+    "gallery-bedrooms-title": "Schlafzimmer",
+    "gallery-book-btn": "Jetzt buchen",
+    "location-title": "Lage",
+    "location-subtitle": "Mas Airaga, im Herzen der Provence, zwischen Alpilles und Avignon",
+    "location-address-title": "📍 Adresse",
+    "location-distances-title": "🚗 Entfernungen von Mas Airaga",
+    "location-map-title": "🗺️ Karte",
+    "location-book-btn": "Jetzt buchen",
+    "around-title": "Entdecken Sie die Provence",
+    "around-subtitle": "Sehenswürdigkeiten, provenzalische Märkte und Aktivitäten rund um Mas Airaga",
+    "around-historical-title": "🏛️ Historische Stätten",
+    "around-wine-title": "🍷 Weinberge & Gastronomie",
+    "around-nature-title": "🌿 Natur & Aktivitäten",
+    "around-culture-title": "🎨 Kultur & Veranstaltungen",
+    "around-book-btn": "Buchen Sie Ihren Aufenthalt",
     "reviews-eyebrow": "Kundenbewertungen",
     "reviews-title": "Was unsere Gäste denken",
     "reviews-count": "44 Bewertungen",
@@ -796,25 +944,28 @@ function setLanguage(lang) {
   localStorage.setItem('preferred-language', lang);
 }
 
-// Language button listeners
-document.querySelectorAll('.nav-lang-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    setLanguage(btn.getAttribute('data-lang'));
+// Initialize language system on DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+  // Language button listeners
+  document.querySelectorAll('.nav-lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setLanguage(btn.getAttribute('data-lang'));
+    });
   });
-});
 
-// Load saved language preference or detect browser language
-const savedLang = localStorage.getItem('preferred-language');
-let browserLang = 'en'; // default to English
-if (navigator.language.startsWith('fr')) {
-  browserLang = 'fr';
-} else if (navigator.language.startsWith('nl')) {
-  browserLang = 'nl';
-} else if (navigator.language.startsWith('de')) {
-  browserLang = 'de';
-}
-const initialLang = savedLang || browserLang;
-setLanguage(initialLang);
+  // Load saved language preference or detect browser language
+  const savedLang = localStorage.getItem('preferred-language');
+  let browserLang = 'en'; // default to English
+  if (navigator.language.startsWith('fr')) {
+    browserLang = 'fr';
+  } else if (navigator.language.startsWith('nl')) {
+    browserLang = 'nl';
+  } else if (navigator.language.startsWith('de')) {
+    browserLang = 'de';
+  }
+  const initialLang = savedLang || browserLang;
+  setLanguage(initialLang);
+});
 
 // Booking form with intelligent calendar and automatic price calculation
 const bookingForm = document.getElementById("bookingForm");
@@ -1123,8 +1274,10 @@ if (bookingChildrenInput) {
   });
 }
 
-// Initial calculation
-calculateBookingPrice();
+// Initial calculation (only if booking form exists)
+if (bookingCheckinInput) {
+  calculateBookingPrice();
+}
 
 if (bookingForm) {
   bookingForm.addEventListener("submit", (event) => {

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact – Mas Airaga | Location de Vacances en Provence</title>
+  <meta name="description" content="Contactez Mas Airaga pour vos réservations et questions. Email, téléphone, WhatsApp. Réponse rapide garantie.">
+  <link rel="canonical" href="https://mas-airaga.com/contact.html">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav__container">
+      <!-- Back arrow for mobile -->
+      <a href="index.html" class="nav__back-arrow" aria-label="Retour">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </a>
+
+      <div class="nav__brand">
+        <a href="index.html">
+          <img src="images/LOGO.png" alt="Mas Airaga" class="nav__logo">
+          Mas Airaga
+        </a>
+      </div>
+
+      <!-- Hamburger button for mobile -->
+      <button class="nav__hamburger" id="nav-hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="nav__links" id="nav-links">
+        <a href="index.html" class="button button--ghost" data-i18n="back-home">← Retour à la page principale</a>
+        <div class="nav__lang-toggle">
+          <button class="nav-lang-btn active" data-lang="fr" title="Français">🇫🇷</button>
+          <button class="nav-lang-btn" data-lang="en" title="English">🇬🇧</button>
+          <button class="nav-lang-btn" data-lang="nl" title="Nederlands">🇳🇱</button>
+          <button class="nav-lang-btn" data-lang="de" title="Deutsch">🇩🇪</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top: 120px;">
+    <div class="container">
+      <h1 data-i18n="contact-title">Contactez-nous</h1>
+      <p class="lead" data-i18n="contact-subtitle">Nous sommes à votre disposition pour toute question ou réservation.</p>
+
+      <div style="display: grid; gap: 40px; margin-top: 60px;">
+        <div class="card">
+          <h2 data-i18n="contact-email-title">📧 Email</h2>
+          <p><a href="mailto:mas.airaga.contact@gmail.com" style="font-size: 1.2rem;">mas.airaga.contact@gmail.com</a></p>
+        </div>
+
+        <div class="card">
+          <h2 data-i18n="contact-phone-title">📞 Téléphone</h2>
+          <p><a href="tel:+33614325706" style="font-size: 1.2rem;">+33 6 14 32 57 06</a></p>
+        </div>
+
+        <div class="card">
+          <h2 data-i18n="contact-whatsapp-title">💬 WhatsApp</h2>
+          <p><a href="https://wa.me/33614325706" target="_blank" class="button" data-i18n="contact-whatsapp-btn">Ouvrir WhatsApp</a></p>
+        </div>
+
+        <div class="card">
+          <h2 data-i18n="contact-address-title">📍 Adresse</h2>
+          <p><span data-i18n="contact-address-line1">Eyragues, Provence</span><br>
+          <span data-i18n="contact-address-line2">À 4 km de Saint-Rémy-de-Provence</span><br>
+          <span data-i18n="contact-address-line3">Entre Alpilles et Avignon</span></p>
+        </div>
+      </div>
+
+      <div style="margin-top: 60px; text-align: center;">
+        <a href="index.html#reservation" class="button" data-i18n="contact-book-btn">Faire une réservation</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>
+      <img src="images/LOGO.png" alt="Mas Airaga Logo" class="footer__logo">
+      <p class="eyebrow">Mas Airaga</p>
+      <p data-i18n="footer-registration">Maison meublée déclarée • Eyragues, Provence</p>
+    </div>
+    <div class="footer__links">
+      <a href="index.html" data-i18n="footer-home">Accueil</a>
+      <a href="gallery.html" data-i18n="footer-gallery">Galerie</a>
+      <a href="location.html" data-i18n="footer-location">Localisation</a>
+      <a href="around.html" data-i18n="footer-around">Aux alentours</a>
+      <a href="contact.html" data-i18n="footer-contact-page">Contact</a>
+    </div>
+    <div>
+      <p class="muted">
+        <span data-i18n="footer-contact">Contact :</span>
+        <a href="mailto:mas.airaga.contact@gmail.com">mas.airaga.contact@gmail.com</a> ·
+        <a href="tel:+33614325706">+33 6 14 32 57 06</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

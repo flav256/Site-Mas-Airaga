@@ -250,6 +250,26 @@ p {
   box-shadow: 0 2px 8px rgba(198, 139, 0, 0.3);
 }
 
+/* Back arrow button (mobile only) */
+.nav__back-arrow {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(57, 88, 70, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--sage);
+  z-index: 1001;
+}
+
+.nav__back-arrow:hover {
+  background: rgba(57, 88, 70, 0.2);
+  transform: scale(1.05);
+}
+
 /* Hamburger menu button */
 .nav__hamburger {
   display: none;
@@ -363,6 +383,38 @@ p {
   border-radius: 18px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(4px);
+}
+
+.card--link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.card--link::after {
+  content: '→';
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-size: 20px;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.card--link:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: var(--accent);
+}
+
+.card--link:hover::after {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .icon {
@@ -665,7 +717,11 @@ textarea {
     height: 26px;
   }
 
-  /* Show hamburger, hide nav links on mobile */
+  /* Show back arrow and hamburger on mobile */
+  .nav__back-arrow {
+    display: flex;
+  }
+
   .nav__hamburger {
     display: flex;
   }

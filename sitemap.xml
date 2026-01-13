@@ -1,5 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Page principale -->
   <url>
     <loc>https://mas-airaga.com/</loc>
+    <lastmod>2026-01-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
+
+  <!-- Page Galerie -->
+  <url>
+    <loc>https://mas-airaga.com/gallery.html</loc>
+    <lastmod>2026-01-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Page Contact -->
+  <url>
+    <loc>https://mas-airaga.com/contact.html</loc>
+    <lastmod>2026-01-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Page Localisation -->
+  <url>
+    <loc>https://mas-airaga.com/location.html</loc>
+    <lastmod>2026-01-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Page Aux alentours -->
+  <url>
+    <loc>https://mas-airaga.com/around.html</loc>
+    <lastmod>2026-01-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
 </urlset>
