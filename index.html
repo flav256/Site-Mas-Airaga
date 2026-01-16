@@ -391,15 +391,12 @@
         <div class="pricing-card">
           <h3 class="pricing-card__title" data-i18n="pricing-standard-title">Tarif Standard</h3>
           <p class="pricing-card__period muted" data-i18n="pricing-standard-period">17 avril au 3 juillet & 29 août au 3 octobre</p>
-          <div class="pricing-card__rate" data-i18n="pricing-standard-rate">500€ / nuit</div>
+          <div class="pricing-card__rate" data-i18n="pricing-standard-rate">400€ / nuit</div>
           <p class="pricing-card__min" data-i18n="pricing-standard-min">Minimum 4 nuits</p>
           <div class="pricing-card__degressive">
             <p class="small" style="font-weight: 600; margin-bottom: 8px;" data-i18n="pricing-standard-degressive">Tarif dégressif</p>
             <ul class="pricing-list">
-              <li data-i18n="pricing-standard-5nights">5 nuits : 2 400€</li>
-              <li data-i18n="pricing-standard-6nights">6 nuits : 2 700€</li>
-              <li data-i18n="pricing-standard-7nights">7 nuits : 2 900€</li>
-              <li data-i18n="pricing-standard-15nights">15 nuits : 5 000€</li>
+              <li data-i18n="pricing-standard-7nights">7 nuits et plus : -10%</li>
             </ul>
           </div>
         </div>
@@ -408,15 +405,15 @@
           <div class="pricing-badge">Haute Saison</div>
           <h3 class="pricing-card__title" data-i18n="pricing-high-title">Haute Saison</h3>
           <p class="pricing-card__period muted" data-i18n="pricing-high-period">4 juillet au 28 août</p>
-          <div class="pricing-card__rate" data-i18n="pricing-high-rate">3 900€ / semaine</div>
+          <div class="pricing-card__rate" data-i18n="pricing-high-rate">3 510€ / semaine</div>
           <p class="pricing-card__constraint" data-i18n="pricing-high-constraint">Arrivée/départ : samedi uniquement</p>
         </div>
       </div>
 
       <div class="pricing-info">
-        <p data-i18n="pricing-included">Ménage et linge de maison inclus</p>
-        <p data-i18n="pricing-deposit">Caution : 1 500€</p>
+        <p data-i18n="pricing-included">Ménage et linge de maison (390€ / séjour)</p>
         <p data-i18n="pricing-tax">Tarif hors Taxe de séjour</p>
+        <p data-i18n="pricing-deposit">Caution : 1 500€</p>
         <p class="muted small" data-i18n="pricing-closed">Fermé avant le 17 avril et après le 3 octobre 2026</p>
       </div>
 
@@ -456,6 +453,10 @@
             <div class="calculator-line">
               <span data-i18n="calculator-rate">Tarif hébergement</span>
               <span id="calc-rate">-</span>
+            </div>
+            <div class="calculator-line">
+              <span data-i18n="calculator-stay-fee">Frais de séjour (ménage, linge)</span>
+              <span id="calc-stay-fee">390€</span>
             </div>
             <div class="calculator-line">
               <span data-i18n="calculator-tourism-tax">Taxe de séjour</span>
@@ -674,19 +675,23 @@
           </div>
           <div id="booking-price-summary" class="booking__price-summary" style="display: none;">
             <div class="price-line">
-              <span data-i18n="booking-nights">Nuits</span>
+              <span data-i18n="booking-nights">Nombre de nuits</span>
               <span id="booking-nights-value">-</span>
             </div>
             <div class="price-line">
-              <span data-i18n="booking-rate">Hébergement</span>
+              <span data-i18n="booking-rate">Tarif hébergement</span>
               <span id="booking-rate-value">-</span>
+            </div>
+            <div class="price-line">
+              <span data-i18n="booking-stay-fee">Frais de séjour (ménage, linge)</span>
+              <span id="booking-stay-fee-value">390€</span>
             </div>
             <div class="price-line">
               <span data-i18n="booking-tax">Taxe de séjour</span>
               <span id="booking-tax-value">-</span>
             </div>
             <div class="price-line price-total">
-              <span data-i18n="booking-total">Total estimé</span>
+              <span data-i18n="booking-total">Total TTC</span>
               <span id="booking-total-value">-</span>
             </div>
             <div id="booking-savings" class="booking-savings" style="display: none;">

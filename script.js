@@ -78,10 +78,11 @@ const translations = {
     "form-checkout": "Départ",
     "form-message": "Message",
     "form-submit": "Demander une disponibilité",
-    "booking-nights": "Nuits",
-    "booking-rate": "Hébergement",
+    "booking-nights": "Nombre de nuits",
+    "booking-rate": "Tarif hébergement",
+    "booking-stay-fee": "Frais de séjour (ménage, linge)",
     "booking-tax": "Taxe de séjour",
-    "booking-total": "Total estimé",
+    "booking-total": "Total TTC",
     "badge-quick": "Réponse rapide",
     "aside-title": "Tarif direct avantageux",
     "aside-desc": "Contact direct propriétaire. Caution et contrat simple. Paiement sécurisé.",
@@ -156,20 +157,17 @@ const translations = {
     "pricing-subtitle": "Tarifs transparents pour votre séjour au Mas Airaga",
     "pricing-standard-title": "Tarif Standard",
     "pricing-standard-period": "17 avril au 3 juillet & 29 août au 3 octobre",
-    "pricing-standard-rate": "500€ / nuit",
+    "pricing-standard-rate": "400€ / nuit",
     "pricing-standard-min": "Minimum 4 nuits",
     "pricing-standard-degressive": "Tarif dégressif",
-    "pricing-standard-5nights": "5 nuits : 2 400€",
-    "pricing-standard-6nights": "6 nuits : 2 700€",
-    "pricing-standard-7nights": "7 nuits : 2 900€",
-    "pricing-standard-15nights": "15 nuits : 5 000€",
+    "pricing-standard-7nights": "7 nuits et plus : -10%",
     "pricing-high-title": "Haute Saison",
     "pricing-high-period": "4 juillet au 28 août",
-    "pricing-high-rate": "3 900€ / semaine",
+    "pricing-high-rate": "3 510€ / semaine",
     "pricing-high-constraint": "Arrivée/départ : samedi uniquement",
-    "pricing-included": "Ménage et linge de maison inclus",
-    "pricing-deposit": "Caution : 1 500€",
+    "pricing-included": "Ménage et linge de maison (390€ / séjour)",
     "pricing-tax": "Tarif hors Taxe de séjour",
+    "pricing-deposit": "Caution : 1 500€",
     "pricing-closed": "Fermé avant le 17 avril et après le 3 octobre 2026",
     "faq-eyebrow": "Questions fréquentes",
     "faq-title": "Informations pratiques",
@@ -188,6 +186,7 @@ const translations = {
     "calculator-nights": "Nombre de nuits",
     "calculator-guests": "Voyageurs",
     "calculator-rate": "Tarif hébergement",
+    "calculator-stay-fee": "Frais de séjour (ménage, linge)",
     "calculator-tourism-tax": "Taxe de séjour",
     "calculator-total": "Total TTC",
     "calculator-send-email": "Envoyer une demande de réservation",
@@ -314,10 +313,11 @@ const translations = {
     "form-checkout": "Check-out",
     "form-message": "Message",
     "form-submit": "Request availability",
-    "booking-nights": "Nights",
-    "booking-rate": "Accommodation",
+    "booking-nights": "Number of nights",
+    "booking-rate": "Accommodation rate",
+    "booking-stay-fee": "Stay fee (cleaning, linens)",
     "booking-tax": "Tourist tax",
-    "booking-total": "Estimated total",
+    "booking-total": "Total incl. tax",
     "badge-quick": "Quick response",
     "aside-title": "Advantageous direct rate",
     "aside-desc": "Direct contact with owner. Simple deposit and contract. Secure payment.",
@@ -427,20 +427,17 @@ const translations = {
     "pricing-subtitle": "Transparent pricing for your stay at Mas Airaga",
     "pricing-standard-title": "Standard Rate",
     "pricing-standard-period": "April 17 to July 3 & August 29 to October 3",
-    "pricing-standard-rate": "€500 / night",
+    "pricing-standard-rate": "€400 / night",
     "pricing-standard-min": "Minimum 4 nights",
     "pricing-standard-degressive": "Degressive rate",
-    "pricing-standard-5nights": "5 nights: €2,400",
-    "pricing-standard-6nights": "6 nights: €2,700",
-    "pricing-standard-7nights": "7 nights: €2,900",
-    "pricing-standard-15nights": "15 nights: €5,000",
+    "pricing-standard-7nights": "7+ nights: -10%",
     "pricing-high-title": "High Season",
     "pricing-high-period": "July 4 to August 28",
-    "pricing-high-rate": "€3,900 / week",
+    "pricing-high-rate": "€3,510 / week",
     "pricing-high-constraint": "Check-in/out: Saturday only",
-    "pricing-included": "Cleaning and linens included",
-    "pricing-deposit": "Deposit: €1,500",
+    "pricing-included": "Cleaning and linens (€390 / stay)",
     "pricing-tax": "Price excluding tourist tax",
+    "pricing-deposit": "Deposit: €1,500",
     "pricing-closed": "Closed before April 17 and after October 3, 2026",
     "faq-eyebrow": "FAQ",
     "faq-title": "Practical Information",
@@ -459,6 +456,7 @@ const translations = {
     "calculator-nights": "Number of nights",
     "calculator-guests": "Guests",
     "calculator-rate": "Accommodation rate",
+    "calculator-stay-fee": "Stay fee (cleaning, linens)",
     "calculator-tourism-tax": "Tourist tax",
     "calculator-total": "Total incl. tax",
     "calculator-send-email": "Send booking request",
@@ -556,10 +554,11 @@ const translations = {
     "form-checkout": "Vertrek",
     "form-message": "Bericht",
     "form-submit": "Beschikbaarheid aanvragen",
-    "booking-nights": "Nachten",
-    "booking-rate": "Accommodatie",
+    "booking-nights": "Aantal nachten",
+    "booking-rate": "Accommodatietarief",
+    "booking-stay-fee": "Verblijfskosten (schoonmaak, linnen)",
     "booking-tax": "Toeristenbelasting",
-    "booking-total": "Geschat totaal",
+    "booking-total": "Totaal incl. belasting",
     "badge-quick": "Snelle reactie",
     "aside-title": "Voordelig direct tarief",
     "aside-desc": "Direct contact met eigenaar. Borg en eenvoudig contract. Veilige betaling.",
@@ -634,20 +633,17 @@ const translations = {
     "pricing-subtitle": "Transparante tarieven voor uw verblijf in Mas Airaga",
     "pricing-standard-title": "Standaard tarief",
     "pricing-standard-period": "17 april tot 3 juli & 29 augustus tot 3 oktober",
-    "pricing-standard-rate": "€500 / nacht",
+    "pricing-standard-rate": "€400 / nacht",
     "pricing-standard-min": "Minimaal 4 nachten",
     "pricing-standard-degressive": "Degressief tarief",
-    "pricing-standard-5nights": "5 nachten: €2.400",
-    "pricing-standard-6nights": "6 nachten: €2.700",
-    "pricing-standard-7nights": "7 nachten: €2.900",
-    "pricing-standard-15nights": "15 nachten: €5.000",
+    "pricing-standard-7nights": "7+ nachten: -10%",
     "pricing-high-title": "Hoogseizoen",
     "pricing-high-period": "4 juli tot 28 augustus",
-    "pricing-high-rate": "€3.900 / week",
+    "pricing-high-rate": "€3.510 / week",
     "pricing-high-constraint": "Aankomst/vertrek: alleen zaterdag",
-    "pricing-included": "Schoonmaak en huishoudlinnen inbegrepen",
-    "pricing-deposit": "Borg: €1.500",
+    "pricing-included": "Schoonmaak en huishoudlinnen (€390 / verblijf)",
     "pricing-tax": "Tarief excl. toeristenbelasting",
+    "pricing-deposit": "Borg: €1.500",
     "pricing-closed": "Gesloten vóór 17 april en na 3 oktober 2026",
     "faq-eyebrow": "Veelgestelde vragen",
     "faq-title": "Praktische informatie",
@@ -666,6 +662,7 @@ const translations = {
     "calculator-nights": "Aantal nachten",
     "calculator-guests": "Gasten",
     "calculator-rate": "Accommodatietarief",
+    "calculator-stay-fee": "Verblijfskosten (schoonmaak, linnen)",
     "calculator-tourism-tax": "Toeristenbelasting",
     "calculator-total": "Totaal incl. belasting",
     "calculator-send-email": "Reserveringsverzoek versturen",
@@ -798,10 +795,11 @@ const translations = {
     "form-checkout": "Abreise",
     "form-message": "Nachricht",
     "form-submit": "Verfügbarkeit anfragen",
-    "booking-nights": "Nächte",
-    "booking-rate": "Unterkunft",
+    "booking-nights": "Anzahl der Nächte",
+    "booking-rate": "Unterkunftspreis",
+    "booking-stay-fee": "Aufenthaltsgebühr (Reinigung, Wäsche)",
     "booking-tax": "Kurtaxe",
-    "booking-total": "Geschätztes Gesamt",
+    "booking-total": "Gesamt inkl. Steuer",
     "badge-quick": "Schnelle Antwort",
     "aside-title": "Vorteilhafter Direktpreis",
     "aside-desc": "Direkter Kontakt mit dem Eigentümer. Kaution und einfacher Vertrag. Sichere Zahlung.",
@@ -876,20 +874,17 @@ const translations = {
     "pricing-subtitle": "Transparente Preise für Ihren Aufenthalt im Mas Airaga",
     "pricing-standard-title": "Standardpreis",
     "pricing-standard-period": "17. April bis 3. Juli & 29. August bis 3. Oktober",
-    "pricing-standard-rate": "€500 / Nacht",
+    "pricing-standard-rate": "€400 / Nacht",
     "pricing-standard-min": "Mindestens 4 Nächte",
     "pricing-standard-degressive": "Degressiver Preis",
-    "pricing-standard-5nights": "5 Nächte: €2.400",
-    "pricing-standard-6nights": "6 Nächte: €2.700",
-    "pricing-standard-7nights": "7 Nächte: €2.900",
-    "pricing-standard-15nights": "15 Nächte: €5.000",
+    "pricing-standard-7nights": "7+ Nächte: -10%",
     "pricing-high-title": "Hochsaison",
     "pricing-high-period": "4. Juli bis 28. August",
-    "pricing-high-rate": "€3.900 / Woche",
+    "pricing-high-rate": "€3.510 / Woche",
     "pricing-high-constraint": "Ankunft/Abreise: nur Samstag",
-    "pricing-included": "Reinigung und Haushaltswäsche inbegriffen",
-    "pricing-deposit": "Kaution: €1.500",
+    "pricing-included": "Reinigung und Haushaltswäsche (€390 / Aufenthalt)",
     "pricing-tax": "Preis ohne Kurtaxe",
+    "pricing-deposit": "Kaution: €1.500",
     "pricing-closed": "Geschlossen vor dem 17. April und nach dem 3. Oktober 2026",
     "faq-eyebrow": "Häufig gestellte Fragen",
     "faq-title": "Praktische Informationen",
@@ -908,6 +903,7 @@ const translations = {
     "calculator-nights": "Anzahl der Nächte",
     "calculator-guests": "Gäste",
     "calculator-rate": "Unterkunftspreis",
+    "calculator-stay-fee": "Aufenthaltsgebühr (Reinigung, Wäsche)",
     "calculator-tourism-tax": "Kurtaxe",
     "calculator-total": "Gesamt inkl. Steuer",
     "calculator-send-email": "Buchungsanfrage senden",
@@ -1196,7 +1192,7 @@ function calculateBookingPrice() {
     }
 
     const weeks = Math.floor(nights / 7);
-    price = weeks * 3900;
+    price = weeks * 3510;
 
   } else if (isMixedSeason) {
     // Mixed season: starts in standard, extends into high season
@@ -1220,21 +1216,15 @@ function calculateBookingPrice() {
 
     // Calculate standard season portion
     let standardPrice = 0;
-    if (standardNights >= 15) {
-      standardPrice = 5000 + ((standardNights - 15) * 333);
-    } else if (standardNights === 7) {
-      standardPrice = 2900;
-    } else if (standardNights === 6) {
-      standardPrice = 2700;
-    } else if (standardNights === 5) {
-      standardPrice = 2400;
+    if (standardNights >= 7) {
+      standardPrice = standardNights * 400 * 0.9; // 10% discount for 7+ nights
     } else {
-      standardPrice = standardNights * 500;
+      standardPrice = standardNights * 400;
     }
 
-    // Calculate high season portion (7-day blocks at 3900€/week)
+    // Calculate high season portion (7-day blocks at 3510€/week)
     const highSeasonWeeks = Math.floor(highSeasonNights / 7);
-    const highSeasonPrice = highSeasonWeeks * 3900;
+    const highSeasonPrice = highSeasonWeeks * 3510;
 
     // Remaining nights in high season (less than a week) - not allowed if checkout is in high season
     const remainingHighSeasonNights = highSeasonNights % 7;
@@ -1254,24 +1244,23 @@ function calculateBookingPrice() {
         : 'Minimum 4 nights during standard period.');
     }
 
-    if (nights >= 15) {
-      price = 5000 + ((nights - 15) * 333);
-    } else if (nights === 7) {
-      price = 2900;
-    } else if (nights === 6) {
-      price = 2700;
-    } else if (nights === 5) {
-      price = 2400;
+    // New pricing: 400€/night, -10% for 7+ nights
+    if (nights >= 7) {
+      price = nights * 400 * 0.9; // 10% discount
     } else {
-      price = nights * 500;
+      price = nights * 400;
     }
   }
+
+  // Add 390€ per stay fee
+  const stayFee = 390;
+  const priceWithFee = price + stayFee;
 
   // Calculate tourist tax (Terre de Provence - meublé non classé)
   // Proportional rate: 5% of nightly price per person, capped at 3.18€, + 10% departmental + 34% regional
   const taxCalculation = calculateTouristTax(price, nights, adults, children);
   const touristTax = taxCalculation.totalTouristTax;
-  const totalPrice = price + touristTax;
+  const totalPrice = priceWithFee + touristTax;
 
   bookingCalculatedData = {
     checkin: bookingCheckinInput.value,
@@ -1605,7 +1594,7 @@ function calculatePrice() {
   let rateDescription = '';
 
   if (isHighSeason) {
-    // Fully in high season: €3900/week, Saturday to Saturday only, multiple weeks allowed
+    // Fully in high season: €3510/week, Saturday to Saturday only, multiple weeks allowed
     const checkinDay = checkin.getDay();
     const checkoutDay = checkout.getDay();
 
@@ -1622,10 +1611,10 @@ function calculatePrice() {
     }
 
     const weeks = Math.floor(nights / 7);
-    price = weeks * 3900;
+    price = weeks * 3510;
     rateDescription = currentLang === 'fr'
-      ? (weeks === 1 ? '3 900€ / semaine' : `${weeks} semaines × 3 900€ = ${price.toLocaleString('fr-FR')}€`)
-      : (weeks === 1 ? '€3,900 / week' : `${weeks} weeks × €3,900 = €${price.toLocaleString('fr-FR')}`);
+      ? (weeks === 1 ? '3 510€ / semaine' : `${weeks} semaines × 3 510€ = ${price.toLocaleString('fr-FR')}€`)
+      : (weeks === 1 ? '€3,510 / week' : `${weeks} weeks × €3,510 = €${price.toLocaleString('fr-FR')}`);
 
   } else if (isMixedSeason) {
     // Mixed season: starts in standard, extends into high season
@@ -1649,21 +1638,15 @@ function calculatePrice() {
 
     // Calculate standard season portion
     let standardPrice = 0;
-    if (standardNights >= 15) {
-      standardPrice = 5000 + ((standardNights - 15) * 333);
-    } else if (standardNights === 7) {
-      standardPrice = 2900;
-    } else if (standardNights === 6) {
-      standardPrice = 2700;
-    } else if (standardNights === 5) {
-      standardPrice = 2400;
+    if (standardNights >= 7) {
+      standardPrice = standardNights * 400 * 0.9; // 10% discount for 7+ nights
     } else {
-      standardPrice = standardNights * 500;
+      standardPrice = standardNights * 400;
     }
 
-    // Calculate high season portion (7-day blocks at 3900€/week)
+    // Calculate high season portion (7-day blocks at 3510€/week)
     const highSeasonWeeks = Math.floor(highSeasonNights / 7);
-    const highSeasonPrice = highSeasonWeeks * 3900;
+    const highSeasonPrice = highSeasonWeeks * 3510;
 
     // Remaining nights in high season (less than a week) - not allowed if checkout is in high season
     const remainingHighSeasonNights = highSeasonNights % 7;
@@ -1686,33 +1669,27 @@ function calculatePrice() {
         : 'Minimum 4 nights during standard period.');
     }
 
-    // Degressive pricing
-    if (nights >= 15) {
-      // 15 nuits = 5000€, puis 333€ par nuit supplémentaire
-      price = 5000 + ((nights - 15) * 333);
+    // New pricing: 400€/night, -10% for 7+ nights
+    if (nights >= 7) {
+      price = nights * 400 * 0.9; // 10% discount
       rateDescription = currentLang === 'fr'
-        ? `5 000€ + ${nights - 15} × 333€ = ${price.toLocaleString('fr-FR')}€`
-        : `€5,000 + ${nights - 15} × €333 = €${price.toLocaleString('fr-FR')}`;
-    } else if (nights === 7) {
-      price = 2900;
-      rateDescription = currentLang === 'fr' ? '2 900€ (7 nuits)' : '€2,900 (7 nights)';
-    } else if (nights === 6) {
-      price = 2700;
-      rateDescription = currentLang === 'fr' ? '2 700€ (6 nuits)' : '€2,700 (6 nights)';
-    } else if (nights === 5) {
-      price = 2400;
-      rateDescription = currentLang === 'fr' ? '2 400€ (5 nuits)' : '€2,400 (5 nights)';
+        ? `${nights} × 400€ - 10% = ${price.toLocaleString('fr-FR')}€`
+        : `${nights} × €400 - 10% = €${price.toLocaleString('fr-FR')}`;
     } else {
-      price = nights * 500;
-      rateDescription = currentLang === 'fr' ? `500€ × ${nights} nuits` : `€500 × ${nights} nights`;
+      price = nights * 400;
+      rateDescription = currentLang === 'fr' ? `400€ × ${nights} nuits` : `€400 × ${nights} nights`;
     }
   }
+
+  // Add 390€ per stay fee
+  const stayFee = 390;
+  const priceWithFee = price + stayFee;
 
   // Calculate tourist tax (Terre de Provence - meublé non classé)
   // Proportional rate: 5% of nightly price per person, capped at 3.18€, + 10% departmental + 34% regional
   const taxCalculation = calculateTouristTax(price, nights, adults, children);
   const touristTax = taxCalculation.totalTouristTax;
-  const totalPrice = price + touristTax;
+  const totalPrice = priceWithFee + touristTax;
 
   // Store calculated data for email
   calculatedData = {
