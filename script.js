@@ -1039,6 +1039,74 @@ function formatDateInput(date) {
   return date.toISOString().split('T')[0];
 }
 
+// Calculate tourist tax according to Terre de Provence regulations
+// For non-classified lodgings: 5% proportional rate, capped at 3.18€, + 10% departmental + 34% regional
+function calculateTouristTax(totalAccommodationPrice, nights, adults, children) {
+  // Configuration constants (Terre de Provence Agglomération)
+  // Source: https://terredeprovence.taxesejour.fr/
+  const PROPORTIONAL_RATE = 0.05; // 5%
+  const CAP_PER_PERSON_PER_NIGHT = 3.18; // €
+  const DEPARTMENTAL_TAX_RATE = 0.10; // 10% (Bouches-du-Rhône)
+  const REGIONAL_TAX_RATE = 0.34; // 34% (Ligne Nouvelle Provence Côte d'Azur, since 01/01/2023)
+  
+  // Safety check: avoid division by zero
+  if (nights <= 0 || adults <= 0) {
+    return {
+      baseTaxPerPersonPerNight: 0,
+      departmentalTaxPerPersonPerNight: 0,
+      regionalTaxPerPersonPerNight: 0,
+      totalTaxPerPersonPerNight: 0,
+      totalTouristTax: 0
+    };
+  }
+  
+  const totalGuests = adults + children;
+  
+  // Safety check: avoid division by zero
+  if (totalGuests <= 0) {
+    return {
+      baseTaxPerPersonPerNight: 0,
+      departmentalTaxPerPersonPerNight: 0,
+      regionalTaxPerPersonPerNight: 0,
+      totalTaxPerPersonPerNight: 0,
+      totalTouristTax: 0
+    };
+  }
+  
+  // Calculate nightly price (HT - excluding tax)
+  const nightlyPriceHT = totalAccommodationPrice / nights;
+  
+  // Calculate price per person per night
+  const pricePerPersonPerNight = nightlyPriceHT / totalGuests;
+  
+  // Calculate base tax: 5% of price per person per night
+  let baseTaxPerPersonPerNight = pricePerPersonPerNight * PROPORTIONAL_RATE;
+  
+  // Apply cap: maximum 3.18€ per person per night (before additional taxes)
+  baseTaxPerPersonPerNight = Math.min(baseTaxPerPersonPerNight, CAP_PER_PERSON_PER_NIGHT);
+  
+  // Round base tax to 2 decimals (as per official calculation method)
+  baseTaxPerPersonPerNight = Math.round(baseTaxPerPersonPerNight * 100) / 100;
+  
+  // Calculate additional taxes (rounded to 2 decimals)
+  const departmentalTaxPerPersonPerNight = Math.round(baseTaxPerPersonPerNight * DEPARTMENTAL_TAX_RATE * 100) / 100;
+  const regionalTaxPerPersonPerNight = Math.round(baseTaxPerPersonPerNight * REGIONAL_TAX_RATE * 100) / 100;
+  
+  // Total tax per person per night
+  const totalTaxPerPersonPerNight = baseTaxPerPersonPerNight + departmentalTaxPerPersonPerNight + regionalTaxPerPersonPerNight;
+  
+  // Calculate total tourist tax: only for adults (18+), for all nights
+  const totalTouristTax = totalTaxPerPersonPerNight * adults * nights;
+  
+  return {
+    baseTaxPerPersonPerNight,
+    departmentalTaxPerPersonPerNight,
+    regionalTaxPerPersonPerNight,
+    totalTaxPerPersonPerNight,
+    totalTouristTax
+  };
+}
+
 // Helper function to get all Saturdays in high season
 function getHighSeasonSaturdays() {
   const saturdays = [];
@@ -1188,8 +1256,10 @@ function calculateBookingPrice() {
     }
   }
 
-  const taxPerAdultPerNight = 0.90;
-  const touristTax = adults * nights * taxPerAdultPerNight;
+  // Calculate tourist tax (Terre de Provence - meublé non classé)
+  // Proportional rate: 5% of nightly price per person, capped at 3.18€, + 10% departmental + 34% regional
+  const taxCalculation = calculateTouristTax(price, nights, adults, children);
+  const touristTax = taxCalculation.totalTouristTax;
   const totalPrice = price + touristTax;
 
   bookingCalculatedData = {
@@ -1622,9 +1692,9 @@ function calculatePrice() {
   }
 
   // Calculate tourist tax (Terre de Provence - meublé non classé)
-  // 0.90€ per adult per night (18 years and over)
-  const taxPerAdultPerNight = 0.90;
-  const touristTax = adults * nights * taxPerAdultPerNight;
+  // Proportional rate: 5% of nightly price per person, capped at 3.18€, + 10% departmental + 34% regional
+  const taxCalculation = calculateTouristTax(price, nights, adults, children);
+  const touristTax = taxCalculation.totalTouristTax;
   const totalPrice = price + touristTax;
 
   // Store calculated data for email
