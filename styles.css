@@ -1386,6 +1386,21 @@ textarea {
   letter-spacing: 0.3px;
 }
 
+.around-card--link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
+}
+
+.around-card--link:hover {
+  border-color: var(--accent);
+}
+
+.around-card--link:hover h3 {
+  color: var(--accent);
+}
+
 /* Scroll animations */
 .fade-in {
   opacity: 0;
