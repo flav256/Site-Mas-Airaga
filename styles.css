@@ -1280,6 +1280,25 @@ textarea {
   display: none;
 }
 
+.calculator-savings,
+.booking-savings {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: rgba(198, 139, 0, 0.08);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.savings-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
 @media (max-width: 640px) {
   .calculator-inputs {
     grid-template-columns: 1fr;

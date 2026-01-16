@@ -233,7 +233,8 @@ const translations = {
     "around-activity5-desc": "Arènes romaines et patrimoine Van Gogh, à 30 minutes",
     "around-activity6": "Vignobles",
     "around-activity6-desc": "Route des vins des Alpilles et dégustations dans les domaines",
-    "around-discover-more": "Découvrir plus"
+    "around-discover-more": "Découvrir plus",
+    "savings-airbnb": "Économisez ~14% par rapport à Airbnb"
   },
   en: {
     "page-title": "Mas Airaga - Charming House in Eyragues",
@@ -475,6 +476,7 @@ const translations = {
     "selection-reset": "Change dates",
     "selection-validate": "View price and book",
     "around-discover-more": "Discover more",
+    "savings-airbnb": "Save ~14% compared to Airbnb",
   },
   nl: {
     "page-title": "Mas Airaga - Charmant vakantiehuis in Eyragues",
@@ -681,6 +683,7 @@ const translations = {
     "selection-reset": "Datums wijzigen",
     "selection-validate": "Prijs bekijken en reserveren",
     "around-discover-more": "Meer ontdekken",
+    "savings-airbnb": "Bespaar ~14% vergeleken met Airbnb",
     "around-eyebrow": "De omgeving",
     "around-title": "Ontdek de Alpilles",
     "around-subtitle": "Natuurgebieden, bergdorpen en Provençaals erfgoed om te verkennen rond Mas Airaga",
@@ -922,6 +925,7 @@ const translations = {
     "selection-reset": "Daten ändern",
     "selection-validate": "Preis ansehen und buchen",
     "around-discover-more": "Mehr entdecken",
+    "savings-airbnb": "Sparen Sie ~14% im Vergleich zu Airbnb",
     "around-eyebrow": "Die Umgebung",
     "around-title": "Entdecken Sie die Alpilles",
     "around-subtitle": "Naturgebiete, Bergdörfer und provenzalisches Erbe rund um Mas Airaga",
@@ -1019,6 +1023,7 @@ const bookingRateValue = document.getElementById("booking-rate-value");
 const bookingTaxValue = document.getElementById("booking-tax-value");
 const bookingTotalValue = document.getElementById("booking-total-value");
 const bookingErrorsDiv = document.getElementById("booking-errors");
+const bookingSavingsDiv = document.getElementById("booking-savings");
 
 let bookingCalculatedData = null;
 
@@ -1127,6 +1132,7 @@ function calculateBookingPrice() {
   if (!bookingCheckinInput.value || !bookingCheckoutInput.value) {
     bookingPriceSummary.style.display = 'none';
     bookingCalculatedData = null;
+    if (bookingSavingsDiv) bookingSavingsDiv.style.display = 'none';
     return;
   }
 
@@ -1142,6 +1148,7 @@ function calculateBookingPrice() {
   if (nights <= 0) {
     bookingPriceSummary.style.display = 'none';
     bookingCalculatedData = null;
+    if (bookingSavingsDiv) bookingSavingsDiv.style.display = 'none';
     return;
   }
 
@@ -1160,6 +1167,10 @@ function calculateBookingPrice() {
     errors.push(currentLang === 'fr'
       ? 'Fermé avant le 17 avril et après le 3 octobre 2026.'
       : 'Closed before April 17 and after October 3, 2026.');
+    bookingPriceSummary.style.display = 'none';
+    bookingCalculatedData = null;
+    if (bookingSavingsDiv) bookingSavingsDiv.style.display = 'none';
+    return;
   }
 
   const isHighSeason = checkin >= highSeasonStart && checkout <= highSeasonEnd;
@@ -1280,8 +1291,10 @@ function calculateBookingPrice() {
 
   if (errors.length > 0) {
     bookingErrorsDiv.innerHTML = errors.join('<br>');
+    if (bookingSavingsDiv) bookingSavingsDiv.style.display = 'none';
   } else {
     bookingErrorsDiv.textContent = '';
+    if (bookingSavingsDiv) bookingSavingsDiv.style.display = 'block';
   }
 
   bookingPriceSummary.style.display = 'block';
@@ -1516,6 +1529,7 @@ const totalSpan = document.getElementById('calc-total');
 const errorsDiv = document.getElementById('calc-errors');
 const sendEmailBtn = document.getElementById('calc-send-email');
 const sendWhatsAppBtn = document.getElementById('calc-send-whatsapp');
+const calcSavingsDiv = document.getElementById('calc-savings');
 
 let calculatedData = null;
 
@@ -1524,6 +1538,7 @@ function calculatePrice() {
     resultDiv.style.display = 'none';
     if (sendEmailBtn) sendEmailBtn.style.display = 'none';
     if (sendWhatsAppBtn) sendWhatsAppBtn.style.display = 'none';
+    if (calcSavingsDiv) calcSavingsDiv.style.display = 'none';
     return;
   }
 
@@ -1549,6 +1564,7 @@ function calculatePrice() {
     totalSpan.textContent = '-';
     if (sendEmailBtn) sendEmailBtn.style.display = 'none';
     if (sendWhatsAppBtn) sendWhatsAppBtn.style.display = 'none';
+    if (calcSavingsDiv) calcSavingsDiv.style.display = 'none';
     return;
   }
 
@@ -1577,6 +1593,7 @@ function calculatePrice() {
     totalSpan.textContent = '-';
     if (sendEmailBtn) sendEmailBtn.style.display = 'none';
     if (sendWhatsAppBtn) sendWhatsAppBtn.style.display = 'none';
+    if (calcSavingsDiv) calcSavingsDiv.style.display = 'none';
     return;
   }
 
@@ -1722,10 +1739,12 @@ function calculatePrice() {
     errorsDiv.innerHTML = errors.join('<br>');
     if (sendEmailBtn) sendEmailBtn.style.display = 'none';
     if (sendWhatsAppBtn) sendWhatsAppBtn.style.display = 'none';
+    if (calcSavingsDiv) calcSavingsDiv.style.display = 'none';
   } else {
     errorsDiv.textContent = '';
     if (sendEmailBtn) sendEmailBtn.style.display = 'block';
     if (sendWhatsAppBtn) sendWhatsAppBtn.style.display = 'block';
+    if (calcSavingsDiv) calcSavingsDiv.style.display = 'block';
   }
 
   resultDiv.style.display = 'block';
