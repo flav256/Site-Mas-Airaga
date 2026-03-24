@@ -186,6 +186,7 @@ function initGuide() {
   renderEmergencyContacts();
   renderLocalGuide();
   renderChecklist();
+  initArrivalTime();
 }
 
 /* ———————————————————————————————————————
@@ -400,4 +401,107 @@ function toggleCheck(id) {
   state[id] = !state[id];
   saveCheckedState(state);
   renderChecklist();
+}
+
+/* ———————————————————————————————————————
+   ARRIVAL TIME MODULE
+   ——————————————————————————————————————— */
+
+var selectedArrivalSlot = null;
+
+async function initArrivalTime() {
+  var slotsEl = document.getElementById("arrival-slots");
+  if (!slotsEl) return;
+
+  // Check if already submitted (look in checkin_data)
+  if (currentBooking && db) {
+    try {
+      var { data } = await db
+        .from("checkin_data")
+        .select("arrival_slot")
+        .eq("booking_id", currentBooking.id)
+        .not("arrival_slot", "is", null)
+        .limit(1);
+
+      if (data && data.length > 0 && data[0].arrival_slot) {
+        showArrivalConfirmed(data[0].arrival_slot);
+        return;
+      }
+    } catch (e) {
+      // Continue with form if query fails
+    }
+  }
+
+  // Render time slot buttons
+  var slots = MAS_AIRAGA.arrival_slots;
+  slotsEl.innerHTML = slots.map(function (slot, i) {
+    var isTbc = i === slots.length - 1;
+    return '<div class="arrival-slot' + (isTbc ? ' arrival-slot--tbc' : '') + '"' +
+      ' onclick="selectArrivalSlot(this, \'' + slot.replace(/'/g, "\\'") + '\')"' +
+      ' role="radio" tabindex="0"' +
+      ' onkeydown="if(event.key===\'Enter\'||event.key===\' \')selectArrivalSlot(this, \'' + slot.replace(/'/g, "\\'") + '\')">' +
+      slot +
+    '</div>';
+  }).join("");
+}
+
+function selectArrivalSlot(el, slot) {
+  selectedArrivalSlot = slot;
+
+  // Update visual selection
+  document.querySelectorAll(".arrival-slot").forEach(function (s) {
+    s.classList.remove("arrival-slot--selected");
+  });
+  el.classList.add("arrival-slot--selected");
+
+  // Enable submit button
+  document.getElementById("arrival-submit-btn").disabled = false;
+}
+
+async function submitArrivalTime() {
+  if (!selectedArrivalSlot || !currentBooking || !db) return;
+
+  var btn = document.getElementById("arrival-submit-btn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="fr">Envoi en cours...</span><span class="en">Sending...</span>';
+  // Re-apply lang visibility
+  if (currentLang === "en") {
+    btn.querySelector(".fr").style.display = "none";
+    btn.querySelector(".en").style.display = "inline";
+  } else {
+    btn.querySelector(".en").style.display = "none";
+    btn.querySelector(".fr").style.display = "inline";
+  }
+
+  try {
+    // Upsert into checkin_data
+    var { error } = await db.from("checkin_data").insert({
+      booking_id: currentBooking.id,
+      arrival_slot: selectedArrivalSlot,
+    });
+
+    if (error) {
+      // Might already have a row — try update
+      await db.from("checkin_data")
+        .update({ arrival_slot: selectedArrivalSlot })
+        .eq("booking_id", currentBooking.id);
+    }
+
+    showArrivalConfirmed(selectedArrivalSlot);
+
+  } catch (err) {
+    console.error("Failed to save arrival time:", err);
+    btn.disabled = false;
+    btn.innerHTML = '<span class="fr">Confirmer l\'heure d\'arriv\u00e9e</span><span class="en">Confirm arrival time</span>';
+  }
+}
+
+function showArrivalConfirmed(slot) {
+  var formState = document.getElementById("arrival-form-state");
+  var confirmedState = document.getElementById("arrival-confirmed-state");
+  var slotDisplay = document.getElementById("arrival-confirmed-slot");
+
+  if (formState) formState.style.display = "none";
+  if (confirmedState) confirmedState.style.display = "block";
+  if (slotDisplay) slotDisplay.textContent = slot;
 }

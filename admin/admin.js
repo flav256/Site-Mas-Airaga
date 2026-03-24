@@ -150,7 +150,7 @@ async function loadBookings() {
 
   var { data, error } = await db
     .from("bookings")
-    .select("*")
+    .select("*, checkin_data(arrival_slot)")
     .order("checkin_date", { ascending: false })
     .limit(50);
 
@@ -169,18 +169,25 @@ async function loadBookings() {
     var modules = b.modules || {};
     var modNames = ["guide", "checkin", "arrival", "contract", "checkout"];
 
+    // Extract arrival time from joined checkin_data
+    var arrivalSlot = null;
+    if (b.checkin_data && b.checkin_data.length > 0) {
+      arrivalSlot = b.checkin_data[0].arrival_slot;
+    }
+
     return '<div class="booking-card">' +
       '<div class="booking-card__header">' +
         '<div>' +
           '<div class="booking-card__name">' + escapeHtml(b.guest_name) + '</div>' +
-          '<div class="booking-card__dates">' + b.checkin_date + ' → ' + b.checkout_date +
-            (b.num_guests ? ' · ' + b.num_guests + ' guests' : '') +
+          '<div class="booking-card__dates">' + b.checkin_date + ' &rarr; ' + b.checkout_date +
+            (b.num_guests ? ' &middot; ' + b.num_guests + ' guests' : '') +
           '</div>' +
         '</div>' +
         '<span class="booking-card__status booking-card__status--' + (b.status || 'draft') + '">' +
           (b.status || 'draft') +
         '</span>' +
       '</div>' +
+      (arrivalSlot ? '<div class="booking-card__arrival">Arrival: <strong>' + escapeHtml(arrivalSlot) + '</strong></div>' : '') +
       '<div class="booking-card__modules">' +
         modNames.map(function (m) {
           return '<span class="booking-card__mod ' + (!modules[m] ? 'booking-card__mod--off' : '') + '">' + m + '</span>';

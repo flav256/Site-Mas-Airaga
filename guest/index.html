@@ -124,6 +124,45 @@
 
     <main class="guide__main">
 
+      <!-- SECTION: ARRIVAL TIME PICKER (module: arrival) -->
+      <section class="sec sec--arrival-time" id="sec-arrival-time" data-module="arrival">
+        <h2 class="sec__title">
+          <span class="fr">Heure d'arriv&eacute;e</span>
+          <span class="en">Arrival time</span>
+        </h2>
+        <div class="sec__body">
+          <p class="sec__intro fr">
+            Merci de nous indiquer votre cr&eacute;neau d'arriv&eacute;e pour que nous puissions vous accueillir.
+          </p>
+          <p class="sec__intro en">
+            Please let us know your arrival time so we can welcome you.
+          </p>
+
+          <!-- State: form (not yet submitted) -->
+          <div id="arrival-form-state">
+            <div class="arrival-slots" id="arrival-slots"></div>
+            <button class="arrival-submit" id="arrival-submit-btn" onclick="submitArrivalTime()" disabled>
+              <span class="fr">Confirmer l'heure d'arriv&eacute;e</span>
+              <span class="en">Confirm arrival time</span>
+            </button>
+          </div>
+
+          <!-- State: confirmed -->
+          <div id="arrival-confirmed-state" style="display:none">
+            <div class="arrival-confirmed">
+              <div class="arrival-confirmed__icon">&#10003;</div>
+              <p class="arrival-confirmed__text">
+                <strong class="fr">Cr&eacute;neau confirm&eacute;</strong>
+                <strong class="en">Time confirmed</strong>
+              </p>
+              <p class="arrival-confirmed__slot" id="arrival-confirmed-slot"></p>
+              <p class="arrival-confirmed__note fr">Nous vous attendons ! Vous pouvez modifier en nous contactant.</p>
+              <p class="arrival-confirmed__note en">We look forward to seeing you! You can change this by contacting us.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- SECTION: ARRIVEE -->
       <section class="sec" id="sec-arrival" data-module="guide">
         <h2 class="sec__title">
