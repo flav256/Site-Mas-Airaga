@@ -7,8 +7,8 @@
  * TODO: Replace with your actual Supabase project values after setup.
  */
 
-const SUPABASE_URL  = "https://YOUR_PROJECT.supabase.co";    // ← replace after setup
-const SUPABASE_ANON = "eyJ...YOUR_ANON_KEY_HERE";            // ← replace after setup
+const SUPABASE_URL  = "https://ffkloapaxghwrenqfila.supabase.co";    // ← replace after setup
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZma2xvYXBheGdod3JlbnFmaWxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNTE3NTEsImV4cCI6MjA4OTkyNzc1MX0.J6KYv6eJcXF4ImyYuU3yxnbFBO1Kn7PKFyl8TMRhSHA";            // ← replace after setup
 
 // Initialize Supabase client (loaded via CDN in HTML)
 function getSupabase() {
