@@ -199,7 +199,7 @@ async function loadBookings() {
         '</span>' +
       '</div>' +
       (arrivalSlot ? '<div class="booking-card__arrival">Arrival: <strong>' + escapeHtml(arrivalSlot) + '</strong></div>' : '') +
-      (checkinDone ? '<div class="booking-card__checkin-done">Check-in complete' + (guestCount ? ' &middot; ' + guestCount + ' guests' : '') + '</div>' : '') +
+      (checkinDone ? '<div class="booking-card__checkin-done">Check-in complete' + (guestCount ? ' &middot; ' + guestCount + ' guests' : '') + ' <button class="checkin-view-btn" onclick="viewCheckinDetails(\'' + b.id + '\')">View</button></div>' : '') +
       '<div class="booking-card__modules">' +
         modNames.map(function (m) {
           return '<span class="booking-card__mod ' + (!modules[m] ? 'booking-card__mod--off' : '') + '">' + m + '</span>';
@@ -285,6 +285,90 @@ function modalOpenGuest(url) {
 function closeModal() {
   var modal = document.getElementById("success-modal");
   if (modal) modal.remove();
+  var modal2 = document.getElementById("checkin-modal");
+  if (modal2) modal2.remove();
+}
+
+/* ———————————————————————————————————————
+   VIEW CHECK-IN DETAILS MODAL
+   ——————————————————————————————————————— */
+
+async function viewCheckinDetails(bookingId) {
+  // Fetch full checkin data
+  var { data, error } = await db
+    .from("checkin_data")
+    .select("*")
+    .eq("booking_id", bookingId)
+    .limit(1);
+
+  if (error || !data || data.length === 0) {
+    alert("No check-in data found.");
+    return;
+  }
+
+  var cd = data[0];
+
+  // Also get booking name
+  var { data: bookingData } = await db
+    .from("bookings")
+    .select("guest_name, checkin_date, checkout_date")
+    .eq("id", bookingId)
+    .single();
+
+  var bName = bookingData ? bookingData.guest_name : "Guest";
+  var bDates = bookingData ? bookingData.checkin_date + " → " + bookingData.checkout_date : "";
+
+  // Build guests table
+  var guestsHtml = "";
+  if (cd.guests_info && Array.isArray(cd.guests_info)) {
+    guestsHtml = '<table class="checkin-detail-table">' +
+      '<tr><th>Name</th><th>Date of birth</th></tr>' +
+      cd.guests_info.map(function (g) {
+        return '<tr><td>' + escapeHtml(g.name) + '</td><td>' + (g.dob || '—') + '</td></tr>';
+      }).join("") +
+    '</table>';
+  }
+
+  // Build modal
+  var existing = document.getElementById("checkin-modal");
+  if (existing) existing.remove();
+
+  var modal = document.createElement("div");
+  modal.id = "checkin-modal";
+  modal.className = "modal-overlay";
+  modal.innerHTML =
+    '<div class="modal-card">' +
+      '<div class="modal-header">' +
+        '<h2 class="modal-title">Check-in Details</h2>' +
+        '<p class="modal-sub">' + escapeHtml(bName) + ' &middot; ' + bDates + '</p>' +
+      '</div>' +
+      '<div class="modal-body" style="max-height:60vh;overflow-y:auto">' +
+        '<div class="checkin-detail-section">' +
+          '<h4 class="checkin-detail-label">Guests (' + (cd.guests_info ? cd.guests_info.length : 0) + ')</h4>' +
+          guestsHtml +
+        '</div>' +
+        (cd.arrival_slot ? '<div class="checkin-detail-section"><h4 class="checkin-detail-label">Arrival time</h4><p>' + escapeHtml(cd.arrival_slot) + '</p></div>' : '') +
+        '<div class="checkin-detail-section">' +
+          '<h4 class="checkin-detail-label">House rules</h4>' +
+          '<p>' + (cd.house_rules_accepted ? 'Accepted &#10003;' : 'Not accepted') + '</p>' +
+        '</div>' +
+        '<div class="checkin-detail-section">' +
+          '<h4 class="checkin-detail-label">Pool waiver</h4>' +
+          '<p>' + (cd.pool_waiver_signed ? 'Signed &#10003;' : 'Not signed') +
+          (cd.pool_waiver_sig ? ' — <em>' + escapeHtml(cd.pool_waiver_sig) + '</em>' : '') + '</p>' +
+          (cd.signed_at ? '<p class="text-muted" style="font-size:11px">Signed: ' + new Date(cd.signed_at).toLocaleString() + '</p>' : '') +
+        '</div>' +
+        (cd.id_photo_url ? '<div class="checkin-detail-section"><h4 class="checkin-detail-label">ID Photo</h4><p class="text-muted" style="font-size:12px">' + escapeHtml(cd.id_photo_url) + '</p></div>' : '') +
+        '<div class="checkin-detail-section">' +
+          '<p class="text-muted" style="font-size:11px">Submitted: ' + (cd.submitted_at ? new Date(cd.submitted_at).toLocaleString() : '—') + '</p>' +
+        '</div>' +
+      '</div>' +
+      '<div class="modal-actions">' +
+        '<button class="admin-btn admin-btn--ghost" onclick="closeModal()">Close</button>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(modal);
 }
 
 function copyLink(token) {

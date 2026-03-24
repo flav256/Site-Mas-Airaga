@@ -500,5 +500,60 @@ a:hover { text-decoration: underline; }
 
 .modal-actions .admin-btn { width: 100%; }
 
+/* —— CHECK-IN VIEW BUTTON —— */
+.checkin-view-btn {
+  background: none;
+  border: none;
+  color: var(--ma-purple);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 0.4rem;
+  padding: 0;
+  font-family: var(--font-body);
+}
+
+.checkin-view-btn:hover { color: #5A4E70; }
+
+/* —— CHECK-IN DETAIL MODAL —— */
+.checkin-detail-section {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--ma-border-light);
+}
+
+.checkin-detail-section:last-child { border-bottom: none; margin-bottom: 0; }
+
+.checkin-detail-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ma-terra);
+  margin-bottom: 0.35rem;
+}
+
+.checkin-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.checkin-detail-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ma-text-muted);
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--ma-border);
+}
+
+.checkin-detail-table td {
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid var(--ma-border-light);
+  color: var(--ma-text);
+}
+
 /* —— UTILITY —— */
 .text-muted { color: var(--ma-text-muted); }
