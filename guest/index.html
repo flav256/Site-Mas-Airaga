@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mas d'Airaga — Guide de Bienvenue / Welcome Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="guide.css">
+  <!-- Supabase JS client (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+  <!-- ————————————————————————————————————————
+       TOKEN GATE — validates ?t=<token> from URL
+  ———————————————————————————————————————— -->
+  <div id="ma-gate">
+    <div class="gate__card">
+      <div class="gate__logo">
+        <p class="gate__logo-pre">Bienvenue au / Welcome to</p>
+        <h1 class="gate__logo-name">Mas d'Airaga</h1>
+        <p class="gate__logo-loc">Eyragues · Provence</p>
+      </div>
+      <div class="gate__divider"></div>
+      <div class="gate__spinner" id="gate-spinner"></div>
+      <p class="gate__status" id="gate-status">
+        Verification en cours...<br>
+        <span style="color:var(--ma-text-muted);font-size:13px">Verifying your access...</span>
+      </p>
+      <p class="gate__error" id="gate-error"></p>
+      <p class="gate__hint" id="gate-hint"></p>
+    </div>
+  </div>
+
+
+  <!-- ————————————————————————————————————————
+       WELCOME GUIDE — hidden until valid token
+  ———————————————————————————————————————— -->
+  <div id="ma-guide" class="guide" style="display:none">
+
+    <!-- —— TOP BAR —— -->
+    <div class="topbar">
+      <span class="topbar__name">Mas d'Airaga</span>
+      <div class="topbar__lang">
+        <button class="lang-btn lang-btn--active" id="btn-fr" onclick="setLang('fr')">FR</button>
+        <span class="topbar__sep">|</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+
+    <!-- —— HERO —— -->
+    <header class="hero">
+      <p class="hero__pre fr">Bienvenue chez vous</p>
+      <p class="hero__pre en">Welcome home</p>
+      <h1 class="hero__title"><em>Mas d'Airaga</em></h1>
+      <p class="hero__guest" id="hero-guest"></p>
+      <p class="hero__addr">595 Chemin Notre Dame · 13630 Eyragues</p>
+
+      <!-- CHECK-IN CTA — shown only if checkin or arrival module enabled -->
+      <div class="cta-box" id="checkin-cta" style="display:none">
+        <div class="cta-box__text">
+          <strong class="fr">Formulaire d'arrivee</strong>
+          <strong class="en">Arrival check-in form</strong>
+          <span class="fr"> · 2 min avant votre arrivee</span>
+          <span class="en"> · 2 min before arrival</span>
+        </div>
+        <a class="cta-box__btn" href="#sec-checkin">
+          <span class="fr">Completer →</span>
+          <span class="en">Fill in →</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- —— QUICK STRIP —— -->
+    <div class="strip">
+      <div class="strip__item">
+        <span class="strip__label fr">Arrivee</span>
+        <span class="strip__label en">Check-in</span>
+        <span class="strip__value">16h — 22h</span>
+      </div>
+      <div class="strip__item">
+        <span class="strip__label fr">Depart</span>
+        <span class="strip__label en">Check-out</span>
+        <span class="strip__value">avant 10h</span>
+      </div>
+      <div class="strip__item">
+        <span class="strip__label">Max</span>
+        <span class="strip__value">10 pers.</span>
+      </div>
+      <div class="strip__item strip__item--tap" onclick="revealWifi(this)" title="Tap for WiFi">
+        <span class="strip__label">WiFi</span>
+        <span class="strip__value strip__value--tap fr">appuyer</span>
+        <span class="strip__value strip__value--tap en">tap</span>
+        <div class="wifi-pop" id="wifi-pop" style="display:none">
+          <span id="wifi-ssid-pop"></span>
+          <span id="wifi-pass-pop"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- —— OWNER CONTACT BAR —— -->
+    <div class="owner-bar">
+      <span class="owner-bar__names">Virginie &amp; Flavien</span>
+      <a class="owner-bar__link" id="wa-btn" href="#">WhatsApp</a>
+      <a class="owner-bar__link" id="tel-btn" href="#">+33 6 14 32 57 06</a>
+    </div>
+
+
+    <main class="guide__main">
+
+      <!-- ——— SECTION: ARRIVEE (module: guide) ——— -->
+      <section class="sec" id="sec-arrival" data-module="guide">
+        <h2 class="sec__title">
+          <span class="sec__icon" aria-hidden="true">✦</span>
+          <span class="fr">Votre arrivee</span>
+          <span class="en">Your arrival</span>
+        </h2>
+        <div class="sec__body">
+
+          <div class="infocard">
+            <h3 class="infocard__label fr">Adresse &amp; GPS</h3>
+            <h3 class="infocard__label en">Address &amp; GPS</h3>
+            <p>595 Chemin Notre Dame<br>
+               <span class="text-muted fr">A cote de la Chapelle Notre Dame du Pieux Zele</span>
+               <span class="text-muted en">Next to the Chapelle Notre Dame du Pieux Zele</span><br>
+               13630 Eyragues, France</p>
+            <p class="gps-coord">N 43°50'11.80" &nbsp; E 4°50'05.50"</p>
+            <a class="btn-link" href="https://maps.google.com/?q=43.836611,4.834861" target="_blank" rel="noopener">
+              <span class="fr">Ouvrir dans Google Maps →</span>
+              <span class="en">Open in Google Maps →</span>
+            </a>
+          </div>
+
+          <div class="infocard">
+            <h3 class="infocard__label fr">Horaires</h3>
+            <h3 class="infocard__label en">Timing</h3>
+            <table class="timing-table">
+              <tr>
+                <td class="fr">Arrivee</td><td class="en">Arrival</td>
+                <td class="timing-table__val">a partir de 16h00</td>
+              </tr>
+              <tr>
+                <td class="fr">Depart</td><td class="en">Departure</td>
+                <td class="timing-table__val">avant 10h00</td>
+              </tr>
+            </table>
+            <p class="infocard__note fr">Merci de nous prevenir de votre heure d'arrivee la veille.</p>
+            <p class="infocard__note en">Please let us know your arrival time the evening before.</p>
+          </div>
+
+          <div class="infocard">
+            <h3 class="infocard__label fr">Parking</h3>
+            <h3 class="infocard__label en">Parking</h3>
+            <p class="fr">4 places a l'entree de la propriete.</p>
+            <p class="en">4 spaces at the property entrance.</p>
+          </div>
+
+          <div class="infocard">
+            <h3 class="infocard__label fr">Remise des cles</h3>
+            <h3 class="infocard__label en">Key handover</h3>
+            <p class="fr">Nous vous accueillerons sur place entre 16h et 22h. L'heure de rendez-vous se confirme a l'arrivee.</p>
+            <p class="en">We will welcome you on site between 4 pm and 10 pm. Timing confirmed at arrival.</p>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ——— SECTION: LA MAISON (module: guide) ——— -->
+      <section class="sec sec--alt" id="sec-house" data-module="guide">
+        <h2 class="sec__title">
+          <span class="sec__icon" aria-hidden="true">⌂</span>
+          <span class="fr">La maison</span>
+          <span class="en">The house</span>
+        </h2>
+        <div class="sec__body">
+
+          <!-- WiFi card -->
+          <div class="wifi-card">
+            <div class="wifi-card__header">
+              <span class="wifi-card__label">WiFi</span>
+              <span class="wifi-card__network fr">Reseau</span>
+              <span class="wifi-card__network en">Network</span>
+            </div>
+            <p class="wifi-card__ssid" id="wifi-ssid"></p>
+            <p class="wifi-card__pass" id="wifi-pass"></p>
+            <p class="wifi-card__type fr">Connexion haut debit (Starlink)</p>
+            <p class="wifi-card__type en">High-speed connection (Starlink)</p>
+          </div>
+
+          <!-- Rooms -->
+          <div class="rooms" id="rooms-container"></div>
+
+        </div>
+      </section>
+
+
+      <!-- ——— SECTION: PISCINE (module: guide) ——— -->
+      <section class="sec" id="sec-pool" data-module="guide">
+        <h2 class="sec__title">
+          <span class="sec__icon" aria-hidden="true">◈</span>
+          <span class="fr">La piscine</span>
+          <span class="en">The pool</span>
+        </h2>
+        <div class="sec__body">
+
+          <div class="pool-badge">
+            <span>9 m × 4,5 m</span>
+            <span class="fr">· Volet electrique</span>
+            <span class="en">· Electric cover</span>
+          </div>
+
+          <div class="alert alert--warn">
+            <span class="alert__icon">!</span>
+            <div>
+              <strong class="fr">Surveillance constante obligatoire</strong>
+              <strong class="en">Constant supervision required</strong>
+              <p class="fr">Les enfants doivent etre surveilles par un adulte en permanence. Le volet de securite ne remplace en aucun cas la vigilance humaine.</p>
+              <p class="en">Children must be supervised by an adult at all times. The safety cover does not replace human vigilance.</p>
+            </div>
+          </div>
+
+          <ul class="rule-list" id="pool-rules"></ul>
+
+          <div class="infocard">
+            <h3 class="infocard__label fr">Entretien de la piscine</h3>
+            <h3 class="infocard__label en">Pool maintenance</h3>
+            <p class="fr">Le pisciniste intervient une fois par semaine. Ne pas modifier la programmation de la filtration. Laisser le robot dans la piscine en permanence. Vider les skimmers une fois par jour.</p>
+            <p class="en">The pool technician visits once a week. Do not adjust the filtration timer. Leave the cleaning robot in the pool at all times. Empty the skimmers once a day.</p>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ——— SECTION: REGLES (module: guide) ——— -->
+      <section class="sec sec--alt" id="sec-rules" data-module="guide">
+        <h2 class="sec__title">
+          <span class="sec__icon" aria-hidden="true">✻</span>
+          <span class="fr">Regles de la maison</span>
+          <span class="en">House rules</span>
+        </h2>
+        <div class="sec__body">
+          <ul class="rule-list" id="house-rules"></ul>
+        </div>
+      </section>
+
+
+      <!-- ——— SECTION: URGENCES (module: guide) ——— -->
+      <section class="sec" id="sec-emergency" data-module="guide">
+        <h2 class="sec__title">
+          <span class="sec__icon" aria-hidden="true">✦</span>
+          <span class="fr">Urgences &amp; contacts</span>
+          <span class="en">Emergency &amp; contacts</span>
+        </h2>
+        <div class="sec__body">
+          <div class="alert alert--info">
+            <span class="alert__icon">i</span>
+            <span class="fr">Extincteur : sous l'evier de la cuisine.</span>
+            <span class="en">Fire extinguisher: under the kitchen sink.</span>
+          </div>
+          <div class="contact-grid" id="emergency-contacts"></div>
+        </div>
+      </section>
+
+
+      <!-- ——— SECTION: LA REGION (module: guide) ——— -->
+      <section class="sec sec--alt" id="sec-local" data-module="guide">
+        <h2 class="sec__title">
+          <span class="sec__icon" aria-hidden="true">✦</span>
+          <span class="fr">Autour du Mas</span>
+          <span class="en">Around the Mas</span>
+        </h2>
+        <div class="sec__body">
+
+          <div class="local-group">
+            <h3 class="local-group__title fr">Supermarches / Courses</h3>
+            <h3 class="local-group__title en">Supermarkets</h3>
+            <div id="supermarkets"></div>
+          </div>
+
+          <div class="local-group">
+            <h3 class="local-group__title fr">Restaurants a Eyragues</h3>
+            <h3 class="local-group__title en">Restaurants in Eyragues</h3>
+            <div id="restaurants"></div>
+          </div>
+
+          <div class="local-group">
+            <h3 class="local-group__title fr">Marche</h3>
+            <h3 class="local-group__title en">Market</h3>
+            <div id="market-block"></div>
+          </div>
+
+          <div class="local-group">
+            <h3 class="local-group__title fr">A visiter dans la region</h3>
+            <h3 class="local-group__title en">Places to visit</h3>
+            <div id="attractions"></div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ——— SECTION: DEPART (module: checkout) ——— -->
+      <section class="sec" id="sec-departure" data-module="checkout">
+        <h2 class="sec__title">
+          <span class="sec__icon" aria-hidden="true">✦</span>
+          <span class="fr">Avant votre depart</span>
+          <span class="en">Before you leave</span>
+        </h2>
+        <div class="sec__body">
+          <p class="sec__intro fr">Cochez chaque point avant de remettre les cles. Merci !</p>
+          <p class="sec__intro en">Tick each item before handing back the keys. Thank you!</p>
+          <div class="checklist" id="departure-checklist"></div>
+          <div class="trash-note" id="trash-note"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="guide__footer">
+      <p class="guide__footer-wish fr">Nous vous souhaitons un sejour merveilleux.</p>
+      <p class="guide__footer-wish en">We wish you a wonderful stay.</p>
+      <p class="guide__footer-name">Virginie &amp; Flavien MAIRE</p>
+      <p class="guide__footer-addr">595 Chemin Notre Dame · 13630 Eyragues · Provence</p>
+    </footer>
+
+  </div><!-- /#ma-guide -->
+
+  <script src="../shared/supabase-config.js"></script>
+  <script src="mas-airaga-content.js"></script>
+  <script src="guide.js"></script>
+</body>
+</html>

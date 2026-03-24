@@ -1,0 +1,385 @@
+/* ——————————————————————————————————————
+   MAS D'AIRAGA — Admin Dashboard Styles
+   Same design tokens as guest guide
+   —————————————————————————————————————— */
+
+:root {
+  --ma-bg:           #FAF8F4;
+  --ma-bg-alt:       #F2EDE5;
+  --ma-white:        #FFFEFB;
+  --ma-purple:       #6B5E82;
+  --ma-purple-mid:   #9585AA;
+  --ma-purple-light: #EDE9F5;
+  --ma-terra:        #9B5A3A;
+  --ma-olive:        #4E6040;
+  --ma-olive-light:  #EBF0E6;
+  --ma-text:         #2A2218;
+  --ma-text-mid:     #4A4038;
+  --ma-text-muted:   #7A6E65;
+  --ma-border:       #DDD5C8;
+  --ma-border-light: #EDE8E0;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Manrope', system-ui, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 4px rgba(42,34,24,0.08);
+  --shadow-md: 0 4px 20px rgba(42,34,24,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ma-text);
+  background: var(--ma-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--ma-purple); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* —— LOGIN —— */
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.admin-login__card {
+  background: var(--ma-white);
+  border: 1px solid var(--ma-border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.admin-login__title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ma-purple);
+}
+
+.admin-login__sub {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ma-text-muted);
+  margin-top: 0.25rem;
+}
+
+.admin-login__divider {
+  width: 40px;
+  height: 1px;
+  background: var(--ma-border);
+  margin: 1.5rem auto;
+}
+
+.admin-login__error {
+  font-size: 13px;
+  color: #C0392B;
+  min-height: 1.2em;
+  margin-top: 0.5rem;
+}
+
+/* —— INPUTS —— */
+.admin-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 14px;
+  border: 1.5px solid var(--ma-border);
+  border-radius: var(--radius-sm);
+  background: var(--ma-bg);
+  color: var(--ma-text);
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 0.6rem;
+}
+
+.admin-input:focus {
+  border-color: var(--ma-purple-mid);
+  background: var(--ma-white);
+}
+
+/* —— BUTTONS —— */
+.admin-btn {
+  display: inline-block;
+  padding: 0.6rem 1.25rem;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--ma-purple);
+  color: #fff;
+  width: 100%;
+}
+
+.admin-btn:hover { background: #5A4E70; }
+
+.admin-btn--primary {
+  background: var(--ma-purple);
+  color: #fff;
+  margin-top: 1rem;
+}
+
+.admin-btn--ghost {
+  background: transparent;
+  color: var(--ma-purple);
+  border: 1px solid var(--ma-purple-mid);
+  width: auto;
+  padding: 0.4rem 0.9rem;
+  font-size: 12px;
+}
+
+.admin-btn--ghost:hover {
+  background: var(--ma-purple);
+  color: #fff;
+}
+
+.admin-btn--small {
+  width: auto;
+  padding: 0.35rem 0.75rem;
+  font-size: 12px;
+}
+
+/* —— HEADER —— */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: var(--ma-purple);
+  color: #fff;
+}
+
+.admin-header__title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.admin-header__badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 0.5rem;
+}
+
+.admin-header__left {
+  display: flex;
+  align-items: center;
+}
+
+.admin-header__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+
+.admin-header__right .admin-btn--ghost {
+  color: rgba(255,255,255,0.8);
+  border-color: rgba(255,255,255,0.3);
+}
+
+.admin-header__right .admin-btn--ghost:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+/* —— MAIN —— */
+.admin-main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* —— SECTIONS —— */
+.admin-section {
+  background: var(--ma-white);
+  border: 1px solid var(--ma-border-light);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-section__title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ma-purple);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--ma-border-light);
+}
+
+/* —— FORM —— */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 500px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+.form-group { margin-bottom: 0.25rem; }
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ma-text-mid);
+  margin-bottom: 0.25rem;
+}
+
+.form-subtitle {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ma-terra);
+  margin: 1rem 0 0.5rem;
+}
+
+/* —— MODULE TOGGLES —— */
+.module-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--ma-border-light);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.toggle:hover { background: var(--ma-bg); }
+
+.toggle input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--ma-purple);
+}
+
+.toggle__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ma-text);
+  display: block;
+}
+
+.toggle__desc {
+  font-size: 12px;
+  color: var(--ma-text-muted);
+  display: block;
+}
+
+/* —— BOOKINGS LIST —— */
+.bookings-list { }
+
+.booking-card {
+  border: 1px solid var(--ma-border-light);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--ma-bg);
+}
+
+.booking-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.booking-card__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ma-text);
+}
+
+.booking-card__dates {
+  font-size: 13px;
+  color: var(--ma-text-muted);
+}
+
+.booking-card__status {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.booking-card__status--draft { background: var(--ma-border-light); color: var(--ma-text-muted); }
+.booking-card__status--sent { background: var(--ma-purple-light); color: var(--ma-purple); }
+.booking-card__status--active { background: var(--ma-olive-light); color: var(--ma-olive); }
+
+.booking-card__modules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0.5rem 0;
+}
+
+.booking-card__mod {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--ma-purple-light);
+  color: var(--ma-purple);
+}
+
+.booking-card__mod--off {
+  background: var(--ma-border-light);
+  color: var(--ma-text-muted);
+  text-decoration: line-through;
+}
+
+.booking-card__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.booking-card__link {
+  font-size: 12px;
+  color: var(--ma-purple);
+  word-break: break-all;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* —— UTILITY —— */
+.text-muted { color: var(--ma-text-muted); }

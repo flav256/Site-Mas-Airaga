@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mas d'Airaga — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <!-- Supabase JS client (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+  <!-- ————————————————————————————————
+       LOGIN
+  ———————————————————————————————— -->
+  <div id="admin-login" class="admin-login">
+    <div class="admin-login__card">
+      <h1 class="admin-login__title">Mas d'Airaga</h1>
+      <p class="admin-login__sub">Administration</p>
+      <div class="admin-login__divider"></div>
+      <input type="email" id="login-email" class="admin-input" placeholder="Email" autocomplete="email">
+      <input type="password" id="login-password" class="admin-input" placeholder="Password" autocomplete="current-password">
+      <button class="admin-btn" id="login-btn">Sign in</button>
+      <p class="admin-login__error" id="login-error"></p>
+    </div>
+  </div>
+
+  <!-- ————————————————————————————————
+       DASHBOARD — hidden until authenticated
+  ———————————————————————————————— -->
+  <div id="admin-dashboard" style="display:none">
+
+    <header class="admin-header">
+      <div class="admin-header__left">
+        <h1 class="admin-header__title">Mas d'Airaga</h1>
+        <span class="admin-header__badge">Admin</span>
+      </div>
+      <div class="admin-header__right">
+        <span id="admin-user"></span>
+        <button class="admin-btn admin-btn--ghost" id="logout-btn">Sign out</button>
+      </div>
+    </header>
+
+    <main class="admin-main">
+
+      <!-- NEW BOOKING FORM -->
+      <section class="admin-section">
+        <h2 class="admin-section__title">New Booking</h2>
+        <form id="booking-form" class="booking-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Guest name *</label>
+              <input type="text" name="guest_name" class="admin-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Guest phone (WhatsApp)</label>
+              <input type="tel" name="guest_phone" class="admin-input" placeholder="+33 6 ...">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Guest email</label>
+              <input type="email" name="guest_email" class="admin-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Number of guests</label>
+              <input type="number" name="num_guests" class="admin-input" min="1" max="10" value="4">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Check-in date *</label>
+              <input type="date" name="checkin_date" class="admin-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Check-out date *</label>
+              <input type="date" name="checkout_date" class="admin-input" required>
+            </div>
+          </div>
+
+          <h3 class="form-subtitle">Modules to enable</h3>
+          <div class="module-toggles">
+            <label class="toggle">
+              <input type="checkbox" name="mod_guide" checked>
+              <span class="toggle__label">Welcome Guide</span>
+              <span class="toggle__desc">House info, WiFi, local guide, emergency</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" name="mod_checkin">
+              <span class="toggle__label">Online Check-in</span>
+              <span class="toggle__desc">ID upload, guest list, pool waiver</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" name="mod_arrival">
+              <span class="toggle__label">Arrival Time</span>
+              <span class="toggle__desc">Time slot picker + notification</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" name="mod_contract">
+              <span class="toggle__label">Contract</span>
+              <span class="toggle__desc">Rental agreement + e-signature</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" name="mod_checkout">
+              <span class="toggle__label">Check-out</span>
+              <span class="toggle__desc">Departure checklist + completion alert</span>
+            </label>
+          </div>
+
+          <button type="submit" class="admin-btn admin-btn--primary">Create Booking & Generate Link</button>
+        </form>
+      </section>
+
+      <!-- BOOKINGS LIST -->
+      <section class="admin-section">
+        <h2 class="admin-section__title">Bookings</h2>
+        <div id="bookings-list" class="bookings-list">
+          <p class="text-muted">Loading...</p>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="../shared/supabase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
