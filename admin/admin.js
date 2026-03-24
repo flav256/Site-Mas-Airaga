@@ -151,7 +151,7 @@ async function loadBookings() {
   var { data, error } = await db
     .from("bookings")
     .select("*, checkin_data(arrival_slot)")
-    .order("checkin_date", { ascending: false })
+    .order("checkin_date", { ascending: true })
     .limit(50);
 
   if (error) {
@@ -164,10 +164,14 @@ async function loadBookings() {
     return;
   }
 
+  // Sort: upcoming first, then past
+  var today = new Date().toISOString().slice(0, 10);
+
   container.innerHTML = data.map(function (b) {
     var guestUrl = window.location.origin + "/guest/?t=" + b.token;
     var modules = b.modules || {};
     var modNames = ["guide", "checkin", "arrival", "contract", "checkout"];
+    var isPast = b.checkout_date < today;
 
     // Extract arrival time from joined checkin_data
     var arrivalSlot = null;
@@ -175,7 +179,7 @@ async function loadBookings() {
       arrivalSlot = b.checkin_data[0].arrival_slot;
     }
 
-    return '<div class="booking-card">' +
+    return '<div class="booking-card' + (isPast ? ' booking-card--past' : '') + '">' +
       '<div class="booking-card__header">' +
         '<div>' +
           '<div class="booking-card__name">' + escapeHtml(b.guest_name) + '</div>' +

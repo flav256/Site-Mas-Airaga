@@ -344,6 +344,15 @@ a:hover { text-decoration: underline; }
 .booking-card__status--sent { background: var(--ma-purple-light); color: var(--ma-purple); }
 .booking-card__status--active { background: var(--ma-olive-light); color: var(--ma-olive); }
 
+.booking-card--past {
+  opacity: 0.45;
+  filter: grayscale(0.3);
+}
+
+.booking-card--past:hover {
+  opacity: 0.7;
+}
+
 .booking-card__arrival {
   font-size: 13px;
   color: var(--ma-olive);
