@@ -187,6 +187,7 @@ function initGuide() {
   renderLocalGuide();
   renderChecklist();
   initArrivalTime();
+  initCheckin();
 }
 
 /* ———————————————————————————————————————
@@ -504,4 +505,214 @@ function showArrivalConfirmed(slot) {
   if (formState) formState.style.display = "none";
   if (confirmedState) confirmedState.style.display = "block";
   if (slotDisplay) slotDisplay.textContent = slot;
+}
+
+/* ———————————————————————————————————————
+   ONLINE CHECK-IN MODULE
+   ——————————————————————————————————————— */
+
+var guestRowCount = 0;
+
+async function initCheckin() {
+  var formState = document.getElementById("checkin-form-state");
+  if (!formState) return;
+
+  // Check if already submitted
+  if (currentBooking && db) {
+    try {
+      var { data } = await db
+        .from("checkin_data")
+        .select("house_rules_accepted, pool_waiver_signed")
+        .eq("booking_id", currentBooking.id)
+        .limit(1);
+
+      if (data && data.length > 0 && data[0].house_rules_accepted) {
+        document.getElementById("checkin-form-state").style.display = "none";
+        document.getElementById("checkin-confirmed-state").style.display = "block";
+        return;
+      }
+    } catch (e) { /* continue with form */ }
+  }
+
+  // Render house rules in checkin section
+  renderCheckinHouseRules();
+
+  // Render pool waiver text
+  renderCheckinWaiver();
+
+  // Add initial guest rows (2 by default)
+  addGuestRow();
+  addGuestRow();
+
+  // ID file preview
+  var fileInput = document.getElementById("checkin-id-file");
+  if (fileInput) {
+    fileInput.addEventListener("change", function () {
+      var preview = document.getElementById("checkin-id-preview");
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          preview.innerHTML = '<img src="' + e.target.result + '" alt="ID preview">';
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+  }
+}
+
+function renderCheckinHouseRules() {
+  var el = document.getElementById("checkin-house-rules");
+  if (!el) return;
+  var rules = currentLang === "en"
+    ? MAS_AIRAGA.house_rules.en
+    : MAS_AIRAGA.house_rules.fr;
+  el.innerHTML = rules.map(function (r) { return '<li>' + r + '</li>'; }).join("");
+}
+
+function renderCheckinWaiver() {
+  var el = document.getElementById("checkin-waiver-text");
+  if (!el) return;
+  var clauses = currentLang === "en"
+    ? MAS_AIRAGA.pool_waiver.clauses_en
+    : MAS_AIRAGA.pool_waiver.clauses_fr;
+  var disclaimer = currentLang === "en"
+    ? MAS_AIRAGA.pool_waiver.disclaimer_note.en
+    : MAS_AIRAGA.pool_waiver.disclaimer_note.fr;
+
+  el.innerHTML = '<p><em>' + disclaimer + '</em></p>' +
+    '<ol>' + clauses.map(function (c) { return '<li>' + c + '</li>'; }).join("") + '</ol>';
+}
+
+function addGuestRow() {
+  guestRowCount++;
+  var container = document.getElementById("checkin-guests-list");
+  if (!container) return;
+
+  var row = document.createElement("div");
+  row.className = "guest-row";
+  row.id = "guest-row-" + guestRowCount;
+  row.innerHTML =
+    '<div>' +
+      '<div class="guest-row__label">' + (currentLang === "en" ? "Full name" : "Nom complet") + '</div>' +
+      '<input type="text" class="checkin-input guest-name" placeholder="' + (currentLang === "en" ? "First Last" : "Pr\u00e9nom Nom") + '">' +
+    '</div>' +
+    '<div>' +
+      '<div class="guest-row__label">' + (currentLang === "en" ? "Date of birth" : "Date de naissance") + '</div>' +
+      '<input type="date" class="checkin-input guest-dob">' +
+    '</div>' +
+    (guestRowCount > 1 ? '<button type="button" class="guest-row__remove" onclick="removeGuestRow(' + guestRowCount + ')">&times;</button>' : '<div></div>');
+
+  container.appendChild(row);
+}
+
+function removeGuestRow(id) {
+  var row = document.getElementById("guest-row-" + id);
+  if (row) row.remove();
+}
+
+async function submitCheckin() {
+  var errorEl = document.getElementById("checkin-error");
+  errorEl.textContent = "";
+
+  // Validate
+  var rulesAccepted = document.getElementById("checkin-rules-accept").checked;
+  var waiverAccepted = document.getElementById("checkin-waiver-accept").checked;
+  var sigName = document.getElementById("checkin-sig-name").value.trim();
+
+  if (!rulesAccepted) {
+    errorEl.textContent = currentLang === "en"
+      ? "Please accept the house rules."
+      : "Veuillez accepter les r\u00e8gles de la maison.";
+    return;
+  }
+
+  if (!waiverAccepted || !sigName) {
+    errorEl.textContent = currentLang === "en"
+      ? "Please sign the pool waiver (enter your name and check the box)."
+      : "Veuillez signer la d\u00e9charge piscine (entrez votre nom et cochez la case).";
+    return;
+  }
+
+  // Collect guest info
+  var guestRows = document.querySelectorAll(".guest-row");
+  var guestsInfo = [];
+  guestRows.forEach(function (row) {
+    var name = row.querySelector(".guest-name");
+    var dob = row.querySelector(".guest-dob");
+    if (name && name.value.trim()) {
+      guestsInfo.push({
+        name: name.value.trim(),
+        dob: dob ? dob.value : null,
+      });
+    }
+  });
+
+  if (guestsInfo.length === 0) {
+    errorEl.textContent = currentLang === "en"
+      ? "Please enter at least one guest name."
+      : "Veuillez entrer au moins un nom de voyageur.";
+    return;
+  }
+
+  var btn = document.getElementById("checkin-submit-btn");
+  btn.disabled = true;
+  btn.textContent = currentLang === "en" ? "Sending..." : "Envoi en cours...";
+
+  try {
+    // Upload ID photo if provided
+    var idPhotoUrl = null;
+    var fileInput = document.getElementById("checkin-id-file");
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      var file = fileInput.files[0];
+      var ext = file.name.split(".").pop();
+      var path = "id-photos/" + currentBooking.id + "." + ext;
+
+      var { error: uploadError } = await db.storage
+        .from("checkin-documents")
+        .upload(path, file, { upsert: true });
+
+      if (!uploadError) {
+        idPhotoUrl = path;
+      }
+    }
+
+    // Check if checkin_data row already exists (from arrival time)
+    var { data: existing } = await db
+      .from("checkin_data")
+      .select("id")
+      .eq("booking_id", currentBooking.id)
+      .limit(1);
+
+    var checkinPayload = {
+      guests_info: guestsInfo,
+      house_rules_accepted: true,
+      pool_waiver_signed: true,
+      pool_waiver_sig: sigName,
+      signed_at: new Date().toISOString(),
+      id_photo_url: idPhotoUrl,
+    };
+
+    if (existing && existing.length > 0) {
+      // Update existing row
+      await db.from("checkin_data")
+        .update(checkinPayload)
+        .eq("booking_id", currentBooking.id);
+    } else {
+      // Insert new row
+      checkinPayload.booking_id = currentBooking.id;
+      await db.from("checkin_data").insert(checkinPayload);
+    }
+
+    // Show confirmed state
+    document.getElementById("checkin-form-state").style.display = "none";
+    document.getElementById("checkin-confirmed-state").style.display = "block";
+
+  } catch (err) {
+    console.error("Check-in submission error:", err);
+    errorEl.textContent = currentLang === "en"
+      ? "Error submitting. Please try again."
+      : "Erreur lors de l'envoi. Veuillez r\u00e9essayer.";
+    btn.disabled = false;
+    btn.textContent = currentLang === "en" ? "Submit check-in" : "Envoyer l'enregistrement";
+  }
 }

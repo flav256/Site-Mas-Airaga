@@ -163,8 +163,95 @@
         </div>
       </section>
 
+      <!-- SECTION: ONLINE CHECK-IN (module: checkin) -->
+      <section class="sec" id="sec-checkin" data-module="checkin">
+        <h2 class="sec__title">
+          <span class="fr">Enregistrement en ligne</span>
+          <span class="en">Online check-in</span>
+        </h2>
+        <div class="sec__body">
+
+          <!-- State: form -->
+          <div id="checkin-form-state">
+
+            <!-- Guest list -->
+            <div class="checkin-block">
+              <h3 class="checkin-block__title fr">Voyageurs</h3>
+              <h3 class="checkin-block__title en">Guests</h3>
+              <p class="checkin-block__hint fr">Merci d'indiquer le nom et la date de naissance de chaque voyageur.</p>
+              <p class="checkin-block__hint en">Please enter the name and date of birth of each guest.</p>
+              <div id="checkin-guests-list"></div>
+              <button type="button" class="checkin-add-guest" onclick="addGuestRow()">
+                <span class="fr">+ Ajouter un voyageur</span>
+                <span class="en">+ Add a guest</span>
+              </button>
+            </div>
+
+            <!-- House rules acknowledgement -->
+            <div class="checkin-block">
+              <h3 class="checkin-block__title fr">R&egrave;gles de la maison</h3>
+              <h3 class="checkin-block__title en">House rules</h3>
+              <ul class="rule-list" id="checkin-house-rules"></ul>
+              <label class="checkin-checkbox">
+                <input type="checkbox" id="checkin-rules-accept">
+                <span class="fr">J'ai lu et j'accepte les r&egrave;gles de la maison</span>
+                <span class="en">I have read and accept the house rules</span>
+              </label>
+            </div>
+
+            <!-- Pool waiver -->
+            <div class="checkin-block">
+              <h3 class="checkin-block__title fr">D&eacute;charge piscine</h3>
+              <h3 class="checkin-block__title en">Pool waiver</h3>
+              <div class="checkin-waiver" id="checkin-waiver-text"></div>
+              <div class="checkin-sig-block">
+                <label class="form-label fr">Votre nom complet (signature)</label>
+                <label class="form-label en">Your full name (signature)</label>
+                <input type="text" id="checkin-sig-name" class="checkin-input" placeholder="Pr&eacute;nom Nom / Full Name">
+              </div>
+              <label class="checkin-checkbox">
+                <input type="checkbox" id="checkin-waiver-accept">
+                <span class="fr">J'ai lu et j'accepte la d&eacute;charge de responsabilit&eacute; piscine</span>
+                <span class="en">I have read and accept the pool liability waiver</span>
+              </label>
+            </div>
+
+            <!-- ID upload (optional) -->
+            <div class="checkin-block">
+              <h3 class="checkin-block__title fr">Pi&egrave;ce d'identit&eacute; (optionnel)</h3>
+              <h3 class="checkin-block__title en">ID document (optional)</h3>
+              <p class="checkin-block__hint fr">Photo de votre passeport ou carte d'identit&eacute;.</p>
+              <p class="checkin-block__hint en">Photo of your passport or ID card.</p>
+              <input type="file" id="checkin-id-file" accept="image/*" class="checkin-file-input">
+              <div id="checkin-id-preview"></div>
+            </div>
+
+            <!-- Submit -->
+            <button class="checkin-submit" id="checkin-submit-btn" onclick="submitCheckin()">
+              <span class="fr">Envoyer l'enregistrement</span>
+              <span class="en">Submit check-in</span>
+            </button>
+            <p class="checkin-error" id="checkin-error"></p>
+          </div>
+
+          <!-- State: confirmed -->
+          <div id="checkin-confirmed-state" style="display:none">
+            <div class="arrival-confirmed">
+              <div class="arrival-confirmed__icon">&#10003;</div>
+              <p class="arrival-confirmed__text">
+                <strong class="fr">Enregistrement re&ccedil;u</strong>
+                <strong class="en">Check-in received</strong>
+              </p>
+              <p class="arrival-confirmed__note fr">Merci ! Nous avons bien re&ccedil;u vos informations.</p>
+              <p class="arrival-confirmed__note en">Thank you! We have received your information.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       <!-- SECTION: ARRIVEE -->
-      <section class="sec" id="sec-arrival" data-module="guide">
+      <section class="sec sec--alt" id="sec-arrival" data-module="guide">
         <h2 class="sec__title">
           <span class="fr">Votre arriv&eacute;e</span>
           <span class="en">Your arrival</span>

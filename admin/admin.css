@@ -364,6 +364,17 @@ a:hover { text-decoration: underline; }
   display: inline-block;
 }
 
+.booking-card__checkin-done {
+  font-size: 13px;
+  color: var(--ma-purple);
+  background: var(--ma-purple-light);
+  border: 1px solid var(--ma-purple-mid);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.6rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+}
+
 .booking-card__modules {
   display: flex;
   flex-wrap: wrap;

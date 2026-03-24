@@ -150,7 +150,7 @@ async function loadBookings() {
 
   var { data, error } = await db
     .from("bookings")
-    .select("*, checkin_data(arrival_slot)")
+    .select("*, checkin_data(arrival_slot, house_rules_accepted, pool_waiver_signed, guests_info, signed_at)")
     .order("checkin_date", { ascending: true })
     .limit(50);
 
@@ -173,10 +173,17 @@ async function loadBookings() {
     var modNames = ["guide", "checkin", "arrival", "contract", "checkout"];
     var isPast = b.checkout_date < today;
 
-    // Extract arrival time from joined checkin_data
+    // Extract checkin data from joined table
     var arrivalSlot = null;
+    var checkinDone = false;
+    var guestCount = 0;
     if (b.checkin_data && b.checkin_data.length > 0) {
-      arrivalSlot = b.checkin_data[0].arrival_slot;
+      var cd = b.checkin_data[0];
+      arrivalSlot = cd.arrival_slot;
+      checkinDone = !!cd.house_rules_accepted;
+      if (cd.guests_info) {
+        guestCount = Array.isArray(cd.guests_info) ? cd.guests_info.length : 0;
+      }
     }
 
     return '<div class="booking-card' + (isPast ? ' booking-card--past' : '') + '">' +
@@ -192,6 +199,7 @@ async function loadBookings() {
         '</span>' +
       '</div>' +
       (arrivalSlot ? '<div class="booking-card__arrival">Arrival: <strong>' + escapeHtml(arrivalSlot) + '</strong></div>' : '') +
+      (checkinDone ? '<div class="booking-card__checkin-done">Check-in complete' + (guestCount ? ' &middot; ' + guestCount + ' guests' : '') + '</div>' : '') +
       '<div class="booking-card__modules">' +
         modNames.map(function (m) {
           return '<span class="booking-card__mod ' + (!modules[m] ? 'booking-card__mod--off' : '') + '">' + m + '</span>';
