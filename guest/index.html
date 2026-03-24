@@ -251,8 +251,56 @@
         </div>
       </section>
 
+      <!-- SECTION: CONTRACT (module: contract) -->
+      <section class="sec sec--alt" id="sec-contract" data-module="contract">
+        <h2 class="sec__title">
+          <span class="fr">Contrat de location</span>
+          <span class="en">Rental agreement</span>
+        </h2>
+        <div class="sec__body">
+
+          <!-- State: form -->
+          <div id="contract-form-state">
+            <div class="contract-doc" id="contract-doc"></div>
+
+            <div class="checkin-block" style="margin-top:1rem">
+              <div class="checkin-sig-block">
+                <label class="form-label fr">Votre nom complet (signature)</label>
+                <label class="form-label en">Your full name (signature)</label>
+                <input type="text" id="contract-sig-name" class="checkin-input" placeholder="Pr&eacute;nom Nom / Full Name">
+              </div>
+              <label class="checkin-checkbox">
+                <input type="checkbox" id="contract-accept">
+                <span class="fr">J'ai lu et j'accepte l'ensemble des conditions du contrat de location</span>
+                <span class="en">I have read and accept all the terms of the rental agreement</span>
+              </label>
+            </div>
+
+            <button class="checkin-submit" id="contract-submit-btn" onclick="submitContract()">
+              <span class="fr">Signer le contrat</span>
+              <span class="en">Sign the contract</span>
+            </button>
+            <p class="checkin-error" id="contract-error"></p>
+          </div>
+
+          <!-- State: signed -->
+          <div id="contract-confirmed-state" style="display:none">
+            <div class="arrival-confirmed">
+              <div class="arrival-confirmed__icon">&#10003;</div>
+              <p class="arrival-confirmed__text">
+                <strong class="fr">Contrat sign&eacute;</strong>
+                <strong class="en">Contract signed</strong>
+              </p>
+              <p class="arrival-confirmed__note fr">Merci ! Le contrat a &eacute;t&eacute; enregistr&eacute;.</p>
+              <p class="arrival-confirmed__note en">Thank you! The contract has been recorded.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       <!-- SECTION: ARRIVEE -->
-      <section class="sec sec--alt" id="sec-arrival" data-module="guide">
+      <section class="sec" id="sec-arrival" data-module="guide">
         <h2 class="sec__title">
           <span class="fr">Votre arriv&eacute;e</span>
           <span class="en">Your arrival</span>

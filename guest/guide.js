@@ -198,6 +198,7 @@ function initGuide() {
   renderChecklist();
   initArrivalTime();
   initCheckin();
+  initContract();
 }
 
 /* ———————————————————————————————————————
@@ -724,5 +725,154 @@ async function submitCheckin() {
       : "Erreur lors de l'envoi. Veuillez r\u00e9essayer.";
     btn.disabled = false;
     btn.textContent = currentLang === "en" ? "Submit check-in" : "Envoyer l'enregistrement";
+  }
+}
+
+/* ———————————————————————————————————————
+   CONTRACT MODULE
+   ——————————————————————————————————————— */
+
+async function initContract() {
+  var docEl = document.getElementById("contract-doc");
+  if (!docEl) return;
+
+  // Check if already signed
+  if (currentBooking && db) {
+    try {
+      var { data } = await db
+        .from("contract_data")
+        .select("signed_at")
+        .eq("booking_id", currentBooking.id)
+        .limit(1);
+
+      if (data && data.length > 0 && data[0].signed_at) {
+        document.getElementById("contract-form-state").style.display = "none";
+        document.getElementById("contract-confirmed-state").style.display = "block";
+        return;
+      }
+    } catch (e) { /* continue */ }
+  }
+
+  // Render the contract document
+  renderContract();
+}
+
+function renderContract() {
+  var docEl = document.getElementById("contract-doc");
+  if (!docEl || !currentBooking) return;
+
+  var rc = MAS_AIRAGA.rental_contract;
+  var isEn = currentLang === "en";
+  var b = currentBooking;
+
+  // Format dates
+  var opts = { day: "numeric", month: "long", year: "numeric" };
+  var lang = isEn ? "en-GB" : "fr-FR";
+  var ciDate = new Date(b.checkin_date + "T12:00:00").toLocaleDateString(lang, opts);
+  var coDate = new Date(b.checkout_date + "T12:00:00").toLocaleDateString(lang, opts);
+
+  // Calculate nights
+  var ci = new Date(b.checkin_date);
+  var co = new Date(b.checkout_date);
+  var nights = Math.round((co - ci) / (1000 * 60 * 60 * 24));
+
+  var clauses = isEn ? rc.clauses_en : rc.clauses_fr;
+
+  docEl.innerHTML =
+    '<div class="contract-doc__title">' +
+      (isEn ? rc.title_en : rc.title_fr) +
+    '</div>' +
+
+    '<div class="contract-doc__parties">' +
+      '<p class="contract-doc__party-label">' + (isEn ? rc.owner_label_en : rc.owner_label_fr) + '</p>' +
+      '<p class="contract-doc__party-name">' + rc.owner_text + '</p>' +
+      '<p style="font-size:12px;color:var(--ma-text-muted)">595 Chemin Notre Dame, 13630 Eyragues, France</p>' +
+    '</div>' +
+
+    '<div class="contract-doc__parties">' +
+      '<p class="contract-doc__party-label">' + (isEn ? rc.tenant_label_en : rc.tenant_label_fr) + '</p>' +
+      '<p class="contract-doc__party-name">' + escapeHtml(b.guest_name) + '</p>' +
+      (b.guest_email ? '<p style="font-size:12px;color:var(--ma-text-muted)">' + escapeHtml(b.guest_email) + '</p>' : '') +
+    '</div>' +
+
+    '<div style="margin-bottom:1rem">' +
+      '<div class="contract-doc__detail">' +
+        '<span class="contract-doc__detail-label">' + (isEn ? 'Check-in' : 'Arriv\u00e9e') + '</span>' +
+        '<span class="contract-doc__detail-val">' + ciDate + '</span>' +
+      '</div>' +
+      '<div class="contract-doc__detail">' +
+        '<span class="contract-doc__detail-label">' + (isEn ? 'Check-out' : 'D\u00e9part') + '</span>' +
+        '<span class="contract-doc__detail-val">' + coDate + '</span>' +
+      '</div>' +
+      '<div class="contract-doc__detail">' +
+        '<span class="contract-doc__detail-label">' + (isEn ? 'Duration' : 'Dur\u00e9e') + '</span>' +
+        '<span class="contract-doc__detail-val">' + nights + (isEn ? ' nights' : ' nuits') + '</span>' +
+      '</div>' +
+      (b.num_guests ? '<div class="contract-doc__detail">' +
+        '<span class="contract-doc__detail-label">' + (isEn ? 'Guests' : 'Voyageurs') + '</span>' +
+        '<span class="contract-doc__detail-val">' + b.num_guests + '</span>' +
+      '</div>' : '') +
+    '</div>' +
+
+    '<div class="contract-doc__property">' +
+      (isEn ? rc.property_desc_en : rc.property_desc_fr) +
+    '</div>' +
+
+    clauses.map(function (c, i) {
+      return '<div class="contract-doc__clause">' +
+        '<p class="contract-doc__clause-title">Article ' + (i + 1) + ' — ' + c.title + '</p>' +
+        '<p class="contract-doc__clause-text">' + c.text + '</p>' +
+      '</div>';
+    }).join("");
+}
+
+function escapeHtml(str) {
+  if (!str) return "";
+  var div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+async function submitContract() {
+  var errorEl = document.getElementById("contract-error");
+  errorEl.textContent = "";
+
+  var accepted = document.getElementById("contract-accept").checked;
+  var sigName = document.getElementById("contract-sig-name").value.trim();
+
+  if (!accepted || !sigName) {
+    errorEl.textContent = currentLang === "en"
+      ? "Please enter your name and accept the contract terms."
+      : "Veuillez entrer votre nom et accepter les conditions du contrat.";
+    return;
+  }
+
+  var btn = document.getElementById("contract-submit-btn");
+  btn.disabled = true;
+  btn.textContent = currentLang === "en" ? "Signing..." : "Signature en cours...";
+
+  try {
+    // Get the rendered contract HTML as a snapshot
+    var contractHtml = document.getElementById("contract-doc").innerHTML;
+
+    var { error } = await db.from("contract_data").insert({
+      booking_id: currentBooking.id,
+      contract_html: contractHtml,
+      signature: sigName,
+      signed_at: new Date().toISOString(),
+    });
+
+    if (error) throw error;
+
+    document.getElementById("contract-form-state").style.display = "none";
+    document.getElementById("contract-confirmed-state").style.display = "block";
+
+  } catch (err) {
+    console.error("Contract submission error:", err);
+    errorEl.textContent = currentLang === "en"
+      ? "Error submitting. Please try again."
+      : "Erreur lors de l\u2019envoi. Veuillez r\u00e9essayer.";
+    btn.disabled = false;
+    btn.textContent = currentLang === "en" ? "Sign the contract" : "Signer le contrat";
   }
 }

@@ -382,6 +382,49 @@ const MAS_AIRAGA = {
   },
 
   /* ———————————————————————————————————
+     RENTAL CONTRACT — clauses for digital signature
+  ——————————————————————————————————— */
+  rental_contract: {
+    title_fr: "Contrat de Location Saisonniere",
+    title_en: "Seasonal Rental Agreement",
+    preamble_fr: "Entre les soussignes :",
+    preamble_en: "Between the undersigned:",
+    owner_label_fr: "Le proprietaire",
+    owner_label_en: "The owner",
+    owner_text: "M. Flavien MAIRE et Mme Virginie DUVIVIER-MAIRE",
+    tenant_label_fr: "Le locataire",
+    tenant_label_en: "The tenant",
+    property_desc_fr: "Maison d'habitation meublee situee au 595 Chemin Notre Dame, 13630 Eyragues, France. Surface habitable : 185 m\u00b2, 4 chambres, 3 salles de bain, jardin de 2000 m\u00b2 avec piscine securisee.",
+    property_desc_en: "Furnished residential property located at 595 Chemin Notre Dame, 13630 Eyragues, France. Living area: 185 m\u00b2, 4 bedrooms, 3 bathrooms, 2000 m\u00b2 garden with secured pool.",
+    clauses_fr: [
+      { title: "Objet", text: "Le proprietaire met a disposition du locataire le bien decrit ci-dessus, a usage exclusif d'habitation temporaire de vacances." },
+      { title: "Duree", text: "La location est consentie pour la periode indiquee ci-dessus. Le locataire ne pourra en aucun cas se prevaloir d'un quelconque droit au maintien dans les lieux a l'expiration de la periode." },
+      { title: "Capacite", text: "Le nombre maximum d'occupants est de 10 personnes (adultes et enfants). Tout depassement non autorise pourra entrainer la resiliation immediate du contrat." },
+      { title: "Arrivee et depart", text: "Arrivee a partir de 16h00. Depart avant 10h00. Etat des lieux d'entree et de sortie contradictoire." },
+      { title: "Depot de garantie", text: "Un depot de garantie est verse a la reservation. Il sera restitue dans les 15 jours suivant le depart, deduction faite des eventuelles reparations ou du menage supplementaire." },
+      { title: "Annulation", text: "En cas d'annulation plus de 30 jours avant l'arrivee : perte des arrhes (25%). Moins de 30 jours : totalite du montant du." },
+      { title: "Obligations du locataire", text: "Jouir du bien en bon pere de famille. Respecter le reglement interieur. Signaler tout dysfonctionnement. Restituer le bien dans l'etat ou il a ete trouve." },
+      { title: "Assurance", text: "Le locataire declare etre titulaire d'une assurance villegiature couvrant sa responsabilite civile pour la duree du sejour." },
+      { title: "Piscine", text: "L'utilisation de la piscine est sous la responsabilite pleine et entiere du locataire. Les enfants doivent etre surveilles en permanence par un adulte." },
+      { title: "Loi applicable", text: "Le present contrat est regi par le droit francais. Tout litige sera soumis aux tribunaux competents d'Avignon." },
+    ],
+    clauses_en: [
+      { title: "Purpose", text: "The owner makes the above-described property available to the tenant for exclusive use as temporary holiday accommodation." },
+      { title: "Duration", text: "The rental is agreed for the period indicated above. The tenant shall have no right to remain in the property after the rental period expires." },
+      { title: "Capacity", text: "Maximum occupancy is 10 people (adults and children). Any unauthorized excess may result in immediate termination of the contract." },
+      { title: "Arrival and departure", text: "Check-in from 4:00 pm. Check-out before 10:00 am. Contradictory inventory at entry and exit." },
+      { title: "Security deposit", text: "A security deposit is paid upon booking. It will be returned within 15 days of departure, less any deductions for repairs or additional cleaning." },
+      { title: "Cancellation", text: "Cancellation more than 30 days before arrival: loss of deposit (25%). Less than 30 days: full rental amount due." },
+      { title: "Tenant obligations", text: "Use the property responsibly. Comply with house rules. Report any malfunction. Return the property in the condition in which it was found." },
+      { title: "Insurance", text: "The tenant declares having holiday insurance covering civil liability for the duration of the stay." },
+      { title: "Pool", text: "Use of the pool is under the full responsibility of the tenant. Children must be supervised at all times by an adult." },
+      { title: "Applicable law", text: "This contract is governed by French law. Any dispute shall be submitted to the competent courts of Avignon." },
+    ],
+    signature_note_fr: "En signant ci-dessous, je declare avoir lu et accepte l'ensemble des conditions du present contrat de location.",
+    signature_note_en: "By signing below, I declare that I have read and accept all the terms and conditions of this rental agreement.",
+  },
+
+  /* ———————————————————————————————————
      ARRIVAL TIME SLOTS — for checkin form
   ——————————————————————————————————— */
   arrival_slots: [
