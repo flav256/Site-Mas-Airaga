@@ -315,8 +315,26 @@ async function viewCheckinDetails(bookingId) {
     .eq("id", bookingId)
     .single();
 
+  // Also get contract data if exists
+  var contractHtml = "";
+  try {
+    var { data: contractData } = await db
+      .from("contract_data")
+      .select("signature, signed_at")
+      .eq("booking_id", bookingId)
+      .limit(1);
+    if (contractData && contractData.length > 0 && contractData[0].signed_at) {
+      var ct = contractData[0];
+      contractHtml = '<div class="checkin-detail-section">' +
+        '<h4 class="checkin-detail-label">Contract</h4>' +
+        '<p>Signed &#10003;' + (ct.signature ? ' — <em>' + escapeHtml(ct.signature) + '</em>' : '') + '</p>' +
+        '<p class="text-muted" style="font-size:11px">Signed: ' + new Date(ct.signed_at).toLocaleString() + '</p>' +
+      '</div>';
+    }
+  } catch (e) { /* no contract data */ }
+
   var bName = bookingData ? bookingData.guest_name : "Guest";
-  var bDates = bookingData ? bookingData.checkin_date + " → " + bookingData.checkout_date : "";
+  var bDates = bookingData ? bookingData.checkin_date + " \u2192 " + bookingData.checkout_date : "";
 
   // Build guests table
   var guestsHtml = "";
@@ -324,10 +342,57 @@ async function viewCheckinDetails(bookingId) {
     guestsHtml = '<table class="checkin-detail-table">' +
       '<tr><th>Name</th><th>Date of birth</th></tr>' +
       cd.guests_info.map(function (g) {
-        return '<tr><td>' + escapeHtml(g.name) + '</td><td>' + (g.dob || '—') + '</td></tr>';
+        return '<tr><td>' + escapeHtml(g.name) + '</td><td>' + (g.dob || '\u2014') + '</td></tr>';
       }).join("") +
     '</table>';
   }
+
+  // Get signed URL for ID photo if exists
+  var idPhotoHtml = "";
+  if (cd.id_photo_url) {
+    try {
+      var { data: signedData } = await db.storage
+        .from("checkin-documents")
+        .createSignedUrl(cd.id_photo_url, 3600); // 1h expiry
+      if (signedData && signedData.signedUrl) {
+        idPhotoHtml = '<div class="checkin-detail-section">' +
+          '<h4 class="checkin-detail-label">ID Photo</h4>' +
+          '<a href="' + signedData.signedUrl + '" target="_blank" rel="noopener">' +
+            '<img src="' + signedData.signedUrl + '" style="max-width:100%;max-height:250px;border-radius:6px;border:1px solid var(--ma-border);margin-top:0.25rem">' +
+          '</a>' +
+        '</div>';
+      }
+    } catch (e) {
+      idPhotoHtml = '<div class="checkin-detail-section"><h4 class="checkin-detail-label">ID Photo</h4><p class="text-muted" style="font-size:12px">Uploaded: ' + escapeHtml(cd.id_photo_url) + ' (cannot preview)</p></div>';
+    }
+  }
+
+  // Pool waiver detail — show full clauses + signature
+  var waiverHtml = '<div class="checkin-detail-section">' +
+    '<h4 class="checkin-detail-label">Pool waiver</h4>';
+  if (cd.pool_waiver_signed) {
+    waiverHtml += '<div class="checkin-waiver-preview">' +
+      '<p style="font-size:11px;color:var(--ma-text-muted);margin-bottom:0.5rem;font-style:italic">' +
+        'Waiver clauses accepted:' +
+      '</p>' +
+      '<ol style="font-size:11px;color:var(--ma-text-muted);padding-left:1.25rem;margin:0 0 0.5rem">';
+    // Show EN clauses (admin is always EN)
+    var clauses = [
+      "Use of pool involves risks including injury from equipment, tripping or falling.",
+      "Waiver of all claims against Mr/Mrs MAIRE and their representatives.",
+      "Release from liability for any loss, damage, injury or expense.",
+      "Hold harmless and indemnify from any third party damage or injury.",
+      "Children under constant adult supervision at all times near the pool."
+    ];
+    clauses.forEach(function (c) { waiverHtml += '<li>' + c + '</li>'; });
+    waiverHtml += '</ol>' +
+      '<p><strong>Signature:</strong> <em style="font-size:16px;color:var(--ma-purple)">' + escapeHtml(cd.pool_waiver_sig) + '</em></p>' +
+      (cd.signed_at ? '<p class="text-muted" style="font-size:11px">Signed: ' + new Date(cd.signed_at).toLocaleString() + '</p>' : '') +
+    '</div>';
+  } else {
+    waiverHtml += '<p>Not signed</p>';
+  }
+  waiverHtml += '</div>';
 
   // Build modal
   var existing = document.getElementById("checkin-modal");
@@ -352,15 +417,11 @@ async function viewCheckinDetails(bookingId) {
           '<h4 class="checkin-detail-label">House rules</h4>' +
           '<p>' + (cd.house_rules_accepted ? 'Accepted &#10003;' : 'Not accepted') + '</p>' +
         '</div>' +
+        waiverHtml +
+        idPhotoHtml +
+        contractHtml +
         '<div class="checkin-detail-section">' +
-          '<h4 class="checkin-detail-label">Pool waiver</h4>' +
-          '<p>' + (cd.pool_waiver_signed ? 'Signed &#10003;' : 'Not signed') +
-          (cd.pool_waiver_sig ? ' — <em>' + escapeHtml(cd.pool_waiver_sig) + '</em>' : '') + '</p>' +
-          (cd.signed_at ? '<p class="text-muted" style="font-size:11px">Signed: ' + new Date(cd.signed_at).toLocaleString() + '</p>' : '') +
-        '</div>' +
-        (cd.id_photo_url ? '<div class="checkin-detail-section"><h4 class="checkin-detail-label">ID Photo</h4><p class="text-muted" style="font-size:12px">' + escapeHtml(cd.id_photo_url) + '</p></div>' : '') +
-        '<div class="checkin-detail-section">' +
-          '<p class="text-muted" style="font-size:11px">Submitted: ' + (cd.submitted_at ? new Date(cd.submitted_at).toLocaleString() : '—') + '</p>' +
+          '<p class="text-muted" style="font-size:11px">Submitted: ' + (cd.submitted_at ? new Date(cd.submitted_at).toLocaleString() : '\u2014') + '</p>' +
         '</div>' +
       '</div>' +
       '<div class="modal-actions">' +

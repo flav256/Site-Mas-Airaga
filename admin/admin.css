@@ -555,5 +555,13 @@ a:hover { text-decoration: underline; }
   color: var(--ma-text);
 }
 
+.checkin-waiver-preview {
+  background: var(--ma-bg);
+  border: 1px solid var(--ma-border-light);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  margin-top: 0.25rem;
+}
+
 /* —— UTILITY —— */
 .text-muted { color: var(--ma-text-muted); }
