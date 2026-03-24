@@ -135,9 +135,9 @@ async function handleCreateBooking(e) {
   form.mod_guide.checked = true; // re-check default
   loadBookings();
 
-  // Show the generated link
+  // Show success modal with link + actions
   var guestUrl = window.location.origin + "/guest/?t=" + data.token;
-  alert("Booking created!\n\nGuest link:\n" + guestUrl);
+  showSuccessModal(data, guestUrl);
 }
 
 /* ———————————————————————————————————————
@@ -200,10 +200,80 @@ async function loadBookings() {
    ACTIONS
    ——————————————————————————————————————— */
 
+/* ———————————————————————————————————————
+   SUCCESS MODAL — replaces ugly alert()
+   ——————————————————————————————————————— */
+
+function showSuccessModal(booking, guestUrl) {
+  // Remove existing modal if any
+  var existing = document.getElementById("success-modal");
+  if (existing) existing.remove();
+
+  var enabledMods = Object.entries(booking.modules || {})
+    .filter(function (e) { return e[1]; })
+    .map(function (e) { return e[0]; });
+
+  var modal = document.createElement("div");
+  modal.id = "success-modal";
+  modal.className = "modal-overlay";
+  modal.innerHTML =
+    '<div class="modal-card">' +
+      '<div class="modal-header">' +
+        '<div class="modal-check">&#10003;</div>' +
+        '<h2 class="modal-title">Booking created</h2>' +
+        '<p class="modal-sub">' + escapeHtml(booking.guest_name) + ' &middot; ' +
+          booking.checkin_date + ' &rarr; ' + booking.checkout_date + '</p>' +
+      '</div>' +
+      '<div class="modal-body">' +
+        '<label class="form-label">Guest link</label>' +
+        '<div class="modal-link-box">' +
+          '<input type="text" class="admin-input modal-link-input" value="' + guestUrl + '" readonly id="modal-link-input">' +
+          '<button class="admin-btn admin-btn--small" onclick="modalCopyLink()">Copy</button>' +
+        '</div>' +
+        '<p class="modal-mods">Modules: ' + enabledMods.join(', ') + '</p>' +
+      '</div>' +
+      '<div class="modal-actions">' +
+        '<button class="admin-btn admin-btn--primary" onclick="modalSendWhatsApp(\'' + booking.token + '\', \'' + escapeHtml(booking.guest_name) + '\', \'' + (booking.guest_phone || '') + '\')">Send via WhatsApp</button>' +
+        '<button class="admin-btn admin-btn--ghost" onclick="modalOpenGuest(\'' + guestUrl + '\')">Preview guest page</button>' +
+        '<button class="admin-btn admin-btn--ghost" onclick="closeModal()">Close</button>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(modal);
+  // Select link text for easy copy
+  setTimeout(function () {
+    document.getElementById("modal-link-input").select();
+  }, 100);
+}
+
+function modalCopyLink() {
+  var input = document.getElementById("modal-link-input");
+  navigator.clipboard.writeText(input.value).then(function () {
+    var btn = input.nextElementSibling;
+    btn.textContent = "Copied!";
+    setTimeout(function () { btn.textContent = "Copy"; }, 2000);
+  });
+}
+
+function modalSendWhatsApp(token, guestName, guestPhone) {
+  sendWhatsApp(token, guestName, guestPhone);
+}
+
+function modalOpenGuest(url) {
+  window.open(url, "_blank");
+}
+
+function closeModal() {
+  var modal = document.getElementById("success-modal");
+  if (modal) modal.remove();
+}
+
 function copyLink(token) {
   var url = window.location.origin + "/guest/?t=" + token;
   navigator.clipboard.writeText(url).then(function () {
-    alert("Link copied to clipboard!");
+    // Brief visual feedback on the button
+    event.target.textContent = "Copied!";
+    setTimeout(function () { event.target.textContent = "Copy link"; }, 2000);
   });
 }
 

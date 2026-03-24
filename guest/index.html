@@ -9,26 +9,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="guide.css">
-  <!-- Supabase JS client (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
-  <!-- ————————————————————————————————————————
-       TOKEN GATE — validates ?t=<token> from URL
-  ———————————————————————————————————————— -->
+  <!-- TOKEN GATE -->
   <div id="ma-gate">
     <div class="gate__card">
       <div class="gate__logo">
         <p class="gate__logo-pre">Bienvenue au / Welcome to</p>
         <h1 class="gate__logo-name">Mas d'Airaga</h1>
-        <p class="gate__logo-loc">Eyragues · Provence</p>
+        <p class="gate__logo-loc">Eyragues &middot; Provence</p>
       </div>
       <div class="gate__divider"></div>
       <div class="gate__spinner" id="gate-spinner"></div>
       <p class="gate__status" id="gate-status">
-        Verification en cours...<br>
-        <span style="color:var(--ma-text-muted);font-size:13px">Verifying your access...</span>
+        V&eacute;rification en cours&hellip;<br>
+        <span style="color:var(--ma-text-muted);font-size:13px">Verifying your access&hellip;</span>
       </p>
       <p class="gate__error" id="gate-error"></p>
       <p class="gate__hint" id="gate-hint"></p>
@@ -36,12 +33,10 @@
   </div>
 
 
-  <!-- ————————————————————————————————————————
-       WELCOME GUIDE — hidden until valid token
-  ———————————————————————————————————————— -->
+  <!-- WELCOME GUIDE -->
   <div id="ma-guide" class="guide" style="display:none">
 
-    <!-- —— TOP BAR —— -->
+    <!-- TOP BAR -->
     <div class="topbar">
       <span class="topbar__name">Mas d'Airaga</span>
       <div class="topbar__lang">
@@ -51,38 +46,56 @@
       </div>
     </div>
 
-    <!-- —— HERO —— -->
-    <header class="hero">
-      <p class="hero__pre fr">Bienvenue chez vous</p>
-      <p class="hero__pre en">Welcome home</p>
-      <h1 class="hero__title"><em>Mas d'Airaga</em></h1>
-      <p class="hero__guest" id="hero-guest"></p>
-      <p class="hero__addr">595 Chemin Notre Dame · 13630 Eyragues</p>
+    <!-- HERO with background image -->
+    <header class="hero hero--photo">
+      <div class="hero__bg" style="background-image: url('../images/Photo Exterieur 1.webp')"></div>
+      <div class="hero__overlay-photo"></div>
+      <div class="hero__content-photo">
+        <p class="hero__pre fr">Bienvenue chez vous</p>
+        <p class="hero__pre en">Welcome home</p>
+        <h1 class="hero__title"><em>Mas d'Airaga</em></h1>
+        <p class="hero__guest" id="hero-guest"></p>
+        <p class="hero__addr">595 Chemin Notre Dame &middot; 13630 Eyragues</p>
+      </div>
 
-      <!-- CHECK-IN CTA — shown only if checkin or arrival module enabled -->
+      <!-- CHECK-IN CTA -->
       <div class="cta-box" id="checkin-cta" style="display:none">
         <div class="cta-box__text">
-          <strong class="fr">Formulaire d'arrivee</strong>
+          <strong class="fr">Formulaire d'arriv&eacute;e</strong>
           <strong class="en">Arrival check-in form</strong>
-          <span class="fr"> · 2 min avant votre arrivee</span>
-          <span class="en"> · 2 min before arrival</span>
+          <span class="fr"> &middot; 2 min avant votre arriv&eacute;e</span>
+          <span class="en"> &middot; 2 min before arrival</span>
         </div>
         <a class="cta-box__btn" href="#sec-checkin">
-          <span class="fr">Completer →</span>
-          <span class="en">Fill in →</span>
+          <span class="fr">Compl&eacute;ter &rarr;</span>
+          <span class="en">Fill in &rarr;</span>
         </a>
       </div>
     </header>
 
-    <!-- —— QUICK STRIP —— -->
+    <!-- WELCOME INTRO -->
+    <div class="welcome-intro">
+      <p class="welcome-intro__text fr">
+        Nous sommes ravis de vous accueillir dans notre maison &agrave; Eyragues.
+        Ce guide contient toutes les informations utiles pour rendre votre s&eacute;jour
+        le plus confortable possible.
+      </p>
+      <p class="welcome-intro__text en">
+        We are delighted to welcome you to our home in Eyragues.
+        This guide contains all the useful information to make your stay
+        as comfortable as possible.
+      </p>
+    </div>
+
+    <!-- QUICK STRIP -->
     <div class="strip">
       <div class="strip__item">
-        <span class="strip__label fr">Arrivee</span>
+        <span class="strip__label fr">Arriv&eacute;e</span>
         <span class="strip__label en">Check-in</span>
-        <span class="strip__value">16h — 22h</span>
+        <span class="strip__value">16h &mdash; 22h</span>
       </div>
       <div class="strip__item">
-        <span class="strip__label fr">Depart</span>
+        <span class="strip__label fr">D&eacute;part</span>
         <span class="strip__label en">Check-out</span>
         <span class="strip__value">avant 10h</span>
       </div>
@@ -101,7 +114,7 @@
       </div>
     </div>
 
-    <!-- —— OWNER CONTACT BAR —— -->
+    <!-- OWNER CONTACT BAR -->
     <div class="owner-bar">
       <span class="owner-bar__names">Virginie &amp; Flavien</span>
       <a class="owner-bar__link" id="wa-btn" href="#">WhatsApp</a>
@@ -111,11 +124,10 @@
 
     <main class="guide__main">
 
-      <!-- ——— SECTION: ARRIVEE (module: guide) ——— -->
+      <!-- SECTION: ARRIVEE -->
       <section class="sec" id="sec-arrival" data-module="guide">
         <h2 class="sec__title">
-          <span class="sec__icon" aria-hidden="true">✦</span>
-          <span class="fr">Votre arrivee</span>
+          <span class="fr">Votre arriv&eacute;e</span>
           <span class="en">Your arrival</span>
         </h2>
         <div class="sec__body">
@@ -124,13 +136,13 @@
             <h3 class="infocard__label fr">Adresse &amp; GPS</h3>
             <h3 class="infocard__label en">Address &amp; GPS</h3>
             <p>595 Chemin Notre Dame<br>
-               <span class="text-muted fr">A cote de la Chapelle Notre Dame du Pieux Zele</span>
-               <span class="text-muted en">Next to the Chapelle Notre Dame du Pieux Zele</span><br>
+               <span class="text-muted fr">&Agrave; c&ocirc;t&eacute; de la Chapelle Notre Dame du Pieux Z&egrave;le</span>
+               <span class="text-muted en">Next to the Chapelle Notre Dame du Pieux Z&egrave;le</span><br>
                13630 Eyragues, France</p>
-            <p class="gps-coord">N 43°50'11.80" &nbsp; E 4°50'05.50"</p>
+            <p class="gps-coord">N 43&deg;50'11.80" &nbsp; E 4&deg;50'05.50"</p>
             <a class="btn-link" href="https://maps.google.com/?q=43.836611,4.834861" target="_blank" rel="noopener">
-              <span class="fr">Ouvrir dans Google Maps →</span>
-              <span class="en">Open in Google Maps →</span>
+              <span class="fr">Ouvrir dans Google Maps &rarr;</span>
+              <span class="en">Open in Google Maps &rarr;</span>
             </a>
           </div>
 
@@ -139,29 +151,29 @@
             <h3 class="infocard__label en">Timing</h3>
             <table class="timing-table">
               <tr>
-                <td class="fr">Arrivee</td><td class="en">Arrival</td>
-                <td class="timing-table__val">a partir de 16h00</td>
+                <td class="fr">Arriv&eacute;e</td><td class="en">Arrival</td>
+                <td class="timing-table__val">&agrave; partir de 16h00</td>
               </tr>
               <tr>
-                <td class="fr">Depart</td><td class="en">Departure</td>
+                <td class="fr">D&eacute;part</td><td class="en">Departure</td>
                 <td class="timing-table__val">avant 10h00</td>
               </tr>
             </table>
-            <p class="infocard__note fr">Merci de nous prevenir de votre heure d'arrivee la veille.</p>
+            <p class="infocard__note fr">Merci de nous pr&eacute;venir de votre heure d'arriv&eacute;e la veille.</p>
             <p class="infocard__note en">Please let us know your arrival time the evening before.</p>
           </div>
 
           <div class="infocard">
             <h3 class="infocard__label fr">Parking</h3>
             <h3 class="infocard__label en">Parking</h3>
-            <p class="fr">4 places a l'entree de la propriete.</p>
+            <p class="fr">4 places &agrave; l'entr&eacute;e de la propri&eacute;t&eacute;.</p>
             <p class="en">4 spaces at the property entrance.</p>
           </div>
 
           <div class="infocard">
-            <h3 class="infocard__label fr">Remise des cles</h3>
+            <h3 class="infocard__label fr">Remise des cl&eacute;s</h3>
             <h3 class="infocard__label en">Key handover</h3>
-            <p class="fr">Nous vous accueillerons sur place entre 16h et 22h. L'heure de rendez-vous se confirme a l'arrivee.</p>
+            <p class="fr">Nous vous accueillerons sur place entre 16h et 22h. L'heure de rendez-vous se confirme &agrave; l'arriv&eacute;e.</p>
             <p class="en">We will welcome you on site between 4 pm and 10 pm. Timing confirmed at arrival.</p>
           </div>
 
@@ -169,25 +181,41 @@
       </section>
 
 
-      <!-- ——— SECTION: LA MAISON (module: guide) ——— -->
+      <!-- SECTION: LA MAISON -->
       <section class="sec sec--alt" id="sec-house" data-module="guide">
         <h2 class="sec__title">
-          <span class="sec__icon" aria-hidden="true">⌂</span>
           <span class="fr">La maison</span>
           <span class="en">The house</span>
         </h2>
+
+        <!-- Photo gallery strip -->
+        <div class="photo-strip">
+          <img src="../images/15-living-room-spacious-sofas.jpg" alt="Salon" loading="lazy">
+          <img src="../images/20-kitchen-modern-white.jpg" alt="Cuisine" loading="lazy">
+          <img src="../images/31-bedroom-4-master-queen.jpg" alt="Chambre" loading="lazy">
+          <img src="../images/34-bathroom-1.jpg" alt="Salle de bain" loading="lazy">
+        </div>
+
         <div class="sec__body">
+          <p class="sec__intro fr">
+            Mas de caract&egrave;re de 185 m&sup2;, enti&egrave;rement climatis&eacute;,
+            4 chambres, 3 salles de bain, jardin de 2000 m&sup2; plant&eacute; de lavande et d'oliviers.
+          </p>
+          <p class="sec__intro en">
+            Character house of 185 m&sup2;, fully air-conditioned,
+            4 bedrooms, 3 bathrooms, 2000 m&sup2; garden with lavender and olive trees.
+          </p>
 
           <!-- WiFi card -->
           <div class="wifi-card">
             <div class="wifi-card__header">
               <span class="wifi-card__label">WiFi</span>
-              <span class="wifi-card__network fr">Reseau</span>
+              <span class="wifi-card__network fr">R&eacute;seau</span>
               <span class="wifi-card__network en">Network</span>
             </div>
             <p class="wifi-card__ssid" id="wifi-ssid"></p>
             <p class="wifi-card__pass" id="wifi-pass"></p>
-            <p class="wifi-card__type fr">Connexion haut debit (Starlink)</p>
+            <p class="wifi-card__type fr">Connexion haut d&eacute;bit (Starlink)</p>
             <p class="wifi-card__type en">High-speed connection (Starlink)</p>
           </div>
 
@@ -198,19 +226,24 @@
       </section>
 
 
-      <!-- ——— SECTION: PISCINE (module: guide) ——— -->
+      <!-- SECTION: PISCINE -->
       <section class="sec" id="sec-pool" data-module="guide">
         <h2 class="sec__title">
-          <span class="sec__icon" aria-hidden="true">◈</span>
           <span class="fr">La piscine</span>
           <span class="en">The pool</span>
         </h2>
+
+        <!-- Pool photo -->
+        <div class="photo-strip photo-strip--single">
+          <img src="../images/03-outdoor-pool-sunbeds.jpg" alt="Piscine" loading="lazy">
+        </div>
+
         <div class="sec__body">
 
           <div class="pool-badge">
-            <span>9 m × 4,5 m</span>
-            <span class="fr">· Volet electrique</span>
-            <span class="en">· Electric cover</span>
+            <span>9 m &times; 4,5 m</span>
+            <span class="fr">&middot; Volet &eacute;lectrique</span>
+            <span class="en">&middot; Electric cover</span>
           </div>
 
           <div class="alert alert--warn">
@@ -218,7 +251,7 @@
             <div>
               <strong class="fr">Surveillance constante obligatoire</strong>
               <strong class="en">Constant supervision required</strong>
-              <p class="fr">Les enfants doivent etre surveilles par un adulte en permanence. Le volet de securite ne remplace en aucun cas la vigilance humaine.</p>
+              <p class="fr">Les enfants doivent &ecirc;tre surveill&eacute;s par un adulte en permanence. Le volet de s&eacute;curit&eacute; ne remplace en aucun cas la vigilance humaine.</p>
               <p class="en">Children must be supervised by an adult at all times. The safety cover does not replace human vigilance.</p>
             </div>
           </div>
@@ -236,11 +269,10 @@
       </section>
 
 
-      <!-- ——— SECTION: REGLES (module: guide) ——— -->
+      <!-- SECTION: REGLES -->
       <section class="sec sec--alt" id="sec-rules" data-module="guide">
         <h2 class="sec__title">
-          <span class="sec__icon" aria-hidden="true">✻</span>
-          <span class="fr">Regles de la maison</span>
+          <span class="fr">R&egrave;gles de la maison</span>
           <span class="en">House rules</span>
         </h2>
         <div class="sec__body">
@@ -249,17 +281,16 @@
       </section>
 
 
-      <!-- ——— SECTION: URGENCES (module: guide) ——— -->
+      <!-- SECTION: URGENCES -->
       <section class="sec" id="sec-emergency" data-module="guide">
         <h2 class="sec__title">
-          <span class="sec__icon" aria-hidden="true">✦</span>
           <span class="fr">Urgences &amp; contacts</span>
           <span class="en">Emergency &amp; contacts</span>
         </h2>
         <div class="sec__body">
           <div class="alert alert--info">
             <span class="alert__icon">i</span>
-            <span class="fr">Extincteur : sous l'evier de la cuisine.</span>
+            <span class="fr">Extincteur : sous l'&eacute;vier de la cuisine.</span>
             <span class="en">Fire extinguisher: under the kitchen sink.</span>
           </div>
           <div class="contact-grid" id="emergency-contacts"></div>
@@ -267,35 +298,51 @@
       </section>
 
 
-      <!-- ——— SECTION: LA REGION (module: guide) ——— -->
+      <!-- SECTION: LA REGION -->
       <section class="sec sec--alt" id="sec-local" data-module="guide">
         <h2 class="sec__title">
-          <span class="sec__icon" aria-hidden="true">✦</span>
           <span class="fr">Autour du Mas</span>
           <span class="en">Around the Mas</span>
         </h2>
+
+        <!-- Region photos -->
+        <div class="photo-strip">
+          <img src="../images/13-outdoor-facade-flowers.jpg" alt="Facade" loading="lazy">
+          <img src="../images/10-outdoor-pergola-pool-view.jpg" alt="Pergola" loading="lazy">
+          <img src="../images/42-extras-terrace-garden.jpg" alt="Jardin" loading="lazy">
+        </div>
+
         <div class="sec__body">
 
+          <p class="sec__intro fr">
+            Eyragues est un charmant village proven&ccedil;al &agrave; 4 km de Saint-R&eacute;my-de-Provence,
+            au c&oelig;ur des Alpilles. March&eacute;s, restaurants, sites historiques &mdash; tout est &agrave; port&eacute;e.
+          </p>
+          <p class="sec__intro en">
+            Eyragues is a charming Proven&ccedil;al village just 4 km from Saint-R&eacute;my-de-Provence,
+            in the heart of the Alpilles. Markets, restaurants, historic sites &mdash; all within easy reach.
+          </p>
+
           <div class="local-group">
-            <h3 class="local-group__title fr">Supermarches / Courses</h3>
+            <h3 class="local-group__title fr">Supermarch&eacute;s</h3>
             <h3 class="local-group__title en">Supermarkets</h3>
             <div id="supermarkets"></div>
           </div>
 
           <div class="local-group">
-            <h3 class="local-group__title fr">Restaurants a Eyragues</h3>
+            <h3 class="local-group__title fr">Restaurants &agrave; Eyragues</h3>
             <h3 class="local-group__title en">Restaurants in Eyragues</h3>
             <div id="restaurants"></div>
           </div>
 
           <div class="local-group">
-            <h3 class="local-group__title fr">Marche</h3>
+            <h3 class="local-group__title fr">March&eacute;</h3>
             <h3 class="local-group__title en">Market</h3>
             <div id="market-block"></div>
           </div>
 
           <div class="local-group">
-            <h3 class="local-group__title fr">A visiter dans la region</h3>
+            <h3 class="local-group__title fr">&Agrave; visiter dans la r&eacute;gion</h3>
             <h3 class="local-group__title en">Places to visit</h3>
             <div id="attractions"></div>
           </div>
@@ -304,15 +351,14 @@
       </section>
 
 
-      <!-- ——— SECTION: DEPART (module: checkout) ——— -->
+      <!-- SECTION: DEPART -->
       <section class="sec" id="sec-departure" data-module="checkout">
         <h2 class="sec__title">
-          <span class="sec__icon" aria-hidden="true">✦</span>
-          <span class="fr">Avant votre depart</span>
+          <span class="fr">Avant votre d&eacute;part</span>
           <span class="en">Before you leave</span>
         </h2>
         <div class="sec__body">
-          <p class="sec__intro fr">Cochez chaque point avant de remettre les cles. Merci !</p>
+          <p class="sec__intro fr">Cochez chaque point avant de remettre les cl&eacute;s. Merci !</p>
           <p class="sec__intro en">Tick each item before handing back the keys. Thank you!</p>
           <div class="checklist" id="departure-checklist"></div>
           <div class="trash-note" id="trash-note"></div>
@@ -322,13 +368,13 @@
     </main>
 
     <footer class="guide__footer">
-      <p class="guide__footer-wish fr">Nous vous souhaitons un sejour merveilleux.</p>
+      <p class="guide__footer-wish fr">Nous vous souhaitons un s&eacute;jour merveilleux.</p>
       <p class="guide__footer-wish en">We wish you a wonderful stay.</p>
       <p class="guide__footer-name">Virginie &amp; Flavien MAIRE</p>
-      <p class="guide__footer-addr">595 Chemin Notre Dame · 13630 Eyragues · Provence</p>
+      <p class="guide__footer-addr">595 Chemin Notre Dame &middot; 13630 Eyragues &middot; Provence</p>
     </footer>
 
-  </div><!-- /#ma-guide -->
+  </div>
 
   <script src="../shared/supabase-config.js"></script>
   <script src="mas-airaga-content.js"></script>

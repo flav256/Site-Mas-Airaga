@@ -251,6 +251,44 @@ body.lang-en .timing-table td.en { display: table-cell; }
   color: #fff;
 }
 
+.hero--photo {
+  position: relative;
+  padding: 0;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+@media (min-width: 680px) {
+  .hero--photo { min-height: 400px; }
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 30%;
+}
+
+.hero__overlay-photo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(107, 94, 130, 0.2) 0%,
+    rgba(107, 94, 130, 0.6) 50%,
+    rgba(107, 94, 130, 0.92) 100%
+  );
+}
+
+.hero__content-photo {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 1.25rem 1.75rem;
+  text-align: center;
+}
+
 .hero__pre {
   font-size: 12px;
   font-weight: 500;
@@ -273,18 +311,82 @@ body.lang-en .timing-table td.en { display: table-cell; }
   font-size: 13px;
   color: rgba(255,255,255,0.6);
   letter-spacing: 0.06em;
-  margin-bottom: 1.75rem;
+  margin-bottom: 0.5rem;
 }
 
 /* Guest name welcome */
 .hero__guest {
-  font-size: 15px;
-  color: rgba(255,255,255,0.85);
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+/* ————————————————————————————————————————
+   WELCOME INTRO
+   ———————————————————————————————————————— */
+.welcome-intro {
+  padding: 1.25rem 1.25rem 0;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.welcome-intro__text {
+  font-size: 14px;
+  color: var(--ma-text-mid);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+/* ————————————————————————————————————————
+   PHOTO STRIPS — horizontal scrolling galleries
+   ———————————————————————————————————————— */
+.photo-strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 0 1rem;
   margin-bottom: 0.5rem;
+}
+
+.photo-strip::-webkit-scrollbar { height: 4px; }
+.photo-strip::-webkit-scrollbar-thumb { background: var(--ma-border); border-radius: 2px; }
+
+.photo-strip img {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  width: 70%;
+  max-width: 320px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+@media (min-width: 680px) {
+  .photo-strip img { height: 220px; max-width: 380px; }
+}
+
+.photo-strip--single {
+  justify-content: center;
+}
+
+.photo-strip--single img {
+  width: 100%;
+  max-width: 720px;
+  height: 240px;
+}
+
+@media (min-width: 680px) {
+  .photo-strip--single img { height: 300px; }
 }
 
 /* Check-in CTA box inside hero */
 .cta-box {
+  position: relative;
+  z-index: 1;
   background: rgba(255,255,255,0.12);
   border: 1px solid rgba(255,255,255,0.25);
   border-radius: var(--radius-md) var(--radius-md) 0 0;
