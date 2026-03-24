@@ -208,7 +208,7 @@ async function loadBookings() {
       // Notes
       '<div class="booking-card__notes" id="notes-' + b.id + '">' +
         (b.notes ? '<div class="booking-card__note-text">' + escapeHtml(b.notes) + '</div>' : '') +
-        '<button class="booking-card__note-btn" onclick="toggleNoteEdit(\'' + b.id + '\', ' + JSON.stringify(escapeHtml(b.notes || '')) + ')">' +
+        '<button class="booking-card__note-btn" data-bid="' + b.id + '" onclick="toggleNoteEdit(this.dataset.bid)">' +
           (b.notes ? 'Edit note' : '+ Add note') +
         '</button>' +
       '</div>' +
@@ -486,12 +486,16 @@ async function deleteBooking(bookingId, guestName) {
    NOTES (admin-only, per booking)
    ——————————————————————————————————————— */
 
-function toggleNoteEdit(bookingId, currentNote) {
+function toggleNoteEdit(bookingId) {
   var container = document.getElementById("notes-" + bookingId);
   if (!container) return;
 
+  // Get existing note text from the DOM
+  var noteTextEl = container.querySelector(".booking-card__note-text");
+  var currentNote = noteTextEl ? noteTextEl.textContent : "";
+
   container.innerHTML =
-    '<textarea class="admin-input booking-card__note-textarea" id="note-input-' + bookingId + '" placeholder="Add a note (only visible to admins)...">' + (currentNote || '') + '</textarea>' +
+    '<textarea class="admin-input booking-card__note-textarea" id="note-input-' + bookingId + '" placeholder="Add a note (only visible to admins)...">' + escapeHtml(currentNote) + '</textarea>' +
     '<div style="display:flex;gap:0.4rem;margin-top:0.3rem">' +
       '<button class="admin-btn admin-btn--small" onclick="saveNote(\'' + bookingId + '\')">Save</button>' +
       '<button class="admin-btn admin-btn--small admin-btn--ghost" onclick="loadBookings()">Cancel</button>' +
