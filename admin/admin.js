@@ -205,11 +205,19 @@ async function loadBookings() {
           return '<span class="booking-card__mod ' + (!modules[m] ? 'booking-card__mod--off' : '') + '">' + m + '</span>';
         }).join("") +
       '</div>' +
+      // Notes
+      '<div class="booking-card__notes" id="notes-' + b.id + '">' +
+        (b.notes ? '<div class="booking-card__note-text">' + escapeHtml(b.notes) + '</div>' : '') +
+        '<button class="booking-card__note-btn" onclick="toggleNoteEdit(\'' + b.id + '\', ' + JSON.stringify(escapeHtml(b.notes || '')) + ')">' +
+          (b.notes ? 'Edit note' : '+ Add note') +
+        '</button>' +
+      '</div>' +
       '<a class="booking-card__link" href="' + guestUrl + '" target="_blank">' + guestUrl + '</a>' +
       '<div class="booking-card__actions">' +
         '<button class="admin-btn admin-btn--small" onclick="copyLink(\'' + b.token + '\')">Copy link</button>' +
         '<button class="admin-btn admin-btn--small admin-btn--ghost" onclick="sendWhatsApp(\'' + b.token + '\', \'' + escapeHtml(b.guest_name) + '\', \'' + (b.guest_phone || '') + '\')">Send WhatsApp</button>' +
         '<button class="admin-btn admin-btn--small admin-btn--ghost" onclick="markSent(\'' + b.id + '\')">Mark sent</button>' +
+        '<button class="admin-btn admin-btn--small admin-btn--danger" onclick="deleteBooking(\'' + b.id + '\', \'' + escapeHtml(b.guest_name) + '\')">Delete</button>' +
       '</div>' +
     '</div>';
   }).join("");
@@ -459,6 +467,45 @@ function sendWhatsApp(token, guestName, guestPhone) {
 
 async function markSent(bookingId) {
   await db.from("bookings").update({ status: "sent" }).eq("id", bookingId);
+  loadBookings();
+}
+
+/* ———————————————————————————————————————
+   DELETE BOOKING
+   ——————————————————————————————————————— */
+
+async function deleteBooking(bookingId, guestName) {
+  if (!confirm("Delete booking for " + guestName + "?\n\nThis will also delete all check-in data and cannot be undone.")) {
+    return;
+  }
+  await db.from("bookings").delete().eq("id", bookingId);
+  loadBookings();
+}
+
+/* ———————————————————————————————————————
+   NOTES (admin-only, per booking)
+   ——————————————————————————————————————— */
+
+function toggleNoteEdit(bookingId, currentNote) {
+  var container = document.getElementById("notes-" + bookingId);
+  if (!container) return;
+
+  container.innerHTML =
+    '<textarea class="admin-input booking-card__note-textarea" id="note-input-' + bookingId + '" placeholder="Add a note (only visible to admins)...">' + (currentNote || '') + '</textarea>' +
+    '<div style="display:flex;gap:0.4rem;margin-top:0.3rem">' +
+      '<button class="admin-btn admin-btn--small" onclick="saveNote(\'' + bookingId + '\')">Save</button>' +
+      '<button class="admin-btn admin-btn--small admin-btn--ghost" onclick="loadBookings()">Cancel</button>' +
+    '</div>';
+
+  document.getElementById("note-input-" + bookingId).focus();
+}
+
+async function saveNote(bookingId) {
+  var input = document.getElementById("note-input-" + bookingId);
+  if (!input) return;
+
+  var note = input.value.trim() || null;
+  await db.from("bookings").update({ notes: note }).eq("id", bookingId);
   loadBookings();
 }
 
