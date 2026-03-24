@@ -319,7 +319,14 @@ body.lang-en .timing-table td.en { display: table-cell; }
   font-size: 17px;
   font-weight: 600;
   color: #fff;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
+}
+
+.hero__dates {
+  font-size: 14px;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
 }
 
 /* ————————————————————————————————————————

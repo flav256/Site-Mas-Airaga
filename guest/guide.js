@@ -163,11 +163,21 @@ function revealWifi(el) {
 function initGuide() {
   var d = MAS_AIRAGA;
 
-  // Personalized guest name
-  if (currentBooking && currentBooking.guest_name) {
-    var heroGuest = document.getElementById("hero-guest");
-    if (heroGuest) {
-      heroGuest.textContent = currentBooking.guest_name;
+  // Personalized guest name + dates
+  if (currentBooking) {
+    if (currentBooking.guest_name) {
+      var heroGuest = document.getElementById("hero-guest");
+      if (heroGuest) heroGuest.textContent = currentBooking.guest_name;
+    }
+    if (currentBooking.checkin_date && currentBooking.checkout_date) {
+      var heroDates = document.getElementById("hero-dates");
+      if (heroDates) {
+        var opts = { day: "numeric", month: "long", year: "numeric" };
+        var ci = new Date(currentBooking.checkin_date + "T12:00:00");
+        var co = new Date(currentBooking.checkout_date + "T12:00:00");
+        var lang = currentLang === "en" ? "en-GB" : "fr-FR";
+        heroDates.textContent = ci.toLocaleDateString(lang, opts) + " \u2192 " + co.toLocaleDateString(lang, opts);
+      }
     }
   }
 
