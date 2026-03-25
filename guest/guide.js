@@ -603,16 +603,27 @@ function renderLocalGuide() {
     '</div>';
   }
 
-  var attEl = document.getElementById("attractions");
-  if (attEl) {
-    attEl.innerHTML = '<div class="attractions-grid">' +
-      lg.attractions.map(function (a) {
-        return '<div class="attraction-item">' +
-          '<span class="attraction-item__name">' + a.name + '</span>' +
-          '<span class="attraction-item__dist">' + a.distance + '</span>' +
-        '</div>';
-      }).join("") +
-    '</div>';
+  // Rich categorized guide (from around.html)
+  var catEl = document.getElementById("local-categories");
+  if (catEl && lg.categories) {
+    catEl.innerHTML = lg.categories.map(function (cat) {
+      var title = cl === "en" ? cat.title_en : cat.title_fr;
+      return '<div class="local-group">' +
+        '<h3 class="local-group__title">' + title + '</h3>' +
+        '<div class="local-cards">' +
+          cat.items.map(function (item) {
+            var desc = cl === "en" ? item.desc_en : item.desc_fr;
+            var dist = item.distance ? '<span class="local-card__dist">' + item.distance + '</span>' : '';
+            var inner = '<span class="local-card__name">' + item.name + dist + '</span>' +
+              '<span class="local-card__desc">' + desc + '</span>';
+            if (item.url) {
+              return '<a class="local-card local-card--link" href="' + item.url + '" target="_blank" rel="noopener">' + inner + '</a>';
+            }
+            return '<div class="local-card">' + inner + '</div>';
+          }).join("") +
+        '</div>' +
+      '</div>';
+    }).join("");
   }
 }
 

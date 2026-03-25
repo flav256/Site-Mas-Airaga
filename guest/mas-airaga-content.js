@@ -295,42 +295,16 @@ const MAS_AIRAGA = {
      LOCAL AREA GUIDE
   ——————————————————————————————————— */
   local_guide: {
+    /* Practical: supermarkets & restaurants near the house */
     supermarkets: [
-      {
-        name: "U Express",
-        address: "Les Allees, Eyragues",
-        phone: "04 90 94 00 31",
-        distance: "village",
-      },
-      {
-        name: "Petit Casino",
-        address: "5 Place Jean Jaures, Eyragues",
-        phone: "04 90 94 11 16",
-        distance: "village",
-      },
-      {
-        name: "Intermarche SUPER",
-        address: "11 Av. de la 1ere DFL, Saint-Remy-de-Provence",
-        phone: "04 90 92 04 71",
-        distance: "~10 min",
-      },
+      { name: "U Express", address: "Les Allees, Eyragues", phone: "04 90 94 00 31", distance: "village" },
+      { name: "Petit Casino", address: "5 Place Jean Jaures, Eyragues", phone: "04 90 94 11 16", distance: "village" },
+      { name: "Intermarche SUPER", address: "11 Av. de la 1ere DFL, Saint-Remy-de-Provence", phone: "04 90 92 04 71", distance: "~10 min" },
     ],
     restaurants: [
-      {
-        name: "Le Pre Gourmand",
-        address: "175 Av. Max Dormoy, Eyragues",
-        distance: "village",
-      },
-      {
-        name: "Un Bouchon en Provence",
-        address: "2 Av. Henri Barbusse, Eyragues",
-        distance: "village",
-      },
-      {
-        name: "Le Cafe du Soleil",
-        address: "144 Av. Henri Barbusse, Eyragues",
-        distance: "village",
-      },
+      { name: "Le Pre Gourmand", address: "175 Av. Max Dormoy, Eyragues", distance: "village" },
+      { name: "Un Bouchon en Provence", address: "2 Av. Henri Barbusse, Eyragues", distance: "village" },
+      { name: "Le Cafe du Soleil", address: "144 Av. Henri Barbusse, Eyragues", distance: "village" },
     ],
     market: {
       name: "Marche d'Eyragues",
@@ -339,19 +313,54 @@ const MAS_AIRAGA = {
       description_fr: "Fruits, legumes, fleurs, epices, olives, rotisseries.",
       description_en: "Fresh produce, flowers, spices, olives, rotisserie.",
     },
-    attractions: [
-      { name: "Parc des Poetes", type: "park", distance: "village" },
-      { name: "Musee du Patrimoine d'Eyragues", type: "museum", distance: "village" },
-      { name: "Bambous en Provence", type: "garden", distance: "nearby" },
-      { name: "Bureau des Guides Naturalistes", type: "nature-tour", distance: "region" },
-      { name: "Chateau Feodal de Chateaurenard", type: "historic", distance: "~10 min" },
-      { name: "Musee Frederic Mistral (Maillane)", type: "museum", distance: "~15 min" },
-      { name: "Beauty Institute & Spa Cinq Mondes YRILIS", type: "spa", distance: "nearby" },
-      { name: "Classic Bike Esprit Day Tours", type: "cycling", distance: "region" },
-      { name: "Les Baux-de-Provence", type: "village", distance: "~20 min" },
-      { name: "Saint-Remy-de-Provence", type: "market-town", distance: "~10 min" },
-      { name: "Arles", type: "city", distance: "~25 min" },
-      { name: "Avignon", type: "city", distance: "~20 min" },
+    /* Rich categorized guide — matches around.html */
+    categories: [
+      {
+        title_fr: "Eyragues \u2014 Notre village",
+        title_en: "Eyragues \u2014 Our village",
+        items: [
+          { name: "Terre de Provence", url: "https://www.myterredeprovence.fr/Eyragues", desc_fr: "Decouvrez Eyragues, village authentique des Alpilles. Histoire, patrimoine et vie locale.", desc_en: "Discover Eyragues, an authentic Alpilles village. History, heritage and local life." },
+          { name: "Office de Tourisme", url: "https://www.eyragues.fr/tourisme.php", desc_fr: "Informations touristiques officielles, visites guidees et decouverte du village.", desc_en: "Official tourist info, guided tours and village discovery." },
+          { name: "Journal Farandole", url: "http://www.journal-farandole.com/", desc_fr: "Tous les evenements et loisirs de la region. Agenda culturel complet.", desc_en: "All regional events and leisure. Full cultural calendar." },
+        ],
+      },
+      {
+        title_fr: "Sites historiques",
+        title_en: "Historic sites",
+        items: [
+          { name: "Saint-Remy-de-Provence", url: "https://www.saint-remy-de-provence.com", distance: "4 km", desc_fr: "Village pittoresque, marche le mercredi, boutiques artisanales, site de Glanum et monastere Saint-Paul-de-Mausole.", desc_en: "Picturesque village, Wednesday market, artisan shops, Glanum ruins and Saint-Paul-de-Mausole monastery." },
+          { name: "Les Baux-de-Provence", url: "https://www.lesbauxdeprovence.com", distance: "12 km", desc_fr: "Village perche classe Plus beaux villages de France. Chateau medieval, Carrieres de Lumieres.", desc_en: "Hilltop village, one of the Most Beautiful Villages of France. Medieval castle, Carrieres de Lumieres." },
+          { name: "Avignon", url: "https://avignon-tourisme.com", distance: "15 km", desc_fr: "Cite des Papes, Palais des Papes, Pont d'Avignon, Festival en juillet. Centre historique UNESCO.", desc_en: "City of Popes, Papal Palace, Pont d'Avignon, Festival in July. UNESCO historic centre." },
+          { name: "Arles", url: "https://www.arlestourisme.com", distance: "25 km", desc_fr: "Amphitheatre romain, Fondation Van Gogh. Marches mercredi et samedi.", desc_en: "Roman amphitheatre, Van Gogh Foundation. Markets Wednesday and Saturday." },
+        ],
+      },
+      {
+        title_fr: "Vignobles & Gastronomie",
+        title_en: "Wine & Food",
+        items: [
+          { name: "Chateauneuf-du-Pape", url: "https://www.chateauneuf.com", distance: "30 km", desc_fr: "Vignobles reputes, degustations de vins AOC, caves et domaines viticoles.", desc_en: "Renowned vineyards, AOC wine tastings, cellars and estates." },
+          { name: "Cotes du Rhone", url: "https://www.vins-rhone.com", desc_fr: "Route des vins, domaines familiaux. Gigondas, Vacqueyras, Beaumes-de-Venise.", desc_en: "Wine route, family estates. Gigondas, Vacqueyras, Beaumes-de-Venise." },
+          { name: "Marches Provencaux", url: "https://www.provenceguide.com/marches-provence", desc_fr: "Saint-Remy (mercredi), Eyragues (jeudi), Avignon (samedi), Arles (mercredi/samedi).", desc_en: "Saint-Remy (Wednesday), Eyragues (Thursday), Avignon (Saturday), Arles (Wed/Sat)." },
+        ],
+      },
+      {
+        title_fr: "Nature & Activites",
+        title_en: "Nature & Activities",
+        items: [
+          { name: "Parc Naturel des Alpilles", url: "https://www.parc-alpilles.fr", desc_fr: "Randonnees pedestres et VTT, circuits balises, faune et flore mediterraneennes.", desc_en: "Hiking and mountain biking, marked trails, Mediterranean flora and fauna." },
+          { name: "Camargue", url: "https://www.camargue.fr", distance: "40 km", desc_fr: "Reserve naturelle, flamants roses, chevaux blancs. Saintes-Maries-de-la-Mer, plages.", desc_en: "Nature reserve, flamingos, white horses. Saintes-Maries-de-la-Mer, beaches." },
+          { name: "Luberon", url: "https://www.luberon-apt.fr", distance: "50 km", desc_fr: "Gordes, Roussillon, Abbaye de Senanque, champs de lavande (juin-juillet).", desc_en: "Gordes, Roussillon, Senanque Abbey, lavender fields (June-July)." },
+        ],
+      },
+      {
+        title_fr: "Culture & Evenements",
+        title_en: "Culture & Events",
+        items: [
+          { name: "Festival d'Avignon", url: "https://www.festival-avignon.com", desc_fr: "Juillet \u2014 Theatre, danse, musique. Plus grand festival de theatre au monde.", desc_en: "July \u2014 Theatre, dance, music. World's largest theatre festival." },
+          { name: "Carrieres de Lumieres", url: "https://www.carrieres-lumieres.com", desc_fr: "Les Baux \u2014 Spectacle multimedia immersif dans d'anciennes carrieres.", desc_en: "Les Baux \u2014 Immersive multimedia show in former quarries." },
+          { name: "Van Gogh Trail", url: "https://vangoghroute.com/france/saint-remy/", desc_fr: "Saint-Remy & Arles \u2014 Sur les traces de Van Gogh, lieux peints par l'artiste.", desc_en: "Saint-Remy & Arles \u2014 Follow Van Gogh's footsteps, sites painted by the artist." },
+        ],
+      },
     ],
   },
 
