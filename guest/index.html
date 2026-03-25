@@ -61,8 +61,7 @@
       <div class="hero__bg" style="background-image: url('../images/Photo Exterieur 1.webp')"></div>
       <div class="hero__overlay-photo"></div>
       <div class="hero__content-photo">
-        <p class="hero__pre fr">Bienvenue chez vous</p>
-        <p class="hero__pre en">Welcome home</p>
+        <p class="hero__pre" data-ui="welcomeHome">Bienvenue chez vous</p>
         <h1 class="hero__title"><em>Mas d'Airaga</em></h1>
         <p class="hero__guest" id="hero-guest"></p>
         <p class="hero__dates" id="hero-dates"></p>
@@ -72,43 +71,31 @@
       <!-- CHECK-IN CTA -->
       <div class="cta-box" id="checkin-cta" style="display:none">
         <div class="cta-box__text">
-          <strong class="fr">Formulaire d'arriv&eacute;e</strong>
-          <strong class="en">Arrival check-in form</strong>
-          <span class="fr"> &middot; 2 min avant votre arriv&eacute;e</span>
-          <span class="en"> &middot; 2 min before arrival</span>
+          <strong data-ui="ctaForm">Formulaire d'arriv&eacute;e</strong>
+          <span data-ui="ctaFormHint"> &middot; 2 min avant votre arriv&eacute;e</span>
         </div>
-        <a class="cta-box__btn" href="#sec-checkin">
-          <span class="fr">Compl&eacute;ter &rarr;</span>
-          <span class="en">Fill in &rarr;</span>
-        </a>
+        <a class="cta-box__btn" href="#sec-checkin" data-ui="fillIn">Compl&eacute;ter &rarr;</a>
       </div>
     </header>
 
     <!-- WELCOME INTRO -->
     <div class="welcome-intro">
-      <p class="welcome-intro__text fr">
+      <p class="welcome-intro__text" data-ui="welcomeIntro">
         Nous sommes ravis de vous accueillir dans notre maison &agrave; Eyragues.
         Ce guide contient toutes les informations utiles pour rendre votre s&eacute;jour
         le plus confortable possible.
-      </p>
-      <p class="welcome-intro__text en">
-        We are delighted to welcome you to our home in Eyragues.
-        This guide contains all the useful information to make your stay
-        as comfortable as possible.
       </p>
     </div>
 
     <!-- QUICK STRIP -->
     <div class="strip">
       <div class="strip__item">
-        <span class="strip__label fr">Arriv&eacute;e</span>
-        <span class="strip__label en">Check-in</span>
+        <span class="strip__label" data-ui="checkin">Arriv&eacute;e</span>
         <span class="strip__value">16h &mdash; 22h</span>
       </div>
       <div class="strip__item">
-        <span class="strip__label fr">D&eacute;part</span>
-        <span class="strip__label en">Check-out</span>
-        <span class="strip__value">avant 10h</span>
+        <span class="strip__label" data-ui="checkout">D&eacute;part</span>
+        <span class="strip__value" data-ui="beforeTen">avant 10h</span>
       </div>
       <div class="strip__item">
         <span class="strip__label">Max</span>
@@ -116,8 +103,7 @@
       </div>
       <div class="strip__item strip__item--tap" onclick="revealWifi(this)" title="Tap for WiFi">
         <span class="strip__label">WiFi</span>
-        <span class="strip__value strip__value--tap fr">appuyer</span>
-        <span class="strip__value strip__value--tap en">tap</span>
+        <span class="strip__value strip__value--tap" id="wifi-tap-label">appuyer</span>
         <div class="wifi-pop" id="wifi-pop" style="display:none">
           <span id="wifi-ssid-pop"></span>
           <span id="wifi-pass-pop"></span>
@@ -137,38 +123,23 @@
 
       <!-- SECTION: ARRIVAL TIME PICKER (module: arrival) -->
       <section class="sec sec--arrival-time" id="sec-arrival-time" data-module="arrival">
-        <h2 class="sec__title">
-          <span class="fr">Heure d'arriv&eacute;e</span>
-          <span class="en">Arrival time</span>
-        </h2>
+        <h2 class="sec__title" data-ui="arrivalTime">Heure d'arriv&eacute;e</h2>
         <div class="sec__body">
-          <p class="sec__intro fr">
-            Merci de nous indiquer votre cr&eacute;neau d'arriv&eacute;e pour que nous puissions vous accueillir.
-          </p>
-          <p class="sec__intro en">
-            Please let us know your arrival time so we can welcome you.
-          </p>
+          <p class="sec__intro" data-ui="arrivalIntro">Merci de nous indiquer votre cr&eacute;neau d'arriv&eacute;e pour que nous puissions vous accueillir.</p>
 
-          <!-- State: form (not yet submitted) -->
+          <!-- State: form -->
           <div id="arrival-form-state">
             <div class="arrival-slots" id="arrival-slots"></div>
-            <button class="arrival-submit" id="arrival-submit-btn" onclick="submitArrivalTime()" disabled>
-              <span class="fr">Confirmer l'heure d'arriv&eacute;e</span>
-              <span class="en">Confirm arrival time</span>
-            </button>
+            <button class="arrival-submit" id="arrival-submit-btn" onclick="submitArrivalTime()" disabled data-ui="confirmArrival">Confirmer l'heure d'arriv&eacute;e</button>
           </div>
 
           <!-- State: confirmed -->
           <div id="arrival-confirmed-state" style="display:none">
             <div class="arrival-confirmed">
               <div class="arrival-confirmed__icon">&#10003;</div>
-              <p class="arrival-confirmed__text">
-                <strong class="fr">Cr&eacute;neau confirm&eacute;</strong>
-                <strong class="en">Time confirmed</strong>
-              </p>
+              <p class="arrival-confirmed__text"><strong data-ui="timeConfirmed">Cr&eacute;neau confirm&eacute;</strong></p>
               <p class="arrival-confirmed__slot" id="arrival-confirmed-slot"></p>
-              <p class="arrival-confirmed__note fr">Nous vous attendons ! Vous pouvez modifier en nous contactant.</p>
-              <p class="arrival-confirmed__note en">We look forward to seeing you! You can change this by contacting us.</p>
+              <p class="arrival-confirmed__note" data-ui="timeConfirmedNote">Nous vous attendons ! Vous pouvez modifier en nous contactant.</p>
             </div>
           </div>
         </div>
@@ -176,10 +147,7 @@
 
       <!-- SECTION: ONLINE CHECK-IN (module: checkin) -->
       <section class="sec" id="sec-checkin" data-module="checkin">
-        <h2 class="sec__title">
-          <span class="fr">Enregistrement en ligne</span>
-          <span class="en">Online check-in</span>
-        </h2>
+        <h2 class="sec__title" data-ui="onlineCheckin">Enregistrement en ligne</h2>
         <div class="sec__body">
 
           <!-- State: form -->
@@ -187,75 +155,54 @@
 
             <!-- Guest list -->
             <div class="checkin-block">
-              <h3 class="checkin-block__title fr">Voyageurs</h3>
-              <h3 class="checkin-block__title en">Guests</h3>
-              <p class="checkin-block__hint fr">Merci d'indiquer le nom et la date de naissance de chaque voyageur.</p>
-              <p class="checkin-block__hint en">Please enter the name and date of birth of each guest.</p>
+              <h3 class="checkin-block__title" data-ui="guests">Voyageurs</h3>
+              <p class="checkin-block__hint" data-ui="guestsHint">Merci d'indiquer le nom et la date de naissance de chaque voyageur.</p>
               <div id="checkin-guests-list"></div>
-              <button type="button" class="checkin-add-guest" onclick="addGuestRow()">
-                <span class="fr">+ Ajouter un voyageur</span>
-                <span class="en">+ Add a guest</span>
-              </button>
+              <button type="button" class="checkin-add-guest" onclick="addGuestRow()" data-ui="addGuest">+ Ajouter un voyageur</button>
             </div>
 
             <!-- House rules acknowledgement -->
             <div class="checkin-block">
-              <h3 class="checkin-block__title fr">R&egrave;gles de la maison</h3>
-              <h3 class="checkin-block__title en">House rules</h3>
+              <h3 class="checkin-block__title" data-ui="houseRules">R&egrave;gles de la maison</h3>
               <ul class="rule-list" id="checkin-house-rules"></ul>
               <label class="checkin-checkbox">
                 <input type="checkbox" id="checkin-rules-accept">
-                <span class="fr">J'ai lu et j'accepte les r&egrave;gles de la maison</span>
-                <span class="en">I have read and accept the house rules</span>
+                <span data-ui="rulesAccept">J'ai lu et j'accepte les r&egrave;gles de la maison</span>
               </label>
             </div>
 
-            <!-- Pool waiver (full document from decharge_piscine.pdf) -->
+            <!-- Pool waiver -->
             <div class="checkin-block">
-              <h3 class="checkin-block__title fr">D&eacute;charge piscine</h3>
-              <h3 class="checkin-block__title en">Pool liability waiver</h3>
+              <h3 class="checkin-block__title" data-ui="poolWaiver">D&eacute;charge piscine</h3>
               <div class="checkin-waiver checkin-waiver--full" id="checkin-waiver-text"></div>
 
               <!-- Children present (Section 4 of waiver) -->
               <div class="children-section">
-                <h4 class="children-section__title">
-                  <span class="fr">Enfants pr&eacute;sents pendant la location</span>
-                  <span class="en">Children present during rental</span>
-                </h4>
+                <h4 class="children-section__title" data-ui="childrenTitle">Enfants pr&eacute;sents pendant la location</h4>
                 <div id="children-list"></div>
-                <button type="button" class="checkin-add-guest" onclick="addChildRow()">
-                  <span class="fr">+ Ajouter un enfant</span>
-                  <span class="en">+ Add a child</span>
-                </button>
+                <button type="button" class="checkin-add-guest" onclick="addChildRow()" data-ui="addChild">+ Ajouter un enfant</button>
               </div>
 
               <div class="checkin-sig-block">
-                <label class="form-label fr">Votre nom complet (signature)</label>
-                <label class="form-label en">Your full name (signature)</label>
+                <label class="form-label" data-ui="signatureLabel">Votre nom complet (signature)</label>
                 <input type="text" id="checkin-sig-name" class="checkin-input" placeholder="Pr&eacute;nom Nom / Full Name">
               </div>
               <label class="checkin-checkbox">
                 <input type="checkbox" id="checkin-waiver-accept">
-                <span class="fr">J'ai lu et j'accepte la d&eacute;charge de responsabilit&eacute; piscine</span>
-                <span class="en">I have read and accept the pool liability waiver</span>
+                <span data-ui="waiverAccept">J'ai lu et j'accepte la d&eacute;charge de responsabilit&eacute; piscine</span>
               </label>
             </div>
 
             <!-- ID upload (optional) -->
             <div class="checkin-block">
-              <h3 class="checkin-block__title fr">Pi&egrave;ce d'identit&eacute; (optionnel)</h3>
-              <h3 class="checkin-block__title en">ID document (optional)</h3>
-              <p class="checkin-block__hint fr">Photo de votre passeport ou carte d'identit&eacute;.</p>
-              <p class="checkin-block__hint en">Photo of your passport or ID card.</p>
+              <h3 class="checkin-block__title" data-ui="idDoc">Pi&egrave;ce d'identit&eacute; (optionnel)</h3>
+              <p class="checkin-block__hint" data-ui="idDocHint">Photo de votre passeport ou carte d'identit&eacute;.</p>
               <input type="file" id="checkin-id-file" accept="image/*" class="checkin-file-input">
               <div id="checkin-id-preview"></div>
             </div>
 
             <!-- Submit -->
-            <button class="checkin-submit" id="checkin-submit-btn" onclick="submitCheckin()">
-              <span class="fr">Envoyer l'enregistrement</span>
-              <span class="en">Submit check-in</span>
-            </button>
+            <button class="checkin-submit" id="checkin-submit-btn" onclick="submitCheckin()" data-ui="submitCheckin">Envoyer l'enregistrement</button>
             <p class="checkin-error" id="checkin-error"></p>
           </div>
 
@@ -263,16 +210,9 @@
           <div id="checkin-confirmed-state" style="display:none">
             <div class="arrival-confirmed">
               <div class="arrival-confirmed__icon">&#10003;</div>
-              <p class="arrival-confirmed__text">
-                <strong class="fr">Enregistrement re&ccedil;u</strong>
-                <strong class="en">Check-in received</strong>
-              </p>
-              <p class="arrival-confirmed__note fr">Merci ! Nous avons bien re&ccedil;u vos informations.</p>
-              <p class="arrival-confirmed__note en">Thank you! We have received your information.</p>
-              <button class="download-pdf-btn" onclick="downloadWaiverPdf()">
-                <span class="fr">T&eacute;l&eacute;charger la d&eacute;charge sign&eacute;e (PDF)</span>
-                <span class="en">Download signed waiver (PDF)</span>
-              </button>
+              <p class="arrival-confirmed__text"><strong data-ui="checkinReceived">Enregistrement re&ccedil;u</strong></p>
+              <p class="arrival-confirmed__note" data-ui="checkinReceivedNote">Merci ! Nous avons bien re&ccedil;u vos informations.</p>
+              <button class="download-pdf-btn" onclick="downloadWaiverPdf()" data-ui="downloadWaiver">T&eacute;l&eacute;charger la d&eacute;charge sign&eacute;e (PDF)</button>
             </div>
           </div>
 
@@ -281,10 +221,7 @@
 
       <!-- SECTION: CONTRACT (module: contract) -->
       <section class="sec sec--alt" id="sec-contract" data-module="contract">
-        <h2 class="sec__title">
-          <span class="fr">Contrat de location</span>
-          <span class="en">Rental agreement</span>
-        </h2>
+        <h2 class="sec__title" data-ui="rentalContract">Contrat de location</h2>
         <div class="sec__body">
 
           <!-- State: form -->
@@ -293,21 +230,16 @@
 
             <div class="checkin-block" style="margin-top:1rem">
               <div class="checkin-sig-block">
-                <label class="form-label fr">Votre nom complet (signature)</label>
-                <label class="form-label en">Your full name (signature)</label>
+                <label class="form-label" data-ui="signatureLabel">Votre nom complet (signature)</label>
                 <input type="text" id="contract-sig-name" class="checkin-input" placeholder="Pr&eacute;nom Nom / Full Name">
               </div>
               <label class="checkin-checkbox">
                 <input type="checkbox" id="contract-accept">
-                <span class="fr">J'ai lu et j'accepte l'ensemble des conditions du contrat de location</span>
-                <span class="en">I have read and accept all the terms of the rental agreement</span>
+                <span data-ui="contractAccept">J'ai lu et j'accepte l'ensemble des conditions du contrat de location</span>
               </label>
             </div>
 
-            <button class="checkin-submit" id="contract-submit-btn" onclick="submitContract()">
-              <span class="fr">Signer le contrat</span>
-              <span class="en">Sign the contract</span>
-            </button>
+            <button class="checkin-submit" id="contract-submit-btn" onclick="submitContract()" data-ui="signContract">Signer le contrat</button>
             <p class="checkin-error" id="contract-error"></p>
           </div>
 
@@ -315,16 +247,9 @@
           <div id="contract-confirmed-state" style="display:none">
             <div class="arrival-confirmed">
               <div class="arrival-confirmed__icon">&#10003;</div>
-              <p class="arrival-confirmed__text">
-                <strong class="fr">Contrat sign&eacute;</strong>
-                <strong class="en">Contract signed</strong>
-              </p>
-              <p class="arrival-confirmed__note fr">Merci ! Le contrat a &eacute;t&eacute; enregistr&eacute;.</p>
-              <p class="arrival-confirmed__note en">Thank you! The contract has been recorded.</p>
-              <button class="download-pdf-btn" onclick="downloadContractPdf()">
-                <span class="fr">T&eacute;l&eacute;charger le contrat sign&eacute; (PDF)</span>
-                <span class="en">Download signed contract (PDF)</span>
-              </button>
+              <p class="arrival-confirmed__text"><strong data-ui="contractSigned">Contrat sign&eacute;</strong></p>
+              <p class="arrival-confirmed__note" data-ui="contractSignedNote">Merci ! Le contrat a &eacute;t&eacute; enregistr&eacute;.</p>
+              <button class="download-pdf-btn" onclick="downloadContractPdf()" data-ui="downloadContract">T&eacute;l&eacute;charger le contrat sign&eacute; (PDF)</button>
             </div>
           </div>
 
@@ -333,55 +258,41 @@
 
       <!-- SECTION: ARRIVEE -->
       <section class="sec" id="sec-arrival" data-module="guide">
-        <h2 class="sec__title">
-          <span class="fr">Votre arriv&eacute;e</span>
-          <span class="en">Your arrival</span>
-        </h2>
+        <h2 class="sec__title" data-ui="yourArrival">Votre arriv&eacute;e</h2>
         <div class="sec__body">
 
           <div class="infocard">
-            <h3 class="infocard__label fr">Adresse &amp; GPS</h3>
-            <h3 class="infocard__label en">Address &amp; GPS</h3>
+            <h3 class="infocard__label" data-ui="addressGps">Adresse &amp; GPS</h3>
             <p>595 Chemin Notre Dame<br>
-               <span class="text-muted fr">&Agrave; c&ocirc;t&eacute; de la Chapelle Notre Dame du Pieux Z&egrave;le</span>
-               <span class="text-muted en">Next to the Chapelle Notre Dame du Pieux Z&egrave;le</span><br>
+               <span class="text-muted" data-ui="nextToChapel">&Agrave; c&ocirc;t&eacute; de la Chapelle Notre Dame du Pieux Z&egrave;le</span><br>
                13630 Eyragues, France</p>
             <p class="gps-coord">N 43&deg;50'11.80" &nbsp; E 4&deg;50'05.50"</p>
-            <a class="btn-link" href="https://maps.google.com/?q=43.836611,4.834861" target="_blank" rel="noopener">
-              <span class="fr">Ouvrir dans Google Maps &rarr;</span>
-              <span class="en">Open in Google Maps &rarr;</span>
-            </a>
+            <a class="btn-link" href="https://maps.google.com/?q=43.836611,4.834861" target="_blank" rel="noopener" data-ui="openMaps">Ouvrir dans Google Maps &rarr;</a>
           </div>
 
           <div class="infocard">
-            <h3 class="infocard__label fr">Horaires</h3>
-            <h3 class="infocard__label en">Timing</h3>
+            <h3 class="infocard__label" data-ui="timing">Horaires</h3>
             <table class="timing-table">
               <tr>
-                <td class="fr">Arriv&eacute;e</td><td class="en">Arrival</td>
+                <td data-ui="arrival">Arriv&eacute;e</td>
                 <td class="timing-table__val">&agrave; partir de 16h00</td>
               </tr>
               <tr>
-                <td class="fr">D&eacute;part</td><td class="en">Departure</td>
-                <td class="timing-table__val">avant 10h00</td>
+                <td data-ui="departureLabel">D&eacute;part</td>
+                <td class="timing-table__val" data-ui="beforeTen">avant 10h00</td>
               </tr>
             </table>
-            <p class="infocard__note fr">Merci de nous pr&eacute;venir de votre heure d'arriv&eacute;e la veille.</p>
-            <p class="infocard__note en">Please let us know your arrival time the evening before.</p>
+            <p class="infocard__note" data-ui="timingNote">Merci de nous pr&eacute;venir de votre heure d'arriv&eacute;e la veille.</p>
           </div>
 
           <div class="infocard">
-            <h3 class="infocard__label fr">Parking</h3>
-            <h3 class="infocard__label en">Parking</h3>
-            <p class="fr">4 places &agrave; l'entr&eacute;e de la propri&eacute;t&eacute;.</p>
-            <p class="en">4 spaces at the property entrance.</p>
+            <h3 class="infocard__label" data-ui="parking">Parking</h3>
+            <p data-ui="parkingDesc">4 places &agrave; l'entr&eacute;e de la propri&eacute;t&eacute;.</p>
           </div>
 
           <div class="infocard">
-            <h3 class="infocard__label fr">Remise des cl&eacute;s</h3>
-            <h3 class="infocard__label en">Key handover</h3>
-            <p class="fr">Nous vous accueillerons sur place entre 16h et 22h. L'heure de rendez-vous se confirme &agrave; l'arriv&eacute;e.</p>
-            <p class="en">We will welcome you on site between 4 pm and 10 pm. Timing confirmed at arrival.</p>
+            <h3 class="infocard__label" data-ui="keyHandover">Remise des cl&eacute;s</h3>
+            <p data-ui="keyHandoverDesc">Nous vous accueillerons sur place entre 16h et 22h. L'heure de rendez-vous se confirme &agrave; l'arriv&eacute;e.</p>
           </div>
 
         </div>
@@ -390,10 +301,7 @@
 
       <!-- SECTION: LA MAISON -->
       <section class="sec sec--alt" id="sec-house" data-module="guide">
-        <h2 class="sec__title">
-          <span class="fr">La maison</span>
-          <span class="en">The house</span>
-        </h2>
+        <h2 class="sec__title" data-ui="theHouse">La maison</h2>
 
         <!-- Photo gallery strip -->
         <div class="photo-strip">
@@ -417,16 +325,12 @@
           <div class="wifi-card">
             <div class="wifi-card__header">
               <span class="wifi-card__label">WiFi</span>
-              <span class="wifi-card__network fr">R&eacute;seau</span>
-              <span class="wifi-card__network en">Network</span>
             </div>
             <p class="wifi-card__ssid" id="wifi-ssid"></p>
             <p class="wifi-card__pass" id="wifi-pass"></p>
-            <p class="wifi-card__type fr">Connexion haut d&eacute;bit (Starlink)</p>
-            <p class="wifi-card__type en">High-speed connection (Starlink)</p>
+            <p class="wifi-card__type">Starlink</p>
             <div class="wifi-card__qr" id="wifi-qr"></div>
-            <p class="wifi-card__qr-hint fr">Scannez pour vous connecter</p>
-            <p class="wifi-card__qr-hint en">Scan to connect</p>
+            <p class="wifi-card__qr-hint" data-ui="wifiScan">Scannez pour vous connecter</p>
           </div>
 
           <!-- Rooms -->
@@ -438,10 +342,7 @@
 
       <!-- SECTION: PISCINE -->
       <section class="sec" id="sec-pool" data-module="guide">
-        <h2 class="sec__title">
-          <span class="fr">La piscine</span>
-          <span class="en">The pool</span>
-        </h2>
+        <h2 class="sec__title" data-ui="thePool">La piscine</h2>
 
         <!-- Pool photo -->
         <div class="photo-strip photo-strip--single">
@@ -459,20 +360,16 @@
           <div class="alert alert--warn">
             <span class="alert__icon">!</span>
             <div>
-              <strong class="fr">Surveillance constante obligatoire</strong>
-              <strong class="en">Constant supervision required</strong>
-              <p class="fr">Les enfants doivent &ecirc;tre surveill&eacute;s par un adulte en permanence. Le volet de s&eacute;curit&eacute; ne remplace en aucun cas la vigilance humaine.</p>
-              <p class="en">Children must be supervised by an adult at all times. The safety cover does not replace human vigilance.</p>
+              <strong data-ui="supervisionWarn">Surveillance constante obligatoire</strong>
+              <p data-ui="supervisionDesc">Les enfants doivent &ecirc;tre surveill&eacute;s par un adulte en permanence. Le volet de s&eacute;curit&eacute; ne remplace en aucun cas la vigilance humaine.</p>
             </div>
           </div>
 
           <ul class="rule-list" id="pool-rules"></ul>
 
           <div class="infocard">
-            <h3 class="infocard__label fr">Entretien de la piscine</h3>
-            <h3 class="infocard__label en">Pool maintenance</h3>
-            <p class="fr">Le pisciniste intervient une fois par semaine. Ne pas modifier la programmation de la filtration. Laisser le robot dans la piscine en permanence. Vider les skimmers une fois par jour.</p>
-            <p class="en">The pool technician visits once a week. Do not adjust the filtration timer. Leave the cleaning robot in the pool at all times. Empty the skimmers once a day.</p>
+            <h3 class="infocard__label" data-ui="poolMaintenance">Entretien de la piscine</h3>
+            <p data-ui="poolMaintenanceDesc">Le pisciniste intervient une fois par semaine. Ne pas modifier la programmation de la filtration. Laisser le robot dans la piscine en permanence. Vider les skimmers une fois par jour.</p>
           </div>
 
         </div>
@@ -481,10 +378,7 @@
 
       <!-- SECTION: REGLES -->
       <section class="sec sec--alt" id="sec-rules" data-module="guide">
-        <h2 class="sec__title">
-          <span class="fr">R&egrave;gles de la maison</span>
-          <span class="en">House rules</span>
-        </h2>
+        <h2 class="sec__title" data-ui="houseRules">R&egrave;gles de la maison</h2>
         <div class="sec__body">
           <ul class="rule-list" id="house-rules"></ul>
         </div>
@@ -493,15 +387,11 @@
 
       <!-- SECTION: URGENCES -->
       <section class="sec" id="sec-emergency" data-module="guide">
-        <h2 class="sec__title">
-          <span class="fr">Urgences &amp; contacts</span>
-          <span class="en">Emergency &amp; contacts</span>
-        </h2>
+        <h2 class="sec__title" data-ui="emergency">Urgences &amp; contacts</h2>
         <div class="sec__body">
           <div class="alert alert--info">
             <span class="alert__icon">i</span>
-            <span class="fr">Extincteur : sous l'&eacute;vier de la cuisine.</span>
-            <span class="en">Fire extinguisher: under the kitchen sink.</span>
+            <span data-ui="fireExtinguisher">Extincteur : sous l'&eacute;vier de la cuisine.</span>
           </div>
           <div class="contact-grid" id="emergency-contacts"></div>
         </div>
@@ -510,10 +400,7 @@
 
       <!-- SECTION: LA REGION -->
       <section class="sec sec--alt" id="sec-local" data-module="guide">
-        <h2 class="sec__title">
-          <span class="fr">Autour du Mas</span>
-          <span class="en">Around the Mas</span>
-        </h2>
+        <h2 class="sec__title" data-ui="aroundMas">Autour du Mas</h2>
 
         <!-- Region photos -->
         <div class="photo-strip">
@@ -524,30 +411,23 @@
 
         <div class="sec__body">
 
-          <p class="sec__intro fr">
+          <p class="sec__intro" data-ui="aroundIntro">
             Eyragues est un charmant village proven&ccedil;al &agrave; 4 km de Saint-R&eacute;my-de-Provence,
             au c&oelig;ur des Alpilles. March&eacute;s, restaurants, sites historiques &mdash; tout est &agrave; port&eacute;e.
           </p>
-          <p class="sec__intro en">
-            Eyragues is a charming Proven&ccedil;al village just 4 km from Saint-R&eacute;my-de-Provence,
-            in the heart of the Alpilles. Markets, restaurants, historic sites &mdash; all within easy reach.
-          </p>
 
           <div class="local-group">
-            <h3 class="local-group__title fr">Supermarch&eacute;s</h3>
-            <h3 class="local-group__title en">Supermarkets</h3>
+            <h3 class="local-group__title" data-ui="supermarkets">Supermarch&eacute;s</h3>
             <div id="supermarkets"></div>
           </div>
 
           <div class="local-group">
-            <h3 class="local-group__title fr">Restaurants &agrave; Eyragues</h3>
-            <h3 class="local-group__title en">Restaurants in Eyragues</h3>
+            <h3 class="local-group__title" data-ui="restaurantsTitle">Restaurants &agrave; Eyragues</h3>
             <div id="restaurants"></div>
           </div>
 
           <div class="local-group">
-            <h3 class="local-group__title fr">March&eacute;</h3>
-            <h3 class="local-group__title en">Market</h3>
+            <h3 class="local-group__title" data-ui="marketTitle">March&eacute;</h3>
             <div id="market-block"></div>
           </div>
 
@@ -559,13 +439,9 @@
 
       <!-- SECTION: DEPART -->
       <section class="sec" id="sec-departure" data-module="checkout">
-        <h2 class="sec__title">
-          <span class="fr">Avant votre d&eacute;part</span>
-          <span class="en">Before you leave</span>
-        </h2>
+        <h2 class="sec__title" data-ui="departure">Avant votre d&eacute;part</h2>
         <div class="sec__body">
-          <p class="sec__intro fr">Cochez chaque point avant de remettre les cl&eacute;s. Merci !</p>
-          <p class="sec__intro en">Tick each item before handing back the keys. Thank you!</p>
+          <p class="sec__intro" data-ui="departureIntro">Cochez chaque point avant de remettre les cl&eacute;s. Merci !</p>
           <div class="checklist" id="departure-checklist"></div>
           <div class="trash-note" id="trash-note"></div>
         </div>
@@ -574,8 +450,7 @@
     </main>
 
     <footer class="guide__footer">
-      <p class="guide__footer-wish fr">Nous vous souhaitons un s&eacute;jour merveilleux.</p>
-      <p class="guide__footer-wish en">We wish you a wonderful stay.</p>
+      <p class="guide__footer-wish" data-ui="footerWish">Nous vous souhaitons un s&eacute;jour merveilleux.</p>
       <p class="guide__footer-name">Virginie &amp; Flavien MAIRE</p>
       <p class="guide__footer-addr">595 Chemin Notre Dame &middot; 13630 Eyragues &middot; Provence</p>
     </footer>
