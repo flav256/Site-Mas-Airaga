@@ -265,7 +265,23 @@ function setLang(lang) {
   renderHouseRules();
   renderPoolRules();
   renderChecklist();
+  renderCheckinWaiver();
+  renderContract();
+  renderRooms();
+  renderEmergencyContacts();
+  renderLocalGuide();
   buildNav();
+  // Update dates in hero
+  if (currentBooking && currentBooking.checkin_date && currentBooking.checkout_date) {
+    var heroDates = document.getElementById("hero-dates");
+    if (heroDates) {
+      var opts = { day: "numeric", month: "long", year: "numeric" };
+      var loc = { fr: "fr-FR", en: "en-GB", nl: "nl-NL", de: "de-DE" }[currentLang] || "fr-FR";
+      var ci = new Date(currentBooking.checkin_date + "T12:00:00");
+      var co = new Date(currentBooking.checkout_date + "T12:00:00");
+      heroDates.textContent = ci.toLocaleDateString(loc, opts) + " \u2192 " + co.toLocaleDateString(loc, opts);
+    }
+  }
 }
 
 function applyLang(lang) {
