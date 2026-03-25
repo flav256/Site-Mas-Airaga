@@ -388,6 +388,17 @@ function initScrollSpy() {
    WIFI REVEAL (quick strip tap)
    ——————————————————————————————————————— */
 
+function renderWifiQr(ssid, password) {
+  var container = document.getElementById("wifi-qr");
+  if (!container || typeof qrcode === "undefined") return;
+  // WiFi QR standard: WIFI:T:WPA;S:<ssid>;P:<password>;;
+  var wifiStr = "WIFI:T:WPA;S:" + ssid + ";P:" + password + ";;";
+  var qr = qrcode(0, "M");
+  qr.addData(wifiStr);
+  qr.make();
+  container.innerHTML = qr.createImgTag(4, 8);
+}
+
 function revealWifi(el) {
   var pop = document.getElementById("wifi-pop");
   var d = MAS_AIRAGA.access.wifi;
@@ -436,6 +447,7 @@ function initGuide() {
   // WiFi card
   document.getElementById("wifi-ssid").textContent = d.access.wifi.ssid;
   document.getElementById("wifi-pass").textContent = d.access.wifi.password;
+  renderWifiQr(d.access.wifi.ssid, d.access.wifi.password);
 
   renderRooms();
   renderPoolRules();

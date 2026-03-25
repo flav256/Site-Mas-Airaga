@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="guide.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -423,6 +424,9 @@
             <p class="wifi-card__pass" id="wifi-pass"></p>
             <p class="wifi-card__type fr">Connexion haut d&eacute;bit (Starlink)</p>
             <p class="wifi-card__type en">High-speed connection (Starlink)</p>
+            <div class="wifi-card__qr" id="wifi-qr"></div>
+            <p class="wifi-card__qr-hint fr">Scannez pour vous connecter</p>
+            <p class="wifi-card__qr-hint en">Scan to connect</p>
           </div>
 
           <!-- Rooms -->
