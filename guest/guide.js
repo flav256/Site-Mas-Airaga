@@ -390,13 +390,18 @@ function initScrollSpy() {
 
 function renderWifiQr(ssid, password) {
   var container = document.getElementById("wifi-qr");
-  if (!container || typeof qrcode === "undefined") return;
+  if (!container) return;
   // WiFi QR standard: WIFI:T:WPA;S:<ssid>;P:<password>;;
   var wifiStr = "WIFI:T:WPA;S:" + ssid + ";P:" + password + ";;";
-  var qr = qrcode(0, "M");
-  qr.addData(wifiStr);
-  qr.make();
-  container.innerHTML = qr.createImgTag(4, 8);
+  try {
+    var qr = qrcode(0, "M");
+    qr.addData(wifiStr);
+    qr.make();
+    container.innerHTML = '<div class="wifi-qr__box">' + qr.createImgTag(4, 0) + '</div>';
+  } catch (e) {
+    console.warn("QR code generation failed:", e);
+    container.style.display = "none";
+  }
 }
 
 function revealWifi(el) {

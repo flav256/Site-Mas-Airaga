@@ -795,13 +795,19 @@ body.lang-en .timing-table td.en { display: table-cell; }
   justify-content: center;
 }
 
-.wifi-card__qr img,
-.wifi-card__qr canvas {
-  border-radius: 8px;
+.wifi-qr__box {
   background: #fff;
-  padding: 8px;
-  width: 140px;
-  height: 140px;
+  border-radius: 10px;
+  padding: 10px;
+  display: inline-block;
+  line-height: 0;
+}
+
+.wifi-qr__box img {
+  display: block;
+  width: 120px;
+  height: 120px;
+  image-rendering: pixelated;
 }
 
 .wifi-card__qr-hint {
