@@ -5,6 +5,9 @@
 
 let db = null;
 let currentUser = null;
+let allBookings = [];         // cached after loadBookings
+let currentFilter = "upcoming"; // "upcoming" | "all" | "past"
+let calendarBaseDate = new Date(); // first month shown in calendar
 
 /* ———————————————————————————————————————
    BOOT
@@ -35,6 +38,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // Booking form
   document.getElementById("booking-form").addEventListener("submit", handleCreateBooking);
+
+  // Close WhatsApp dropdowns on outside click
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".wa-dropdown")) {
+      document.querySelectorAll(".wa-dropdown__menu--open").forEach(function (m) {
+        m.classList.remove("wa-dropdown__menu--open");
+      });
+    }
+  });
 });
 
 /* ———————————————————————————————————————
@@ -141,6 +153,40 @@ async function handleCreateBooking(e) {
 }
 
 /* ———————————————————————————————————————
+   COMPUTE DISPLAY STATUS (Feature 1)
+   ——————————————————————————————————————— */
+
+function computeDisplayStatus(booking, today) {
+  var isPast = booking.checkout_date < today;
+
+  // Check contract signed
+  var hasSigned = false;
+  if (booking.contract_data && booking.contract_data.length > 0) {
+    hasSigned = !!booking.contract_data[0].signed_at;
+  }
+
+  // Check checked-in
+  var hasCheckedIn = false;
+  if (booking.checkin_data && booking.checkin_data.length > 0) {
+    hasCheckedIn = !!booking.checkin_data[0].house_rules_accepted;
+  }
+
+  // Determine primary status
+  var status;
+  if (hasSigned) {
+    status = "signed";
+  } else if (hasCheckedIn) {
+    status = "checked-in";
+  } else if (booking.status === "sent") {
+    status = "sent";
+  } else {
+    status = "draft";
+  }
+
+  return { status: status, isPast: isPast };
+}
+
+/* ———————————————————————————————————————
    LOAD & RENDER BOOKINGS
    ——————————————————————————————————————— */
 
@@ -150,7 +196,7 @@ async function loadBookings() {
 
   var { data, error } = await db
     .from("bookings")
-    .select("*, checkin_data(arrival_slot, house_rules_accepted, pool_waiver_signed, guests_info, signed_at)")
+    .select("*, checkin_data(arrival_slot, house_rules_accepted, pool_waiver_signed, guests_info, signed_at), contract_data(signed_at)")
     .order("checkin_date", { ascending: true })
     .limit(50);
 
@@ -160,18 +206,43 @@ async function loadBookings() {
   }
 
   if (!data || data.length === 0) {
+    allBookings = [];
+    renderAnalytics();
+    renderCalendar();
     container.innerHTML = '<p class="text-muted">No bookings yet. Create one above.</p>';
     return;
   }
 
-  // Sort: upcoming first, then past
+  allBookings = data;
+  renderAnalytics();
+  renderCalendar();
+  renderBookings();
+}
+
+function renderBookings() {
+  var container = document.getElementById("bookings-list");
   var today = new Date().toISOString().slice(0, 10);
 
-  container.innerHTML = data.map(function (b) {
+  // Filter
+  var filtered = allBookings.filter(function (b) {
+    if (currentFilter === "upcoming") return b.checkout_date >= today;
+    if (currentFilter === "past") return b.checkout_date < today;
+    return true; // "all"
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<p class="text-muted">No ' + currentFilter + ' bookings.</p>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(function (b) {
     var guestUrl = window.location.origin + "/guest/?t=" + b.token;
     var modules = b.modules || {};
     var modNames = ["guide", "checkin", "arrival", "contract", "checkout"];
-    var isPast = b.checkout_date < today;
+
+    var computed = computeDisplayStatus(b, today);
+    var displayStatus = computed.status;
+    var isPast = computed.isPast;
 
     // Extract checkin data from joined table
     var arrivalSlot = null;
@@ -186,7 +257,25 @@ async function loadBookings() {
       }
     }
 
-    return '<div class="booking-card' + (isPast ? ' booking-card--past' : '') + '">' +
+    // Status badge: show both past + primary status if past
+    var statusBadges = '';
+    if (isPast) {
+      statusBadges = '<span class="booking-card__status booking-card__status--past">past</span> ';
+    }
+    statusBadges += '<span class="booking-card__status booking-card__status--' + displayStatus + '">' + displayStatus + '</span>';
+
+    // WhatsApp dropdown with reminder options
+    var waDropdown =
+      '<div class="wa-dropdown">' +
+        '<button class="admin-btn admin-btn--small admin-btn--ghost" onclick="toggleWaDropdown(event)">WhatsApp &#9662;</button>' +
+        '<div class="wa-dropdown__menu">' +
+          '<button class="wa-dropdown__item" onclick="sendWhatsApp(\'' + b.token + '\', \'' + escapeHtml(b.guest_name) + '\', \'' + (b.guest_phone || '') + '\')">Send welcome link</button>' +
+          '<button class="wa-dropdown__item" onclick="sendCheckinReminder(\'' + b.token + '\', \'' + escapeHtml(b.guest_name) + '\', \'' + (b.guest_phone || '') + '\', \'' + b.checkin_date + '\')">Reminder: Check-in</button>' +
+          '<button class="wa-dropdown__item" onclick="sendContractReminder(\'' + b.token + '\', \'' + escapeHtml(b.guest_name) + '\', \'' + (b.guest_phone || '') + '\')">Reminder: Contract</button>' +
+        '</div>' +
+      '</div>';
+
+    return '<div class="booking-card' + (isPast ? ' booking-card--past' : '') + '" id="booking-' + b.id + '">' +
       '<div class="booking-card__header">' +
         '<div>' +
           '<div class="booking-card__name">' + escapeHtml(b.guest_name) + '</div>' +
@@ -194,9 +283,7 @@ async function loadBookings() {
             (b.num_guests ? ' &middot; ' + b.num_guests + ' guests' : '') +
           '</div>' +
         '</div>' +
-        '<span class="booking-card__status booking-card__status--' + (b.status || 'draft') + '">' +
-          (b.status || 'draft') +
-        '</span>' +
+        '<div>' + statusBadges + '</div>' +
       '</div>' +
       (arrivalSlot ? '<div class="booking-card__arrival">Arrival: <strong>' + escapeHtml(arrivalSlot) + '</strong></div>' : '') +
       (checkinDone ? '<div class="booking-card__checkin-done">Check-in complete' + (guestCount ? ' &middot; ' + guestCount + ' guests' : '') + ' <button class="checkin-view-btn" onclick="viewCheckinDetails(\'' + b.id + '\')">View</button></div>' : '') +
@@ -215,12 +302,252 @@ async function loadBookings() {
       '<a class="booking-card__link" href="' + guestUrl + '" target="_blank">' + guestUrl + '</a>' +
       '<div class="booking-card__actions">' +
         '<button class="admin-btn admin-btn--small" onclick="copyLink(\'' + b.token + '\')">Copy link</button>' +
-        '<button class="admin-btn admin-btn--small admin-btn--ghost" onclick="sendWhatsApp(\'' + b.token + '\', \'' + escapeHtml(b.guest_name) + '\', \'' + (b.guest_phone || '') + '\')">Send WhatsApp</button>' +
+        waDropdown +
         '<button class="admin-btn admin-btn--small admin-btn--ghost" onclick="markSent(\'' + b.id + '\')">Mark sent</button>' +
         '<button class="admin-btn admin-btn--small admin-btn--danger" onclick="deleteBooking(\'' + b.id + '\', \'' + escapeHtml(b.guest_name) + '\')">Delete</button>' +
       '</div>' +
     '</div>';
   }).join("");
+}
+
+/* ———————————————————————————————————————
+   ANALYTICS (Feature 5)
+   ——————————————————————————————————————— */
+
+function renderAnalytics() {
+  var container = document.getElementById("analytics-bar");
+  var today = new Date().toISOString().slice(0, 10);
+
+  var total = allBookings.length;
+  var upcoming = 0;
+  var checkinsCompleted = 0;
+  var contractsSigned = 0;
+
+  allBookings.forEach(function (b) {
+    if (b.checkout_date >= today) upcoming++;
+    if (b.checkin_data && b.checkin_data.length > 0 && b.checkin_data[0].house_rules_accepted) checkinsCompleted++;
+    if (b.contract_data && b.contract_data.length > 0 && b.contract_data[0].signed_at) contractsSigned++;
+  });
+
+  container.innerHTML =
+    '<div class="analytics-card">' +
+      '<div class="analytics-card__value">' + total + '</div>' +
+      '<div class="analytics-card__label">Total bookings</div>' +
+    '</div>' +
+    '<div class="analytics-card">' +
+      '<div class="analytics-card__value">' + upcoming + '</div>' +
+      '<div class="analytics-card__label">Upcoming</div>' +
+    '</div>' +
+    '<div class="analytics-card">' +
+      '<div class="analytics-card__value">' + checkinsCompleted + '</div>' +
+      '<div class="analytics-card__label">Check-ins done</div>' +
+    '</div>' +
+    '<div class="analytics-card">' +
+      '<div class="analytics-card__value">' + contractsSigned + '</div>' +
+      '<div class="analytics-card__label">Contracts signed</div>' +
+    '</div>';
+}
+
+/* ———————————————————————————————————————
+   FILTER TABS (Feature 3)
+   ——————————————————————————————————————— */
+
+function setFilter(filter) {
+  currentFilter = filter;
+  // Update active tab
+  document.querySelectorAll(".filter-tab").forEach(function (tab) {
+    tab.classList.toggle("filter-tab--active", tab.dataset.filter === filter);
+  });
+  renderBookings();
+}
+
+/* ———————————————————————————————————————
+   BOOKING CALENDAR (Feature 2)
+   ——————————————————————————————————————— */
+
+function renderCalendar() {
+  var section = document.getElementById("calendar-section");
+  if (allBookings.length === 0) {
+    section.style.display = "none";
+    return;
+  }
+  section.style.display = "block";
+
+  var baseYear = calendarBaseDate.getFullYear();
+  var baseMonth = calendarBaseDate.getMonth();
+
+  // Title
+  var monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  document.getElementById("calendar-title").textContent =
+    monthNames[baseMonth] + " " + baseYear + " / " +
+    monthNames[(baseMonth + 1) % 12] + " " + (baseMonth === 11 ? baseYear + 1 : baseYear);
+
+  var container = document.getElementById("calendar-months");
+  container.innerHTML = renderMonth(baseYear, baseMonth) + renderMonth(
+    baseMonth === 11 ? baseYear + 1 : baseYear,
+    (baseMonth + 1) % 12
+  );
+}
+
+function renderMonth(year, month) {
+  var monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var dayNames = ["Mo","Tu","We","Th","Fr","Sa","Su"];
+  var today = new Date().toISOString().slice(0, 10);
+
+  var firstDay = new Date(year, month, 1);
+  var daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Monday=0 start
+  var startDay = (firstDay.getDay() + 6) % 7;
+
+  // Build booked-day map for this month: date -> { name, id }
+  var bookedMap = {};
+  allBookings.forEach(function (b) {
+    var start = new Date(b.checkin_date + "T00:00:00");
+    var end = new Date(b.checkout_date + "T00:00:00");
+    var cursor = new Date(start);
+    while (cursor <= end) {
+      var key = cursor.toISOString().slice(0, 10);
+      if (cursor.getFullYear() === year && cursor.getMonth() === month) {
+        bookedMap[key] = { name: b.guest_name, id: b.id };
+      }
+      cursor.setDate(cursor.getDate() + 1);
+    }
+  });
+
+  var html = '<div>' +
+    '<div class="calendar-month__title">' + monthNames[month] + ' ' + year + '</div>' +
+    '<div class="calendar-grid">';
+
+  // Day headers
+  dayNames.forEach(function (d) {
+    html += '<div class="calendar-grid__head">' + d + '</div>';
+  });
+
+  // Empty cells before first day
+  for (var i = 0; i < startDay; i++) {
+    html += '<div class="calendar-day calendar-day--empty"></div>';
+  }
+
+  // Days
+  for (var d = 1; d <= daysInMonth; d++) {
+    var dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+    var classes = "calendar-day";
+    var title = "";
+
+    if (dateStr === today) classes += " calendar-day--today";
+
+    if (bookedMap[dateStr]) {
+      var bk = bookedMap[dateStr];
+      classes += " calendar-day--booked";
+
+      // Determine if start, mid, or end
+      var prevDate = new Date(year, month, d - 1);
+      var nextDate = new Date(year, month, d + 1);
+      var prevKey = prevDate.toISOString().slice(0, 10);
+      var nextKey = nextDate.toISOString().slice(0, 10);
+      var hasPrev = !!bookedMap[prevKey];
+      var hasNext = !!bookedMap[nextKey];
+
+      if (!hasPrev && hasNext) classes += " calendar-day--booked-start";
+      else if (hasPrev && hasNext) classes += " calendar-day--booked-mid";
+      else if (hasPrev && !hasNext) classes += " calendar-day--booked-end";
+
+      html += '<div class="' + classes + '" data-booking-id="' + bk.id + '" onclick="scrollToBooking(\'' + bk.id + '\')">' +
+        '<span class="cal-day__num">' + d + '</span>' +
+        '<span class="cal-day__tip">' + escapeHtml(bk.name) + '</span>' +
+      '</div>';
+    } else {
+      html += '<div class="' + classes + '">' + d + '</div>';
+    }
+  }
+
+  html += '</div></div>';
+  return html;
+}
+
+function calendarNavigate(direction) {
+  calendarBaseDate.setMonth(calendarBaseDate.getMonth() + direction);
+  renderCalendar();
+}
+
+function scrollToBooking(bookingId) {
+  // Switch to "All" filter to ensure card is visible
+  setFilter("all");
+  setTimeout(function () {
+    var card = document.getElementById("booking-" + bookingId);
+    if (!card) return;
+    card.scrollIntoView({ behavior: "smooth", block: "center" });
+    // Flash highlight
+    card.classList.add("booking-card--highlight");
+    setTimeout(function () { card.classList.remove("booking-card--highlight"); }, 2000);
+  }, 50);
+}
+
+/* ———————————————————————————————————————
+   WHATSAPP MESSAGES (Feature 4)
+   ——————————————————————————————————————— */
+
+function toggleWaDropdown(e) {
+  e.stopPropagation();
+  var menu = e.target.closest(".wa-dropdown").querySelector(".wa-dropdown__menu");
+  // Close all others first
+  document.querySelectorAll(".wa-dropdown__menu--open").forEach(function (m) {
+    if (m !== menu) m.classList.remove("wa-dropdown__menu--open");
+  });
+  menu.classList.toggle("wa-dropdown__menu--open");
+}
+
+function sendWhatsApp(token, guestName, guestPhone) {
+  var url = window.location.origin + "/guest/?t=" + token;
+  var phone = guestPhone.replace(/\D/g, "");
+  var message = encodeURIComponent(
+    "Bonjour " + guestName + " ! \ud83c\udfe1\n\n" +
+    "Voici votre guide de bienvenue pour le Mas d'Airaga :\n" +
+    url + "\n\n" +
+    "Here is your welcome guide for Mas d'Airaga.\n\n" +
+    "Virginie & Flavien"
+  );
+  var waUrl = phone
+    ? "https://wa.me/" + phone + "?text=" + message
+    : "https://wa.me/?text=" + message;
+  window.open(waUrl, "_blank");
+}
+
+function sendCheckinReminder(token, guestName, guestPhone, checkinDate) {
+  var url = window.location.origin + "/guest/?t=" + token;
+  var phone = guestPhone.replace(/\D/g, "");
+  var dateObj = new Date(checkinDate + "T00:00:00");
+  var formattedDate = dateObj.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
+
+  var message = encodeURIComponent(
+    "Bonjour " + guestName + " ! \ud83c\udf1e\n\n" +
+    "A gentle reminder: your stay at Mas d'Airaga begins on " + formattedDate + ".\n\n" +
+    "Check-in is from 4:00 PM. Address: Mas d'Airaga, Uzes, Gard.\n\n" +
+    "Please complete your online check-in before arrival:\n" +
+    url + "\n\n" +
+    "See you soon!\nVirginie & Flavien"
+  );
+  var waUrl = phone
+    ? "https://wa.me/" + phone + "?text=" + message
+    : "https://wa.me/?text=" + message;
+  window.open(waUrl, "_blank");
+}
+
+function sendContractReminder(token, guestName, guestPhone) {
+  var url = window.location.origin + "/guest/?t=" + token;
+  var phone = guestPhone.replace(/\D/g, "");
+
+  var message = encodeURIComponent(
+    "Bonjour " + guestName + " ! \ud83d\udcdd\n\n" +
+    "A quick reminder to sign the rental contract for your stay at Mas d'Airaga.\n\n" +
+    "You can review and sign it here:\n" +
+    url + "\n\n" +
+    "Thank you!\nVirginie & Flavien"
+  );
+  var waUrl = phone
+    ? "https://wa.me/" + phone + "?text=" + message
+    : "https://wa.me/?text=" + message;
+  window.open(waUrl, "_blank");
 }
 
 /* ———————————————————————————————————————
@@ -449,22 +776,6 @@ function copyLink(token) {
   });
 }
 
-function sendWhatsApp(token, guestName, guestPhone) {
-  var url = window.location.origin + "/guest/?t=" + token;
-  var phone = guestPhone.replace(/\D/g, "");
-  var message = encodeURIComponent(
-    "Bonjour " + guestName + " ! 🏡\n\n" +
-    "Voici votre guide de bienvenue pour le Mas d'Airaga :\n" +
-    url + "\n\n" +
-    "Here is your welcome guide for Mas d'Airaga.\n\n" +
-    "Virginie & Flavien"
-  );
-  var waUrl = phone
-    ? "https://wa.me/" + phone + "?text=" + message
-    : "https://wa.me/?text=" + message;
-  window.open(waUrl, "_blank");
-}
-
 async function markSent(bookingId) {
   await db.from("bookings").update({ status: "sent" }).eq("id", bookingId);
   loadBookings();
@@ -474,11 +785,42 @@ async function markSent(bookingId) {
    DELETE BOOKING
    ——————————————————————————————————————— */
 
-async function deleteBooking(bookingId, guestName) {
-  if (!confirm("Delete booking for " + guestName + "?\n\nThis will also delete all check-in data and cannot be undone.")) {
-    return;
-  }
+function deleteBooking(bookingId, guestName) {
+  var existing = document.getElementById("confirm-modal");
+  if (existing) existing.remove();
+
+  var modal = document.createElement("div");
+  modal.id = "confirm-modal";
+  modal.className = "modal-overlay";
+  modal.innerHTML =
+    '<div class="modal-card" style="max-width:380px">' +
+      '<div class="modal-header" style="background:#C0392B">' +
+        '<div class="modal-check" style="background:rgba(255,255,255,0.2);font-size:18px">&#10005;</div>' +
+        '<h2 class="modal-title">Delete booking?</h2>' +
+        '<p class="modal-sub">' + escapeHtml(guestName) + '</p>' +
+      '</div>' +
+      '<div class="modal-body" style="text-align:center">' +
+        '<p style="font-size:13px;color:var(--ma-text-mid)">This will permanently delete the booking, all check-in data, and the signed contract. This cannot be undone.</p>' +
+      '</div>' +
+      '<div class="modal-actions" style="flex-direction:row;gap:0.75rem">' +
+        '<button class="admin-btn admin-btn--ghost" style="flex:1" onclick="closeConfirmModal()">Cancel</button>' +
+        '<button class="admin-btn admin-btn--small" style="flex:1;background:#C0392B;color:#fff;padding:0.6rem 1rem;font-size:14px" onclick="confirmDelete(\'' + bookingId + '\')">Delete</button>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(modal);
+}
+
+function closeConfirmModal() {
+  var m = document.getElementById("confirm-modal");
+  if (m) m.remove();
+}
+
+async function confirmDelete(bookingId) {
+  var btn = document.querySelector("#confirm-modal .admin-btn:last-child");
+  if (btn) { btn.disabled = true; btn.textContent = "Deleting..."; }
   await db.from("bookings").delete().eq("id", bookingId);
+  closeConfirmModal();
   loadBookings();
 }
 

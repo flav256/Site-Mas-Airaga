@@ -47,6 +47,9 @@
 
     <main class="admin-main">
 
+      <!-- ANALYTICS BAR -->
+      <div id="analytics-bar" class="analytics-bar"></div>
+
       <!-- NEW BOOKING FORM -->
       <section class="admin-section">
         <h2 class="admin-section__title">New Booking</h2>
@@ -115,9 +118,24 @@
         </form>
       </section>
 
+      <!-- BOOKING CALENDAR -->
+      <section id="calendar-section" class="calendar-section" style="display:none">
+        <div class="calendar-nav">
+          <button class="calendar-nav__btn" onclick="calendarNavigate(-1)">&larr; Prev</button>
+          <span class="calendar-nav__title" id="calendar-title"></span>
+          <button class="calendar-nav__btn" onclick="calendarNavigate(1)">Next &rarr;</button>
+        </div>
+        <div class="calendar-months" id="calendar-months"></div>
+      </section>
+
       <!-- BOOKINGS LIST -->
       <section class="admin-section">
         <h2 class="admin-section__title">Bookings</h2>
+        <div class="filter-tabs" id="filter-tabs">
+          <button class="filter-tab filter-tab--active" data-filter="upcoming" onclick="setFilter('upcoming')">Upcoming</button>
+          <button class="filter-tab" data-filter="all" onclick="setFilter('all')">All</button>
+          <button class="filter-tab" data-filter="past" onclick="setFilter('past')">Past</button>
+        </div>
         <div id="bookings-list" class="bookings-list">
           <p class="text-muted">Loading...</p>
         </div>

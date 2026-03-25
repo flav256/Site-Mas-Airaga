@@ -17,7 +17,7 @@ const MAS_AIRAGA = {
   ——————————————————————————————————— */
   property: {
     name: "Mas d'Airaga",
-    tagline: "Maison de caractere en Provence · Eyragues, Alpilles",
+    tagline: "Maison de caractere en Provence \u00b7 Eyragues, Alpilles",
     address: {
       street: "595 Chemin Notre Dame",
       locality: "A cote de la Chapelle Notre Dame du Pieux Zele",
@@ -33,10 +33,12 @@ const MAS_AIRAGA = {
     pool: {
       dimensions: "9 m \u00d7 4,5 m",
       cover: "Volet electrique",
-      safety_norm: "NF P90-308 — AQUAL Life Hors Sol",
-      safety_cert: "Attestation de conformite N\u00b030243992 — APAVE, Fontaine",
+      safety_device: "Couverture de securite AQUAL Life Hors Sol",
+      safety_norm: "NF P90-308",
+      safety_cert: "Attestation de conformite N\u00b030243992 \u2014 APAVE, 17 Bd Paul Langevin, 38600 Fontaine",
+      safety_manufacturer: "AQUALIFE, 5 rue Levavasseur Grand St Charles, 66000 Perpignan",
       installed: "7 avril 2016",
-      installer: "EAUX ET PISCINES (OZEO), ZA de la Gare, St-Remy-de-Provence",
+      installer: "EAUX ET PISCINES (OZEO), ZA de la Gare, 8 allee de Jonquerolles, 13210 St-Remy-de-Provence",
       invoice_ref: "Facture N\u00b0551462 du 15/04/2016",
       maintenance: "Pisciniste intervient une fois par semaine",
       tenant_tasks: [
@@ -82,8 +84,8 @@ const MAS_AIRAGA = {
   ——————————————————————————————————— */
   access: {
     wifi: {
-      ssid: "Freebox-61114E",
-      password: "regat-permulti3-tolerarem#4-abjicio",
+      ssid: "MasAiraga",
+      password: "zazbIg-cutpud-2qygzo",
     },
     internet_type: "Haut debit (Starlink + Freebox)",
     tv: "TNT",
@@ -209,7 +211,7 @@ const MAS_AIRAGA = {
     en: [
       "Non-smoking: smoking is not allowed inside the house.",
       "Pets: no pets without prior owner approval.",
-      "Noise: respect the neighbors — no excessive noise after 11 pm.",
+      "Noise: respect the neighbors \u2014 no excessive noise after 11 pm.",
       "Cleanliness: leave the house clean and tidy before departure.",
       "Waste: sort and dispose of waste according to instructions.",
       "Capacity: maximum 10 people (adults + children).",
@@ -225,7 +227,7 @@ const MAS_AIRAGA = {
   ——————————————————————————————————— */
   departure_checklist: {
     fr: [
-      { id: 1, label: "Vider le refrigerateur — jeter tous les aliments perissables" },
+      { id: 1, label: "Vider le refrigerateur \u2014 jeter tous les aliments perissables" },
       { id: 2, label: "Nettoyer la plancha" },
       { id: 3, label: "Eteindre toutes les climatisations" },
       { id: 4, label: "Fermer toutes les fenetres et portes" },
@@ -237,7 +239,7 @@ const MAS_AIRAGA = {
       { id: 10, label: "Remettre les cles et telecommandes au proprietaire ou son representant" },
     ],
     en: [
-      { id: 1, label: "Empty the refrigerator — dispose of all perishable food" },
+      { id: 1, label: "Empty the refrigerator \u2014 dispose of all perishable food" },
       { id: 2, label: "Clean the plancha / griddle" },
       { id: 3, label: "Turn off all air conditioning units" },
       { id: 4, label: "Close all windows and doors" },
@@ -354,86 +356,182 @@ const MAS_AIRAGA = {
   },
 
   /* ———————————————————————————————————
-     POOL WAIVER — text for digital check-in
+     POOL WAIVER — full liability waiver (from decharge_piscine.pdf)
+     5 sections matching the official paper document
   ——————————————————————————————————— */
   pool_waiver: {
-    pool_safety_equipment: {
-      fr: "Couverture de securite et dispositif d'accrochage AQUAL Life Hors Sol, conforme a la norme NF P90-308. Attestation de conformite N\u00b030243992 — APAVE. Pose le 7/04/2016 par EAUX ET PISCINES (OZEO), St-Remy-de-Provence.",
-      en: "Security cover and snatches 'AQUAL Life Hors Sol', NORM NF P90-308. Conformity agreement N\u00b030243992 — APAVE. Installed 07/04/2016 by EAUX ET PISCINES (OZEO), St-Remy-de-Provence.",
-    },
-    disclaimer_note: {
-      fr: "Ces dispositifs ne sauraient se substituer a la vigilance et a la surveillance que vous devez a votre/vos enfant(s) ou a toute autre personne.",
-      en: "This equipment does not prevent from a constant monitoring of children.",
-    },
-    clauses_en: [
-      "I wish to use the pool in the property of Mr/Mrs MAIRE; I recognize and understand that using the Swimming Pool involves certain risks, including risk of injury from equipment malfunction, tripping or falling in the pool area.",
-      "I WAIVE ANY AND ALL CLAIMS that I have or may in the future have against Mr/Mrs MAIRE and their representatives.",
-      "I RELEASE Mr/Mrs MAIRE from any and all liability for any loss, damage, injury or expense that I or my next of kin may suffer as a result of my participation at the Swimming Pool, INCLUDING NEGLIGENCE ON THE PART OF THE OWNERS.",
-      "I HOLD HARMLESS AND INDEMNIFY Mr/Mrs MAIRE from any and all liability from any damage to property or personal injury to any third party resulting from my participation at the Swimming Pool.",
-      "I confirm that children will be under constant adult supervision at all times when using or near the pool.",
+    title_fr: "Fiche de decharge de responsabilite \u2013 Utilisation piscine",
+    title_en: "Waiver and release of liability \u2013 Swimming pool use",
+    subtitle: "595 Chemin Notre Dame, 13630 Eyragues",
+    sections_fr: [
+      {
+        num: 1,
+        title: "Equipement de securite",
+        text: "La piscine dispose de tous les equipements de securite requis par la loi :",
+        items: [
+          "Couverture de securite et dispositif d'accrochage \u00ab AQUAL Life Hors Sol \u00bb, conforme a la norme NF P90-308.",
+          "AQUALIFE \u2013 5 rue Levavasseur Grand St Charles, 66000 Perpignan, France.",
+          "Attestation de conformite N\u00b030243992, APAVE, 17 Bd Paul Langevin, 38600 Fontaine.",
+          "Installee le 07/04/2016 par EAUX ET PISCINES (OZEO), ZA de la Gare, 8 allee de Jonquerolles, 13210 St-Remy-de-Provence. Facture N\u00b0551462 du 15/04/2016.",
+        ],
+      },
+      {
+        num: 2,
+        title: "Rappel des regles de securite",
+        text: "Ces equipements ne sauraient se substituer a une surveillance constante des enfants.",
+        items: [
+          "La surveillance active et constante d'un adulte responsable est obligatoire pendant toute utilisation de la piscine.",
+          "Aucun systeme de securite (couverture, barriere, alarme, etc.) ne remplace la vigilance humaine.",
+          "L'acces a la piscine est interdit aux enfants sans accompagnement d'un adulte sachant nager.",
+          "Les jeux violents, plongeons ou courses autour de la piscine sont interdits.",
+          "Ne pas laisser de jouets dans ou autour du bassin en dehors des periodes de baignade.",
+        ],
+      },
+      {
+        num: 3,
+        title: "Acceptation des risques et decharge de responsabilite",
+        text: "Le locataire reconnait et comprend que l'utilisation de la piscine comporte certains risques, notamment le risque de blessure resultant d'un eventuel dysfonctionnement des equipements, de glissade ou de chute aux abords du bassin. Le locataire accepte les conditions suivantes :",
+        items: [
+          "Renoncer a toute reclamation presente ou future contre M. et Mme MAIRE et leurs representants.",
+          "Degager M. et Mme MAIRE de toute responsabilite pour toute perte, dommage, blessure ou depense que le locataire ou ses proches pourraient subir du fait de l'utilisation de la piscine, Y COMPRIS EN CAS DE NEGLIGENCE DES PROPRIETAIRES.",
+          "Garantir et indemniser M. et Mme MAIRE de toute responsabilite pour tout dommage materiel ou corporel subi par un tiers du fait de l'utilisation de la piscine.",
+          "Le present accord est effectif et contraignant pour les heritiers, executeurs testamentaires, administrateurs et ayants droit du locataire.",
+        ],
+      },
+      {
+        num: 5,
+        title: "Engagement du locataire",
+        text: "En signant ce document, le locataire s'engage a :",
+        items: [
+          "respecter toutes les consignes de securite ci-dessus,",
+          "ne jamais desactiver ou neutraliser le dispositif de couverture de securite en dehors des periodes de baignade,",
+          "informer immediatement le proprietaire en cas de dysfonctionnement ou d'incident lie a la piscine,",
+          "remettre en etat initial tout element de securite apres manipulation.",
+        ],
+      },
     ],
-    clauses_fr: [
-      "Je souhaite utiliser la piscine de la propriete de M./Mme MAIRE ; je reconnais et comprends que l'utilisation de la piscine comporte certains risques.",
-      "Je decharge de toute responsabilite M. Flavien MAIRE et Mme Virginie DUVIVIER-MAIRE quant aux risques eventuels que constitue la piscine situee sur ce bien.",
-      "Je m'engage a surveiller en permanence les enfants presents, et reconnais que les dispositifs de securite ne se substituent pas a cette surveillance.",
-      "Tout dommage materiel ou corporel relatif a l'utilisation de la piscine releve de la responsabilite pleine et entiere du locataire.",
+    sections_en: [
+      {
+        num: 1,
+        title: "Safety Equipment",
+        text: "The swimming pool has all the necessary security equipment as per legal requirements:",
+        items: [
+          "Security cover and snatches \u00ab AQUAL Life Hors Sol \u00bb, NORM NF P90-308.",
+          "AQUALIFE \u2013 5 rue Levavasseur Grand St Charles, 66000 Perpignan, France.",
+          "Conformity agreement N\u00b030243992, APAVE, 17 Bd Paul Langevin, 38600 Fontaine.",
+          "Installed on 07/04/2016 by EAUX ET PISCINES (OZEO), ZA de la Gare, 8 allee de Jonquerolles, 13210 St-Remy-de-Provence. Invoice N\u00b0551462 dated 15/04/2016.",
+        ],
+      },
+      {
+        num: 2,
+        title: "Reminder of Safety Rules",
+        text: "This equipment does not prevent from a constant monitoring of the children.",
+        items: [
+          "Active and constant supervision by a responsible adult is mandatory during any use of the pool.",
+          "No safety system (cover, barrier, alarm, etc.) replaces human vigilance.",
+          "Access to the pool is forbidden to children without the presence of an adult who can swim.",
+          "Rough play, diving or running around the pool are prohibited.",
+          "Do not leave toys in or around the pool outside swimming periods.",
+        ],
+      },
+      {
+        num: 3,
+        title: "Assumption of Risk and Release of Liability",
+        text: "The tenant recognizes and understands that using the swimming pool involves certain risks, including but not limited to the risk of injury resulting from possible malfunction of equipment, tripping or falling in the pool area. The tenant hereby agrees as follows:",
+        items: [
+          "TO WAIVE ANY AND ALL CLAIMS that the tenant has or may in the future have against Mr/Mrs MAIRE and their representatives.",
+          "TO RELEASE Mr/Mrs MAIRE from any and all liability for any loss, damage, injury or expense that the tenant or next of kin may suffer as a result of participation at the swimming pool, INCLUDING NEGLIGENCE ON THE PART OF THE OWNERS.",
+          "TO HOLD HARMLESS AND INDEMNIFY Mr/Mrs MAIRE from any and all liability for any damage to property or personal injury to any third party resulting from participation at the swimming pool.",
+          "This agreement shall be effective and binding upon the tenant's heirs, next of kin, executors, administrators and assigns.",
+        ],
+      },
+      {
+        num: 5,
+        title: "Tenant's Commitment",
+        text: "By signing this document, the tenant agrees to:",
+        items: [
+          "comply with all the above safety instructions,",
+          "never deactivate or neutralize the security cover system outside swimming periods,",
+          "immediately inform the owner in case of malfunction or pool-related incident,",
+          "restore any safety element to its original state after manipulation.",
+        ],
+      },
     ],
-    legal_ref_fr: "Loi n\u00b02003-9 du 3 janvier 2003 · Decret n\u00b02003-1389 · Decret n\u00b02004-499 · Decret du 16 juillet 2009.",
+    children_title_fr: "4. Enfants presents pendant la location",
+    children_title_en: "4. Children Present During Rental",
+    sign_off_fr: "J'AI LU ET COMPRIS CE DOCUMENT. En le signant, je renonce a certains droits legaux que moi-meme ou mes heritiers, executeurs testamentaires et ayants droit pourrions avoir contre les proprietaires.",
+    sign_off_en: "I HAVE READ AND UNDERSTOOD THIS AGREEMENT. I AM AWARE THAT BY SIGNING THIS AGREEMENT, I AM WAIVING CERTAIN LEGAL RIGHTS WHICH I OR MY HEIRS, NEXT OF KIN, EXECUTORS, ADMINISTRATORS AND ASSIGNS MAY HAVE AGAINST THE OWNERS.",
   },
 
   /* ———————————————————————————————————
-     RENTAL CONTRACT — clauses for digital signature
+     RENTAL CONTRACT — full 15-article contract (from seasonal rental contract PDF)
   ——————————————————————————————————— */
   rental_contract: {
-    title_fr: "Contrat de Location Saisonniere",
-    title_en: "Seasonal Rental Agreement",
+    title_fr: "Contrat de Location Saisonniere Meuble",
+    title_en: "Furnished Seasonal Rental Agreement",
     preamble_fr: "Entre les soussignes :",
     preamble_en: "Between the undersigned:",
-    owner_label_fr: "Le proprietaire",
-    owner_label_en: "The owner",
-    owner_text: "M. Flavien MAIRE et Mme Virginie DUVIVIER-MAIRE",
-    tenant_label_fr: "Le locataire",
-    tenant_label_en: "The tenant",
-    property_desc_fr: "Maison d'habitation meublee situee au 595 Chemin Notre Dame, 13630 Eyragues, France. Surface habitable : 185 m\u00b2, 4 chambres, 3 salles de bain, jardin de 2000 m\u00b2 avec piscine securisee.",
-    property_desc_en: "Furnished residential property located at 595 Chemin Notre Dame, 13630 Eyragues, France. Living area: 185 m\u00b2, 4 bedrooms, 3 bathrooms, 2000 m\u00b2 garden with secured pool.",
+    owner_label_fr: "Le Bailleur",
+    owner_label_en: "The Landlord",
+    owner_text: "Monsieur et Madame Flavien et Virginie MAIRE",
+    owner_address: "Park View Al Saadiyat Island Apt 714, Abu Dhabi, Emirats Arabes Unis",
+    owner_phones: "+971 502048428 / +33 6 14325706 / +971 501730189",
+    owner_email: "virginieduvivier@gmail.com",
+    tenant_label_fr: "Le Locataire",
+    tenant_label_en: "The Tenant",
+    property_desc_fr: "Maison d'habitation meublee situee au 595 Chemin Notre Dame, a cote de la Chapelle Notre Dame du Pieux Zele, 13630 Eyragues, France. Coordonnees GPS : N 43\u00b050'11.80\" ; E 4\u00b050'05.50''. Construction 2009. Surface habitable : 185 m\u00b2. Rez-de-chaussee : salon, salle a manger, cuisine equipee, 1 chambre avec salle de bain, arriere-cuisine, buanderie. Premier etage : 3 chambres (dont 1 suite avec salle de bain double douche/vasque), 1 salle de bain avec baignoire, WC separe. Exterieur : terrasse couverte 25 m\u00b2 avec plancha a gaz, piscine 9m x 4,5m avec volet electrique et pool house, parking 4 voitures. Equipement bebe disponible.",
+    property_desc_en: "Furnished residential property at 595 Chemin Notre Dame, next to the Chapelle Notre Dame du Pieux Zele, 13630 Eyragues, France. GPS: N 43\u00b050'11.80\"; E 4\u00b050'05.50''. Built 2009. Living area: 185 m\u00b2. Ground floor: living room, dining room, fitted kitchen, 1 bedroom with ensuite, back kitchen, laundry. First floor: 3 bedrooms (including 1 suite with double shower/basin ensuite), 1 bathroom with bathtub, separate WC. Exterior: 25 m\u00b2 covered terrace with gas plancha, 9m x 4.5m pool with electric cover and pool house, parking for 4 cars. Baby equipment available.",
+    max_occupants: 10,
+    security_deposit: 1500,
+    cleaning_rate_per_hour: 25,
     clauses_fr: [
-      { title: "Objet", text: "Le proprietaire met a disposition du locataire le bien decrit ci-dessus, a usage exclusif d'habitation temporaire de vacances." },
-      { title: "Duree", text: "La location est consentie pour la periode indiquee ci-dessus. Le locataire ne pourra en aucun cas se prevaloir d'un quelconque droit au maintien dans les lieux a l'expiration de la periode." },
-      { title: "Capacite", text: "Le nombre maximum d'occupants est de 10 personnes (adultes et enfants). Tout depassement non autorise pourra entrainer la resiliation immediate du contrat." },
-      { title: "Arrivee et depart", text: "Arrivee a partir de 16h00. Depart avant 10h00. Etat des lieux d'entree et de sortie contradictoire." },
-      { title: "Depot de garantie", text: "Un depot de garantie est verse a la reservation. Il sera restitue dans les 15 jours suivant le depart, deduction faite des eventuelles reparations ou du menage supplementaire." },
-      { title: "Annulation", text: "En cas d'annulation plus de 30 jours avant l'arrivee : perte des arrhes (25%). Moins de 30 jours : totalite du montant du." },
-      { title: "Obligations du locataire", text: "Jouir du bien en bon pere de famille. Respecter le reglement interieur. Signaler tout dysfonctionnement. Restituer le bien dans l'etat ou il a ete trouve." },
-      { title: "Assurance", text: "Le locataire declare etre titulaire d'une assurance villegiature couvrant sa responsabilite civile pour la duree du sejour." },
-      { title: "Piscine", text: "L'utilisation de la piscine est sous la responsabilite pleine et entiere du locataire. Les enfants doivent etre surveilles en permanence par un adulte." },
-      { title: "Loi applicable", text: "Le present contrat est regi par le droit francais. Tout litige sera soumis aux tribunaux competents d'Avignon." },
+      { title: "Objet du contrat", text: "Les locaux objet du present contrat sont loues meubles a titre saisonnier. Les parties conviennent que leurs droits et obligations respectifs seront regis par les stipulations du present contrat, par l'arrete du 28 decembre 1976 modifie et a defaut par les dispositions du code civil." },
+      { title: "Designation du logement", text: "Adresse : 595 Chemin Notre Dame, 13630 Eyragues, France. Coordonnees GPS : N 43\u00b050'11.80\" ; E 4\u00b050'05.50''. Maison de 185 m\u00b2 comprenant : Rez-de-chaussee (salon, salle a manger, cuisine equipee, 1 chambre avec salle de bain, arriere-cuisine, buanderie), Premier etage (3 chambres dont 1 suite avec salle de bain, 1 salle de bain, WC), Exterieur (terrasse couverte 25 m\u00b2 avec plancha, piscine 9m x 4,5m avec volet electrique et pool house, parking 4 voitures). Equipement bebe disponible (table a langer, lit pliant, chaise haute)." },
+      { title: "Piscine", text: "La piscine est par nature un endroit dangereux. Elle ne doit pas etre utilisee par les enfants sans la surveillance directe d'un adulte. Cette surveillance est de la responsabilite du locataire. La presence d'un dispositif de securite conforme a la legislation ne dispense pas d'une surveillance directe par des adultes et ne peut s'y substituer. Tout dommage materiel ou corporel relatif a l'utilisation de la piscine releve de la responsabilite pleine et entiere du locataire. Une decharge de responsabilite (en annexe) doit etre remplie et signee lors de l'etat des lieux d'entree. Un contrat d'entretien est en place : le pisciniste intervient une fois par semaine. Le locataire ne doit pas intervenir sur la programmation de filtration et doit laisser le robot dans la piscine en permanence. Les skimmers doivent etre vides quotidiennement. Aucun animal n'est autorise dans la piscine." },
+      { title: "Etat des lieux et inventaire", text: "Un etat des lieux et un inventaire du mobilier sont remis au locataire lors de l'entree dans le logement, et seront annexes au present contrat. A defaut de contestation par le Locataire dans un delai de 48 heures suivant l'entree, l'etat des lieux sera repute accepte sans reserve. Un etat des lieux de sortie sera etabli par les parties a la fin de la location." },
+      { title: "Duree de la location", text: "Le Bailleur loue au Locataire le logement pour la periode indiquee ci-dessus. La location ne pourra pas etre prorogee sauf accord prealable et ecrit du bailleur. La remise des cles ne peut se faire qu'entre 16h00 et 22h00. L'heure d'arrivee doit etre communiquee au bailleur la veille. Le Locataire s'engage a avoir integralement libere le logement avant 10h00 le jour du depart, et a remettre au Bailleur l'ensemble des clefs et telecommandes." },
+      { title: "Prix et charges", text: "Le loyer est fixe selon les conditions convenues entre les parties. Il comprend les charges locatives : eau de ville et de pompage, chauffage (climatisation reversible), air conditionne, acces Internet haut debit (Starlink) et WiFi, television TNT, linge de maison et draps fournis (serviettes de plage NON fournies), menage, entretien de la piscine et du jardin." },
+      { title: "Reservation et versement des arrhes", text: "Le Locataire retourne le present contrat paraphe et signe accompagne du versement d'arrhes correspondant a 25% du montant de la location. Ce versement ne sera pas rembourse en cas d'annulation. Seul le contrat signe par les deux parties constituera acceptation du present contrat par le bailleur." },
+      { title: "Paiement du solde", text: "Le solde (75%) sera verse par le locataire 30 jours avant la date d'arrivee dans la maison." },
+      { title: "Depot de garantie", text: "Au plus tard lors de l'entree dans les lieux, le locataire remettra 1 500 \u20ac a titre de depot de garantie. Cette somme sera restituee dans un delai de 4 jours apres l'etat des lieux de sortie, si aucune degradation n'est constatee. Le locataire s'engage a rendre les lieux dans un etat de proprete acceptable (ne necessitant pas plus de 3 heures de menage). Bareme de nettoyage supplementaire : 25 \u20ac par heure." },
+      { title: "Cession et sous-location", text: "Le present contrat est conclu intuitu personae au profit du seul locataire identifie en tete du contrat. Toute cession, sous-location totale ou partielle, ou mise a disposition meme gratuite est rigoureusement interdite." },
+      { title: "Obligations du locataire", text: "Le Locataire usera paisiblement du logement loue et du mobilier. Il est interdit de fumer dans la maison. Les animaux ne sont pas autorises sauf accord entre locataire et proprietaire. Le bruit doit etre respectueux des voisins. Le nombre maximum de personnes est de 10. Le locataire s'engage a rendre les lieux dans un etat propre : placards et poubelles vides, refrigerateurs vides de dechets, sanitaires, appareils electromenagers, barbecue et plancha nettoyes." },
+      { title: "Annulation", text: "La signature du contrat engage les deux parties de maniere irrevocable. Desistement du locataire : plus de 15 jours avant le debut \u2014 perte des arrhes verses ; moins de 15 jours \u2014 perte de l'integralite des sommes versees. Il est vivement conseille de souscrire une assurance annulation. Desistement du bailleur : plus de 8 semaines avant \u2014 le bailleur versera le double des arrhes ; moins de 8 semaines \u2014 pas de desistement possible sauf force majeure." },
+      { title: "Assurances", text: "Le locataire s'engage a s'assurer contre les risques locatifs (incendie, degats des eaux) et a produire avant l'entree dans les lieux un exemplaire de la police d'assurance. Le locataire doit fournir une preuve d'assurance responsabilite civile pour l'ensemble des personnes occupant la maison pendant la duree de la location." },
+      { title: "Resiliation de plein droit", text: "En cas de manquement par le Locataire a l'une de ses obligations contractuelles, le present bail sera resilie de plein droit. Cette resiliation prendra effet apres un delai de 48 heures apres une sommation restee infructueuse." },
+      { title: "Loi applicable et juridiction", text: "Le present contrat est regi par le droit francais. En cas de litige, le tribunal de la circonscription judiciaire ou se trouve le lieu loue sera seul competent." },
     ],
     clauses_en: [
-      { title: "Purpose", text: "The owner makes the above-described property available to the tenant for exclusive use as temporary holiday accommodation." },
-      { title: "Duration", text: "The rental is agreed for the period indicated above. The tenant shall have no right to remain in the property after the rental period expires." },
-      { title: "Capacity", text: "Maximum occupancy is 10 people (adults and children). Any unauthorized excess may result in immediate termination of the contract." },
-      { title: "Arrival and departure", text: "Check-in from 4:00 pm. Check-out before 10:00 am. Contradictory inventory at entry and exit." },
-      { title: "Security deposit", text: "A security deposit is paid upon booking. It will be returned within 15 days of departure, less any deductions for repairs or additional cleaning." },
-      { title: "Cancellation", text: "Cancellation more than 30 days before arrival: loss of deposit (25%). Less than 30 days: full rental amount due." },
-      { title: "Tenant obligations", text: "Use the property responsibly. Comply with house rules. Report any malfunction. Return the property in the condition in which it was found." },
-      { title: "Insurance", text: "The tenant declares having holiday insurance covering civil liability for the duration of the stay." },
-      { title: "Pool", text: "Use of the pool is under the full responsibility of the tenant. Children must be supervised at all times by an adult." },
-      { title: "Applicable law", text: "This contract is governed by French law. Any dispute shall be submitted to the competent courts of Avignon." },
+      { title: "Purpose of the contract", text: "The premises are rented furnished on a seasonal basis. The parties agree that their rights and obligations shall be governed by this contract, the decree of 28 December 1976 as amended, and the French Civil Code." },
+      { title: "Property description", text: "Address: 595 Chemin Notre Dame, 13630 Eyragues, France. GPS: N 43\u00b050'11.80\"; E 4\u00b050'05.50''. 185 m\u00b2 house comprising: Ground floor (living room, dining room, fitted kitchen, 1 bedroom with ensuite, back kitchen, laundry), First floor (3 bedrooms including 1 suite with ensuite, 1 bathroom, WC), Exterior (25 m\u00b2 covered terrace with plancha, 9m x 4.5m pool with electric cover and pool house, parking for 4 cars). Baby equipment available (changing table, travel cot, high chair)." },
+      { title: "Pool", text: "The pool is inherently dangerous. It must not be used by children without direct adult supervision. This supervision is the tenant's responsibility. Safety devices do not replace direct supervision by adults. Any material or bodily damage related to pool use is the full responsibility of the tenant. A liability waiver (appended) must be completed and signed at check-in. A maintenance contract is in place: pool technician visits weekly. The tenant must not adjust the filtration schedule and must leave the robot in the pool at all times. Skimmers must be emptied daily. No animals in the pool." },
+      { title: "Inventory and condition report", text: "An inventory and condition report will be provided at check-in and appended to this contract. If not contested within 48 hours, they shall be deemed accepted without reservation. A check-out report will be established by both parties." },
+      { title: "Duration", text: "The landlord rents the property to the tenant for the period indicated above. The rental may not be extended without prior written agreement. Key handover between 4:00 pm and 10:00 pm. The tenant must inform the landlord of arrival time the day before. The tenant undertakes to vacate the property by 10:00 am on departure day and return all keys and remote controls." },
+      { title: "Price and charges", text: "The rental price is set as agreed between the parties. It includes: mains water and well water, heating (reversible air conditioning), air conditioning, high-speed internet (Starlink) and WiFi, TNT television, household linen and sheets (beach towels NOT provided), cleaning, pool and garden maintenance." },
+      { title: "Booking and deposit", text: "The tenant returns the signed contract with a deposit of 25% of the total rental amount. This deposit is non-refundable in case of cancellation. Only the contract signed by both parties constitutes acceptance." },
+      { title: "Balance payment", text: "The balance (75%) must be paid 30 days before the arrival date." },
+      { title: "Security deposit", text: "Upon arrival, the tenant shall provide \u20ac1,500 as a security deposit. This sum will be returned within 4 days after the check-out inspection, provided no damage is found. The tenant must return the property in an acceptable state of cleanliness (requiring no more than 3 hours of cleaning). Additional cleaning rate: \u20ac25 per hour." },
+      { title: "Assignment and subletting", text: "This contract is entered into on the basis of the tenant's personal identity. Any assignment, subletting (total or partial), or making the property available to others \u2014 even free of charge \u2014 is strictly prohibited." },
+      { title: "Tenant obligations", text: "The tenant shall use the property and furnishings peacefully. No smoking inside the house. No pets without prior agreement. Respect neighbors' tranquility. Maximum 10 occupants. The tenant must return the property clean: cupboards and bins emptied, fridges cleared, bathrooms, appliances, barbecue and plancha cleaned." },
+      { title: "Cancellation", text: "The signed contract is irrevocable. Tenant cancellation: more than 15 days before arrival \u2014 loss of deposit; less than 15 days \u2014 full amount due. Cancellation insurance is strongly recommended. Landlord cancellation: more than 8 weeks before \u2014 double the deposit; less than 8 weeks \u2014 no cancellation except force majeure." },
+      { title: "Insurance", text: "The tenant must be insured against rental risks (fire, water damage) and provide proof of insurance before check-in. Civil liability insurance is required for all occupants." },
+      { title: "Automatic termination", text: "In case of breach by the tenant of any contractual obligation, the lease shall be terminated automatically after 48 hours following an unsuccessful formal notice." },
+      { title: "Applicable law and jurisdiction", text: "This contract is governed by French law. Any dispute shall be submitted to the competent court in the jurisdiction where the property is located." },
     ],
-    signature_note_fr: "En signant ci-dessous, je declare avoir lu et accepte l'ensemble des conditions du present contrat de location.",
-    signature_note_en: "By signing below, I declare that I have read and accept all the terms and conditions of this rental agreement.",
+    signature_note_fr: "Lu et approuve \u2013 En signant ci-dessous, je declare avoir lu et accepte l'ensemble des conditions du present contrat de location saisonniere.",
+    signature_note_en: "Read and approved \u2013 By signing below, I declare that I have read and accept all the terms and conditions of this seasonal rental agreement.",
   },
 
   /* ———————————————————————————————————
      ARRIVAL TIME SLOTS — for checkin form
   ——————————————————————————————————— */
   arrival_slots: [
-    "16:00 — 17:00",
-    "17:00 — 18:00",
-    "18:00 — 19:00",
-    "19:00 — 20:00",
-    "20:00 — 21:00",
-    "21:00 — 22:00",
+    "16:00 \u2014 17:00",
+    "17:00 \u2014 18:00",
+    "18:00 \u2014 19:00",
+    "19:00 \u2014 20:00",
+    "20:00 \u2014 21:00",
+    "21:00 \u2014 22:00",
     "A preciser / To be confirmed",
   ],
 

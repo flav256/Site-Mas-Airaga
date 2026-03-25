@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="guide.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -39,12 +40,20 @@
     <!-- TOP BAR -->
     <div class="topbar">
       <span class="topbar__name">Mas d'Airaga</span>
-      <div class="topbar__lang">
-        <button class="lang-btn lang-btn--active" id="btn-fr" onclick="setLang('fr')">FR</button>
-        <span class="topbar__sep">|</span>
-        <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+      <div class="topbar__actions">
+        <div class="topbar__lang">
+          <button class="lang-btn lang-btn--active" data-lang="fr" title="Fran&ccedil;ais">&#127467;&#127479;</button>
+          <button class="lang-btn" data-lang="en" title="English">&#127468;&#127463;</button>
+          <button class="lang-btn" data-lang="nl" title="Nederlands">&#127475;&#127473;</button>
+          <button class="lang-btn" data-lang="de" title="Deutsch">&#127465;&#127466;</button>
+        </div>
       </div>
     </div>
+
+    <!-- SECTION NAV (grouped) -->
+    <nav class="guide-nav" id="guide-nav">
+      <div class="guide-nav__scroll" id="guide-nav-links"></div>
+    </nav>
 
     <!-- HERO with background image -->
     <header class="hero hero--photo">
@@ -200,11 +209,25 @@
               </label>
             </div>
 
-            <!-- Pool waiver -->
+            <!-- Pool waiver (full document from decharge_piscine.pdf) -->
             <div class="checkin-block">
               <h3 class="checkin-block__title fr">D&eacute;charge piscine</h3>
-              <h3 class="checkin-block__title en">Pool waiver</h3>
-              <div class="checkin-waiver" id="checkin-waiver-text"></div>
+              <h3 class="checkin-block__title en">Pool liability waiver</h3>
+              <div class="checkin-waiver checkin-waiver--full" id="checkin-waiver-text"></div>
+
+              <!-- Children present (Section 4 of waiver) -->
+              <div class="children-section">
+                <h4 class="children-section__title">
+                  <span class="fr">Enfants pr&eacute;sents pendant la location</span>
+                  <span class="en">Children present during rental</span>
+                </h4>
+                <div id="children-list"></div>
+                <button type="button" class="checkin-add-guest" onclick="addChildRow()">
+                  <span class="fr">+ Ajouter un enfant</span>
+                  <span class="en">+ Add a child</span>
+                </button>
+              </div>
+
               <div class="checkin-sig-block">
                 <label class="form-label fr">Votre nom complet (signature)</label>
                 <label class="form-label en">Your full name (signature)</label>
@@ -245,6 +268,10 @@
               </p>
               <p class="arrival-confirmed__note fr">Merci ! Nous avons bien re&ccedil;u vos informations.</p>
               <p class="arrival-confirmed__note en">Thank you! We have received your information.</p>
+              <button class="download-pdf-btn" onclick="downloadWaiverPdf()">
+                <span class="fr">T&eacute;l&eacute;charger la d&eacute;charge sign&eacute;e (PDF)</span>
+                <span class="en">Download signed waiver (PDF)</span>
+              </button>
             </div>
           </div>
 
@@ -293,6 +320,10 @@
               </p>
               <p class="arrival-confirmed__note fr">Merci ! Le contrat a &eacute;t&eacute; enregistr&eacute;.</p>
               <p class="arrival-confirmed__note en">Thank you! The contract has been recorded.</p>
+              <button class="download-pdf-btn" onclick="downloadContractPdf()">
+                <span class="fr">T&eacute;l&eacute;charger le contrat sign&eacute; (PDF)</span>
+                <span class="en">Download signed contract (PDF)</span>
+              </button>
             </div>
           </div>
 

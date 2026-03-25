@@ -343,6 +343,9 @@ a:hover { text-decoration: underline; }
 .booking-card__status--draft { background: var(--ma-border-light); color: var(--ma-text-muted); }
 .booking-card__status--sent { background: var(--ma-purple-light); color: var(--ma-purple); }
 .booking-card__status--active { background: var(--ma-olive-light); color: var(--ma-olive); }
+.booking-card__status--checked-in { background: #E0F0F0; color: #2A7A7A; }
+.booking-card__status--signed { background: var(--ma-olive-light); color: var(--ma-olive); }
+.booking-card__status--past { background: var(--ma-border-light); color: var(--ma-text-muted); font-style: italic; }
 
 .booking-card--past {
   opacity: 0.45;
@@ -612,6 +615,286 @@ a:hover { text-decoration: underline; }
   border-radius: var(--radius-sm);
   padding: 0.75rem;
   margin-top: 0.25rem;
+}
+
+/* —— ANALYTICS BAR —— */
+.analytics-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .analytics-bar { grid-template-columns: repeat(2, 1fr); }
+}
+
+.analytics-card {
+  background: var(--ma-white);
+  border: 1px solid var(--ma-border-light);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+}
+
+.analytics-card__value {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--ma-purple);
+  line-height: 1.2;
+}
+
+.analytics-card__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ma-text-muted);
+  margin-top: 0.15rem;
+}
+
+/* —— BOOKING CALENDAR —— */
+.calendar-section {
+  background: var(--ma-white);
+  border: 1px solid var(--ma-border-light);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.calendar-nav__title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ma-purple);
+}
+
+.calendar-nav__btn {
+  background: none;
+  border: 1px solid var(--ma-border);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.7rem;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ma-purple);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.calendar-nav__btn:hover {
+  background: var(--ma-purple-light);
+}
+
+.calendar-months {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .calendar-months { grid-template-columns: 1fr; }
+}
+
+.calendar-month__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ma-text-mid);
+  text-align: center;
+  margin-bottom: 0.4rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  font-size: 12px;
+}
+
+.calendar-grid__head {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ma-text-muted);
+  text-align: center;
+  padding: 0.2rem 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 0.3rem 0.15rem;
+  border-radius: 4px;
+  position: relative;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--ma-text-mid);
+}
+
+.calendar-day--empty {
+  color: transparent;
+}
+
+.calendar-day--today {
+  font-weight: 700;
+  color: var(--ma-purple);
+  box-shadow: inset 0 0 0 1.5px var(--ma-purple);
+}
+
+.calendar-day--booked {
+  background: var(--ma-purple-light);
+  color: var(--ma-purple);
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+}
+
+.calendar-day--booked:hover {
+  background: var(--ma-purple-mid);
+  color: #fff;
+}
+
+.calendar-day--booked-start { border-radius: 4px 0 0 4px; }
+.calendar-day--booked-end { border-radius: 0 4px 4px 0; }
+.calendar-day--booked-mid { border-radius: 0; }
+
+/* Number inside booked day */
+.cal-day__num { position: relative; z-index: 1; }
+
+/* Tooltip on hover */
+.cal-day__tip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ma-text);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 3px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.cal-day__tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--ma-text);
+}
+
+.calendar-day--booked:hover .cal-day__tip {
+  display: block;
+}
+
+/* Booking card flash highlight on calendar click */
+.booking-card--highlight {
+  animation: cardFlash 2s ease;
+}
+
+@keyframes cardFlash {
+  0%, 100% { box-shadow: none; }
+  15%, 60% { box-shadow: 0 0 0 3px var(--ma-purple-mid), 0 4px 16px rgba(107,94,130,0.25); }
+}
+
+/* —— FILTER TABS —— */
+.filter-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.filter-tab {
+  background: none;
+  border: 1px solid var(--ma-border);
+  border-radius: 20px;
+  padding: 0.3rem 0.9rem;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ma-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-tab:hover {
+  background: var(--ma-bg-alt);
+  color: var(--ma-text);
+}
+
+.filter-tab--active {
+  background: var(--ma-purple);
+  color: #fff;
+  border-color: var(--ma-purple);
+}
+
+.filter-tab--active:hover {
+  background: #5A4E70;
+  color: #fff;
+}
+
+/* —— WHATSAPP DROPDOWN —— */
+.wa-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.wa-dropdown__menu {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  background: var(--ma-white);
+  border: 1px solid var(--ma-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  min-width: 200px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.wa-dropdown__menu--open {
+  display: block;
+}
+
+.wa-dropdown__item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ma-text);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.wa-dropdown__item:hover {
+  background: var(--ma-purple-light);
+  color: var(--ma-purple);
+}
+
+.wa-dropdown__item + .wa-dropdown__item {
+  border-top: 1px solid var(--ma-border-light);
 }
 
 /* —— UTILITY —— */

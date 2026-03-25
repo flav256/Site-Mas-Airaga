@@ -206,38 +206,95 @@ body.lang-en .timing-table td.en { display: table-cell; }
   letter-spacing: 0.02em;
 }
 
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .topbar__lang {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.topbar__sep {
-  color: rgba(255,255,255,0.3);
-  font-size: 13px;
-}
-
 .lang-btn {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.6);
+  font-size: 18px;
+  line-height: 1;
   background: transparent;
-  border: none;
+  border: 2px solid transparent;
   cursor: pointer;
-  padding: 3px 6px;
+  padding: 2px 4px;
   border-radius: 4px;
   transition: all 0.15s;
+  opacity: 0.5;
 }
 
 .lang-btn--active {
-  color: #fff;
-  background: rgba(255,255,255,0.18);
+  opacity: 1;
+  border-color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.12);
 }
 
 .lang-btn:hover:not(.lang-btn--active) {
-  color: rgba(255,255,255,0.9);
+  opacity: 0.85;
+}
+
+/* ————————————————————————————————————————
+   SECTION NAVIGATION — horizontal scroll, grouped
+   ———————————————————————————————————————— */
+.guide-nav {
+  position: sticky;
+  top: 42px; /* below topbar */
+  z-index: 99;
+  background: var(--ma-white);
+  border-bottom: 1px solid var(--ma-border-light);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.guide-nav::-webkit-scrollbar { height: 0; }
+
+.guide-nav__scroll {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  min-width: max-content;
+}
+
+.guide-nav__link {
+  display: block;
+  white-space: nowrap;
+  padding: 0.55rem 0.85rem;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ma-text-muted);
+  text-decoration: none;
+  transition: all 0.15s;
+  border-bottom: 2px solid transparent;
+}
+
+.guide-nav__link:hover {
+  color: var(--ma-purple);
+  text-decoration: none;
+}
+
+.guide-nav__link.active {
+  color: var(--ma-purple);
+  border-bottom-color: var(--ma-purple);
+  font-weight: 600;
+}
+
+.guide-nav__sep {
+  display: flex;
+  align-items: center;
+  padding: 0 2px;
+  color: var(--ma-border);
+  font-size: 10px;
+}
+
+@media (min-width: 680px) {
+  .guide-nav__link { padding: 0.6rem 1rem; font-size: 13px; }
 }
 
 
@@ -1515,6 +1572,116 @@ body.lang-en .timing-table td.en { display: table-cell; }
   font-size: 12px;
   color: rgba(255,255,255,0.5);
   letter-spacing: 0.06em;
+}
+
+/* ————————————————————————————————————————
+   CHILDREN FORM (pool waiver section 4)
+   ———————————————————————————————————————— */
+.children-section {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: var(--ma-bg);
+  border: 1px solid var(--ma-border-light);
+  border-radius: var(--radius-sm);
+}
+
+.children-section__title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ma-terra);
+  margin-bottom: 0.5rem;
+}
+
+.child-row {
+  display: grid;
+  grid-template-columns: 1fr 80px auto;
+  gap: 0.5rem;
+  align-items: end;
+  margin-bottom: 0.4rem;
+}
+
+@media (max-width: 400px) {
+  .child-row { grid-template-columns: 1fr 60px auto; }
+}
+
+.child-row__label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ma-text-muted);
+  margin-bottom: 0.1rem;
+}
+
+.child-row__remove {
+  background: none;
+  border: none;
+  color: var(--ma-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0.3rem;
+  line-height: 1;
+  border-radius: 4px;
+}
+
+.child-row__remove:hover { color: #C0392B; }
+
+/* Full waiver display */
+.checkin-waiver--full {
+  max-height: 350px;
+}
+
+.checkin-waiver--full h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ma-text);
+  margin: 0.75rem 0 0.3rem;
+}
+
+.checkin-waiver--full h4:first-child {
+  margin-top: 0;
+}
+
+.checkin-waiver--full ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0.25rem 0;
+}
+
+.checkin-waiver--full ul li {
+  margin-bottom: 0.25rem;
+}
+
+.checkin-waiver--full .waiver-signoff {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--ma-border-light);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ma-text-mid);
+}
+
+/* ————————————————————————————————————————
+   DOWNLOAD PDF BUTTON
+   ———————————————————————————————————————— */
+.download-pdf-btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1.25rem;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ma-purple);
+  background: var(--ma-white);
+  border: 1.5px solid var(--ma-purple-mid);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.download-pdf-btn:hover {
+  background: var(--ma-purple);
+  color: #fff;
 }
 
 /* —— UTILITY —— */
