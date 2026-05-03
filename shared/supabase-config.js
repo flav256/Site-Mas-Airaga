@@ -1,5 +1,5 @@
 /**
- * Supabase Configuration — Mas d'Airaga Guest Portal
+ * Supabase Configuration — Mas Airaga Guest Portal
  *
  * These are PUBLIC keys (anon key). They are safe to commit.
  * Row-Level Security (RLS) on Supabase enforces access control.

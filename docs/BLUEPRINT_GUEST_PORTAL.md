@@ -1,4 +1,4 @@
-# Mas d'Airaga — Guest Portal Blueprint
+# Mas Airaga — Guest Portal Blueprint
 
 > **Version**: 2.0
 > **Created**: 2026-03-24
@@ -149,7 +149,7 @@ Toggles modules: ☑ guide  ☑ checkin  ☑ arrival  ☐ contract  ☑ checkout
     ↓
 Clicks "Send link" → pre-filled WhatsApp message opens
     ↓
-Guest receives: "Your Mas d'Airaga welcome portal: mas-airaga.com/guest/?t=a8f3c..."
+Guest receives: "Your Mas Airaga welcome portal: mas-airaga.com/guest/?t=a8f3c..."
     ↓
 Guest opens link → Supabase validates token + checks expiry
     ↓

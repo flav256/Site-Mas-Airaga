@@ -1,5 +1,5 @@
 /* ——————————————————————————————————————————————
-   MAS D'AIRAGA — guide.js (v2 — Supabase token auth)
+   MAS AIRAGA — guide.js (v2 — Supabase token auth)
    Replaces the old pin-based gate with magic-link token validation.
    Renders only the modules enabled for the current booking.
    —————————————————————————————————————————————— */
