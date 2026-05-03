@@ -1260,7 +1260,16 @@ function renderContract() {
   var arrhes = totalAmount ? Math.round(totalAmount * 0.25) : null;
   var solde = totalAmount && arrhes ? (totalAmount - arrhes) : null;
 
+  var taxRate = rc.tourist_tax_per_person_per_night || 0;
+  var taxAdults = b.num_guests || 0;
+  var touristTax = taxRate && taxAdults && nights ? +(taxRate * taxAdults * nights).toFixed(2) : 0;
+  var taxAuthority = isEn ? rc.tourist_tax_authority_en : rc.tourist_tax_authority_fr;
+  var grandTotal = totalAmount != null ? totalAmount + touristTax : null;
+
   var clauses = isEn ? rc.clauses_en : rc.clauses_fr;
+
+  function eur(n) { return n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " \u20ac"; }
+  function eurInt(n) { return n.toLocaleString("fr-FR") + " \u20ac"; }
 
   docEl.innerHTML =
     '<div class="contract-doc__title">' + (isEn ? rc.title_en : rc.title_fr) + '</div>' +
@@ -1291,10 +1300,26 @@ function renderContract() {
       contractDetail(isEn ? 'Check-out' : 'D\u00e9part', coDate) +
       contractDetail(isEn ? 'Duration' : 'Dur\u00e9e', nights + (isEn ? ' nights' : ' nuits')) +
       (b.num_guests ? contractDetail(isEn ? 'Guests' : 'Voyageurs', b.num_guests) : '') +
-      (totalAmount ? contractDetail(isEn ? 'Total rental' : 'Loyer total', totalAmount.toLocaleString("fr-FR") + ' \u20ac') : '') +
-      (arrhes ? contractDetail(isEn ? 'Deposit (25%)' : 'Arrhes (25%)', arrhes.toLocaleString("fr-FR") + ' \u20ac') : '') +
-      (solde ? contractDetail(isEn ? 'Balance due' : 'Solde d\u00fb', solde.toLocaleString("fr-FR") + ' \u20ac') : '') +
+      (totalAmount ? contractDetail(isEn ? 'Total rental' : 'Loyer total', eurInt(totalAmount)) : '') +
+      (arrhes ? contractDetail(isEn ? 'Deposit (25%)' : 'Arrhes (25%)', eurInt(arrhes)) : '') +
+      (solde ? contractDetail(isEn ? 'Balance due' : 'Solde d\u00fb', eurInt(solde)) : '') +
+      (touristTax ? contractDetail(
+        (isEn ? 'Tourist tax' : 'Taxe de s\u00e9jour') +
+          ' <span style="font-weight:400;color:var(--ma-text-muted);font-size:11px">(' +
+          eur(taxRate) + ' \u00d7 ' + taxAdults + (isEn ? ' adult' : ' adulte') + (taxAdults > 1 ? 's' : '') +
+          ' \u00d7 ' + nights + (isEn ? ' night' : ' nuit') + (nights > 1 ? 's' : '') + ')</span>',
+        eur(touristTax)
+      ) : '') +
+      (grandTotal != null && touristTax ? contractDetail(
+        '<strong>' + (isEn ? 'Grand total' : 'Total g\u00e9n\u00e9ral') + '</strong>',
+        '<strong>' + eur(grandTotal) + '</strong>'
+      ) : '') +
     '</div>' +
+    (touristTax ? '<p style="font-size:11px;color:var(--ma-text-muted);margin:-0.5rem 0 1rem;font-style:italic">' +
+      (isEn
+        ? 'Tourist tax collected by the landlord on behalf of the ' + taxAuthority + '.'
+        : 'Taxe de s\u00e9jour collect\u00e9e par le bailleur pour le compte de la ' + taxAuthority + '.') +
+      '</p>' : '') +
 
     '<div class="contract-doc__property">' + (isEn ? rc.property_desc_en : rc.property_desc_fr) + '</div>' +
 
@@ -1439,10 +1464,36 @@ function downloadContractPdf() {
   var nights = Math.round((co - ci) / (1000 * 60 * 60 * 24));
   add((isEn ? "Duration: " : "Duree: ") + nights + (isEn ? " nights" : " nuits"), 10, "normal");
   if (b.num_guests) add((isEn ? "Guests: " : "Voyageurs: ") + b.num_guests, 10, "normal");
+  var totalRent = null;
   if (b.weekly_rate) {
     var weeks = Math.ceil(nights / 7);
-    var total = b.weekly_rate * weeks;
-    add((isEn ? "Total rental: " : "Loyer total: ") + total.toLocaleString("fr-FR") + " \u20ac", 10, "normal");
+    totalRent = b.weekly_rate * weeks;
+    add((isEn ? "Total rental: " : "Loyer total: ") + totalRent.toLocaleString("fr-FR") + " \u20ac", 10, "normal");
+    var arrhesPdf = Math.round(totalRent * 0.25);
+    add((isEn ? "Deposit (25%): " : "Arrhes (25%): ") + arrhesPdf.toLocaleString("fr-FR") + " \u20ac", 10, "normal");
+    add((isEn ? "Balance due (75%): " : "Solde du (75%): ") + (totalRent - arrhesPdf).toLocaleString("fr-FR") + " \u20ac", 10, "normal");
+  }
+  var taxRatePdf = rc.tourist_tax_per_person_per_night || 0;
+  var taxAdultsPdf = b.num_guests || 0;
+  var touristTaxPdf = taxRatePdf && taxAdultsPdf && nights ? +(taxRatePdf * taxAdultsPdf * nights).toFixed(2) : 0;
+  if (touristTaxPdf) {
+    var taxAuthPdf = isEn ? rc.tourist_tax_authority_en : rc.tourist_tax_authority_fr;
+    var rateStr = taxRatePdf.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    var taxStr = touristTaxPdf.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    add(
+      (isEn ? "Tourist tax: " : "Taxe de sejour: ") + taxStr + " \u20ac" +
+      "  (" + rateStr + " \u20ac \u00d7 " + taxAdultsPdf + (isEn ? " adult" : " adulte") + (taxAdultsPdf > 1 ? "s" : "") +
+      " \u00d7 " + nights + (isEn ? " night" : " nuit") + (nights > 1 ? "s" : "") + ")",
+      10, "normal"
+    );
+    if (totalRent != null) {
+      var grand = (totalRent + touristTaxPdf).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      add((isEn ? "Grand total: " : "Total general: ") + grand + " \u20ac", 11, "bold");
+    }
+    add((isEn
+      ? "Tourist tax collected by the landlord on behalf of the " + taxAuthPdf + "."
+      : "Taxe de sejour collectee par le bailleur pour le compte de la " + taxAuthPdf + "."),
+      8, "italic");
   }
   yRef.y += 4;
 
