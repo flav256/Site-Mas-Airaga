@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS bookings (
   checkin_date    date NOT NULL,
   checkout_date   date NOT NULL,
   num_guests      int,
+  num_adults      int,
+  num_children    int,
   weekly_rate     numeric,
   deposit         numeric,
   token           text UNIQUE NOT NULL,

@@ -164,13 +164,20 @@ async function handleCreateBooking(e) {
   var checkoutDate = new Date(form.checkout_date.value);
   var tokenExpires = new Date(checkoutDate.getTime() + 48 * 60 * 60 * 1000); // +48h
 
+  var nAdults = parseInt(form.num_adults.value);
+  var nChildren = parseInt(form.num_children.value);
+  if (isNaN(nAdults)) nAdults = 0;
+  if (isNaN(nChildren)) nChildren = 0;
+
   var booking = {
     guest_name: form.guest_name.value.trim(),
     guest_email: form.guest_email.value.trim() || null,
     guest_phone: form.guest_phone.value.trim() || null,
     checkin_date: form.checkin_date.value,
     checkout_date: form.checkout_date.value,
-    num_guests: parseInt(form.num_guests.value) || null,
+    num_adults: nAdults,
+    num_children: nChildren,
+    num_guests: nAdults + nChildren || null,
     token: token,
     token_expires: tokenExpires.toISOString(),
     status: "draft",
@@ -377,7 +384,17 @@ function renderBookings() {
         '<div>' +
           '<div class="booking-card__name">' + escapeHtml(b.guest_name) + '</div>' +
           '<div class="booking-card__dates">' + b.checkin_date + ' &rarr; ' + b.checkout_date +
-            (b.num_guests ? ' &middot; ' + b.num_guests + ' guests' : '') +
+            (function () {
+              var a = b.num_adults != null ? b.num_adults : null;
+              var c = b.num_children != null ? b.num_children : null;
+              if (a != null || c != null) {
+                var parts = [];
+                if (a) parts.push(a + ' adult' + (a > 1 ? 's' : ''));
+                if (c) parts.push(c + ' child' + (c > 1 ? 'ren' : ''));
+                return parts.length ? ' &middot; ' + parts.join(', ') : '';
+              }
+              return b.num_guests ? ' &middot; ' + b.num_guests + ' guests' : '';
+            })() +
           '</div>' +
         '</div>' +
         '<div>' + statusBadges + '</div>' +
