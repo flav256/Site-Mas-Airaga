@@ -33,6 +33,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (e.key === "Enter") handleLogin();
   });
 
+  // Forgot password handler
+  document.getElementById("forgot-btn").addEventListener("click", handleForgotPassword);
+
+  // Password recovery: when Supabase redirects back here, it fires PASSWORD_RECOVERY
+  db.auth.onAuthStateChange(function (event) {
+    if (event === "PASSWORD_RECOVERY") promptNewPassword();
+  });
+
   // Logout handler
   document.getElementById("logout-btn").addEventListener("click", handleLogout);
 
@@ -72,6 +80,45 @@ async function handleLogin() {
 
   currentUser = data.user;
   showDashboard();
+}
+
+async function handleForgotPassword() {
+  var email = document.getElementById("login-email").value.trim();
+  var errorEl = document.getElementById("login-error");
+  var infoEl = document.getElementById("login-info");
+  errorEl.textContent = "";
+  infoEl.textContent = "";
+
+  if (!email) {
+    errorEl.textContent = "Enter your email above first.";
+    return;
+  }
+
+  var redirectTo = window.location.origin + "/admin/";
+  var { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: redirectTo });
+  if (error) {
+    errorEl.textContent = error.message;
+    return;
+  }
+
+  infoEl.textContent = "Check your inbox — a reset link has been sent.";
+}
+
+async function promptNewPassword() {
+  var infoEl = document.getElementById("login-info");
+  var errorEl = document.getElementById("login-error");
+  var newPwd = window.prompt("Set a new password (min 6 characters):");
+  if (!newPwd) return;
+  if (newPwd.length < 6) {
+    errorEl.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+  var { error } = await db.auth.updateUser({ password: newPwd });
+  if (error) {
+    errorEl.textContent = error.message;
+    return;
+  }
+  infoEl.textContent = "Password updated. You can sign in now.";
 }
 
 async function handleLogout() {
