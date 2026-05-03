@@ -47,6 +47,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Booking form
   document.getElementById("booking-form").addEventListener("submit", handleCreateBooking);
 
+  // Quick link form
+  document.getElementById("quick-link-form").addEventListener("submit", handleQuickLink);
+
   // Close WhatsApp dropdowns on outside click
   document.addEventListener("click", function (e) {
     if (!e.target.closest(".wa-dropdown")) {
@@ -195,6 +198,53 @@ async function handleCreateBooking(e) {
   loadBookings();
 
   // Show success modal with link + actions
+  var guestUrl = window.location.origin + "/guest/?t=" + data.token;
+  showSuccessModal(data, guestUrl);
+}
+
+/* ———————————————————————————————————————
+   QUICK LINK — name-only minimal booking
+   ——————————————————————————————————————— */
+
+async function handleQuickLink(e) {
+  e.preventDefault();
+  var nameInput = document.getElementById("quick-name");
+  var name = nameInput.value.trim();
+  if (!name) return;
+
+  var btn = e.target.querySelector("button[type=submit]");
+  btn.disabled = true;
+  btn.textContent = "Creating...";
+
+  var token = generateToken();
+  var today = new Date();
+  var checkin = today.toISOString().slice(0, 10);
+  var checkoutDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+  var checkout = checkoutDate.toISOString().slice(0, 10);
+  var tokenExpires = new Date(checkoutDate.getTime() + 48 * 60 * 60 * 1000);
+
+  var booking = {
+    guest_name: name,
+    checkin_date: checkin,
+    checkout_date: checkout,
+    token: token,
+    token_expires: tokenExpires.toISOString(),
+    status: "draft",
+    modules: { guide: true, checkin: false, arrival: false, contract: false, checkout: false },
+  };
+
+  var { data, error } = await db.from("bookings").insert([booking]).select().single();
+
+  btn.disabled = false;
+  btn.textContent = "Generate link";
+
+  if (error) {
+    alert("Error creating quick link: " + error.message);
+    return;
+  }
+
+  nameInput.value = "";
+  loadBookings();
   var guestUrl = window.location.origin + "/guest/?t=" + data.token;
   showSuccessModal(data, guestUrl);
 }

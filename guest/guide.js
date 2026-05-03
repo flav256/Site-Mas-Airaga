@@ -1260,9 +1260,12 @@ function renderContract() {
   var arrhes = totalAmount ? Math.round(totalAmount * 0.25) : null;
   var solde = totalAmount && arrhes ? (totalAmount - arrhes) : null;
 
-  var taxRate = rc.tourist_tax_per_person_per_night || 0;
-  var taxAdults = b.num_guests || 0;
-  var touristTax = taxRate && taxAdults && nights ? +(taxRate * taxAdults * nights).toFixed(2) : 0;
+  // Tourist tax (Terre de Provence Agglomeration) — see mas-airaga-content.js
+  // Until num_adults / num_children are stored separately, treat all num_guests as adults.
+  var taxAdults = b.num_adults != null ? b.num_adults : (b.num_guests || 0);
+  var taxChildren = b.num_children != null ? b.num_children : 0;
+  var taxCalc = computeTouristTax(rc, totalAmount || 0, nights, taxAdults, taxChildren);
+  var touristTax = taxCalc.total;
   var taxAuthority = isEn ? rc.tourist_tax_authority_en : rc.tourist_tax_authority_fr;
   var grandTotal = totalAmount != null ? totalAmount + touristTax : null;
 
@@ -1306,7 +1309,7 @@ function renderContract() {
       (touristTax ? contractDetail(
         (isEn ? 'Tourist tax' : 'Taxe de s\u00e9jour') +
           ' <span style="font-weight:400;color:var(--ma-text-muted);font-size:11px">(' +
-          eur(taxRate) + ' \u00d7 ' + taxAdults + (isEn ? ' adult' : ' adulte') + (taxAdults > 1 ? 's' : '') +
+          eur(taxCalc.totalPerAdultPerNight) + ' \u00d7 ' + taxAdults + (isEn ? ' adult' : ' adulte') + (taxAdults > 1 ? 's' : '') +
           ' \u00d7 ' + nights + (isEn ? ' night' : ' nuit') + (nights > 1 ? 's' : '') + ')</span>',
         eur(touristTax)
       ) : '') +
@@ -1315,10 +1318,20 @@ function renderContract() {
         '<strong>' + eur(grandTotal) + '</strong>'
       ) : '') +
     '</div>' +
-    (touristTax ? '<p style="font-size:11px;color:var(--ma-text-muted);margin:-0.5rem 0 1rem;font-style:italic">' +
+    (touristTax ? '<p style="font-size:11px;color:var(--ma-text-muted);margin:-0.5rem 0 1rem;font-style:italic;line-height:1.5">' +
       (isEn
-        ? 'Tourist tax collected by the landlord on behalf of the ' + taxAuthority + '.'
-        : 'Taxe de s\u00e9jour collect\u00e9e par le bailleur pour le compte de la ' + taxAuthority + '.') +
+        ? 'Tourist tax (meuble non classe): 5% of price per person per night = ' + eur(taxCalc.basePerPersonPerNight) +
+          ', capped at ' + eur(rc.tourist_tax_cap_per_person_per_night) +
+          '; +10% departmental = ' + eur(taxCalc.departmentalPerPersonPerNight) +
+          '; +34% regional = ' + eur(taxCalc.regionalPerPersonPerNight) +
+          '. Total per adult per night: ' + eur(taxCalc.totalPerAdultPerNight) +
+          '. Children under 18 exempt. Collected by the landlord on behalf of ' + taxAuthority + '.'
+        : 'Taxe de s\u00e9jour (meubl\u00e9 non class\u00e9) : 5\u202f% du prix par personne et par nuit = ' + eur(taxCalc.basePerPersonPerNight) +
+          ', plafonn\u00e9 \u00e0 ' + eur(rc.tourist_tax_cap_per_person_per_night) +
+          '\u202f; +10\u202f% d\u00e9partementale = ' + eur(taxCalc.departmentalPerPersonPerNight) +
+          '\u202f; +34\u202f% r\u00e9gionale = ' + eur(taxCalc.regionalPerPersonPerNight) +
+          '. Total par adulte et par nuit : ' + eur(taxCalc.totalPerAdultPerNight) +
+          '. Mineurs de moins de 18 ans exon\u00e9r\u00e9s. Collect\u00e9e par le bailleur pour le compte de ' + taxAuthority + '.') +
       '</p>' : '') +
 
     '<div class="contract-doc__property">' + (isEn ? rc.property_desc_en : rc.property_desc_fr) + '</div>' +
@@ -1332,6 +1345,47 @@ function renderContract() {
 
     '<div style="margin-top:1rem;padding:0.75rem;background:var(--ma-purple-light);border-radius:var(--radius-sm);font-size:12px;font-style:italic;color:var(--ma-text-mid)">' +
       (isEn ? rc.signature_note_en : rc.signature_note_fr) + '</div>';
+}
+
+/* ———————————————————————————————————————
+   TOURIST TAX — Terre de Provence Agglomeration
+   Mirrors script.js calculateTouristTax() from the public site.
+   ——————————————————————————————————————— */
+
+function computeTouristTax(rc, totalAccommodationPrice, nights, adults, children) {
+  var zero = {
+    basePerPersonPerNight: 0,
+    departmentalPerPersonPerNight: 0,
+    regionalPerPersonPerNight: 0,
+    totalPerAdultPerNight: 0,
+    total: 0
+  };
+  if (!rc || !totalAccommodationPrice || nights <= 0 || adults <= 0) return zero;
+
+  var totalGuests = adults + (children || 0);
+  if (totalGuests <= 0) return zero;
+
+  var rate = rc.tourist_tax_proportional_rate || 0.05;
+  var cap = rc.tourist_tax_cap_per_person_per_night || 3.18;
+  var dept = rc.tourist_tax_departmental_rate || 0.10;
+  var reg = rc.tourist_tax_regional_rate || 0.34;
+
+  var nightlyPrice = totalAccommodationPrice / nights;
+  var pricePerPerson = nightlyPrice / totalGuests;
+  var base = Math.min(pricePerPerson * rate, cap);
+  base = Math.round(base * 100) / 100;
+  var deptTax = Math.round(base * dept * 100) / 100;
+  var regTax = Math.round(base * reg * 100) / 100;
+  var perAdultPerNight = base + deptTax + regTax;
+  var total = +(perAdultPerNight * adults * nights).toFixed(2);
+
+  return {
+    basePerPersonPerNight: base,
+    departmentalPerPersonPerNight: deptTax,
+    regionalPerPersonPerNight: regTax,
+    totalPerAdultPerNight: perAdultPerNight,
+    total: total
+  };
 }
 
 function contractDetail(label, val) {
@@ -1473,26 +1527,32 @@ function downloadContractPdf() {
     add((isEn ? "Deposit (25%): " : "Arrhes (25%): ") + arrhesPdf.toLocaleString("fr-FR") + " \u20ac", 10, "normal");
     add((isEn ? "Balance due (75%): " : "Solde du (75%): ") + (totalRent - arrhesPdf).toLocaleString("fr-FR") + " \u20ac", 10, "normal");
   }
-  var taxRatePdf = rc.tourist_tax_per_person_per_night || 0;
-  var taxAdultsPdf = b.num_guests || 0;
-  var touristTaxPdf = taxRatePdf && taxAdultsPdf && nights ? +(taxRatePdf * taxAdultsPdf * nights).toFixed(2) : 0;
-  if (touristTaxPdf) {
+  var taxAdultsPdf = b.num_adults != null ? b.num_adults : (b.num_guests || 0);
+  var taxChildrenPdf = b.num_children != null ? b.num_children : 0;
+  var taxCalcPdf = computeTouristTax(rc, totalRent || 0, nights, taxAdultsPdf, taxChildrenPdf);
+  if (taxCalcPdf.total) {
     var taxAuthPdf = isEn ? rc.tourist_tax_authority_en : rc.tourist_tax_authority_fr;
-    var rateStr = taxRatePdf.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    var taxStr = touristTaxPdf.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    function eur2(n) { return n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
     add(
-      (isEn ? "Tourist tax: " : "Taxe de sejour: ") + taxStr + " \u20ac" +
-      "  (" + rateStr + " \u20ac \u00d7 " + taxAdultsPdf + (isEn ? " adult" : " adulte") + (taxAdultsPdf > 1 ? "s" : "") +
+      (isEn ? "Tourist tax: " : "Taxe de sejour: ") + eur2(taxCalcPdf.total) + " \u20ac" +
+      "  (" + eur2(taxCalcPdf.totalPerAdultPerNight) + " \u20ac \u00d7 " +
+      taxAdultsPdf + (isEn ? " adult" : " adulte") + (taxAdultsPdf > 1 ? "s" : "") +
       " \u00d7 " + nights + (isEn ? " night" : " nuit") + (nights > 1 ? "s" : "") + ")",
       10, "normal"
     );
     if (totalRent != null) {
-      var grand = (totalRent + touristTaxPdf).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      add((isEn ? "Grand total: " : "Total general: ") + grand + " \u20ac", 11, "bold");
+      add((isEn ? "Grand total: " : "Total general: ") + eur2(totalRent + taxCalcPdf.total) + " \u20ac", 11, "bold");
     }
+    var capStr = eur2(rc.tourist_tax_cap_per_person_per_night);
     add((isEn
-      ? "Tourist tax collected by the landlord on behalf of the " + taxAuthPdf + "."
-      : "Taxe de sejour collectee par le bailleur pour le compte de la " + taxAuthPdf + "."),
+      ? "Tourist tax (meuble non classe): 5% of price/person/night = " + eur2(taxCalcPdf.basePerPersonPerNight) +
+        " EUR (capped at " + capStr + " EUR); +10% departmental = " + eur2(taxCalcPdf.departmentalPerPersonPerNight) +
+        " EUR; +34% regional = " + eur2(taxCalcPdf.regionalPerPersonPerNight) +
+        " EUR. Children under 18 exempt. Collected on behalf of " + taxAuthPdf + "."
+      : "Taxe de sejour (meuble non classe): 5% du prix/personne/nuit = " + eur2(taxCalcPdf.basePerPersonPerNight) +
+        " EUR (plafond " + capStr + " EUR); +10% departementale = " + eur2(taxCalcPdf.departmentalPerPersonPerNight) +
+        " EUR; +34% regionale = " + eur2(taxCalcPdf.regionalPerPersonPerNight) +
+        " EUR. Mineurs de moins de 18 ans exoneres. Collectee pour le compte de " + taxAuthPdf + "."),
       8, "italic");
   }
   yRef.y += 4;
