@@ -8,11 +8,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Supabase client (token validation) + QR code generator -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+
   <style>
     /* ————————————————————————————————————
        PRINT-READY A4 LIVRET — Mas d'Airaga
-       Designed to mirror the original Eyragues-Brochure layout
-       Recto-verso friendly: cover (recto), p2 (verso), p3 (recto)…
+       Token-gated; content hidden until ?t=<token> is validated.
        ———————————————————————————————————— */
 
     :root {
@@ -36,6 +40,51 @@
       font-size: 11pt;
       line-height: 1.5;
     }
+
+    /* —— GATE SCREEN —— */
+    .gate {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6mm;
+      background: linear-gradient(135deg, #d9d3df, #efe9f3);
+    }
+    .gate__card {
+      max-width: 520px;
+      background: #fff;
+      padding: 14mm 12mm;
+      border-radius: 3mm;
+      text-align: center;
+      box-shadow: 0 4mm 14mm rgba(0,0,0,0.10);
+    }
+    .gate__title {
+      font-family: "Playfair Display", serif;
+      font-style: italic;
+      font-size: 24pt;
+      color: var(--ma-purple-deep);
+      margin-bottom: 4mm;
+    }
+    .gate__msg {
+      color: var(--ma-text-mid);
+      margin-bottom: 4mm;
+    }
+    .gate__msg.error { color: #b04848; }
+    .gate__hint {
+      font-size: 10pt;
+      color: var(--ma-text-muted);
+      font-style: italic;
+    }
+    .spinner {
+      width: 8mm;
+      height: 8mm;
+      border: 0.6mm solid var(--ma-purple-light);
+      border-top-color: var(--ma-purple);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 4mm auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* —— PAGE: A4 (210mm x 297mm) —— */
     .page {
@@ -62,7 +111,6 @@
     .small { font-size: 9.5pt; }
     .center { text-align: center; }
 
-    /* —— HEADER BAND (purple band like brochure) —— */
     .band {
       background: var(--ma-purple-soft);
       color: #fff;
@@ -80,10 +128,7 @@
     .band--sm h2 { font-size: 18pt; }
 
     /* —— COVER —— */
-    .cover {
-      padding: 0 0 18mm;
-      background: #fff;
-    }
+    .cover { padding: 0 0 18mm; background: #fff; }
     .cover__top {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -108,235 +153,151 @@
       text-align: center;
     }
     .cover__hero {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4mm;
-      min-height: 75mm;
+      display: flex; align-items: center; justify-content: center;
+      padding: 4mm; min-height: 75mm;
     }
     .cover__hero img { max-width: 100%; max-height: 75mm; object-fit: contain; }
-
     .cover__photos {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4mm;
-      padding: 0 16mm;
-      margin-bottom: 8mm;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4mm; padding: 0 16mm; margin-bottom: 8mm;
     }
     .cover__photos img {
-      width: 100%;
-      height: 65mm;
-      object-fit: cover;
-      border-radius: 1.5mm;
+      width: 100%; height: 65mm; object-fit: cover; border-radius: 1.5mm;
     }
-
     .cover__band {
-      background: var(--ma-purple-soft);
-      color: #fff;
-      padding: 14mm 16mm;
-      margin: 0;
+      background: var(--ma-purple-soft); color: #fff;
+      padding: 14mm 16mm; margin: 0;
     }
     .cover__band h2 {
-      color: #fff;
-      font-style: italic;
-      font-size: 24pt;
-      line-height: 1.3;
+      color: #fff; font-style: italic;
+      font-size: 24pt; line-height: 1.3;
     }
     .cover__band h2.en {
       color: var(--ma-purple-light);
-      margin-top: 4mm;
-      margin-left: 8mm;
+      margin-top: 4mm; margin-left: 8mm;
     }
     .cover__footnote {
-      font-size: 9pt;
-      color: var(--ma-text-muted);
-      font-style: italic;
-      padding: 6mm 16mm 0;
+      font-size: 9pt; color: var(--ma-text-muted);
+      font-style: italic; padding: 6mm 16mm 0;
     }
 
-    /* —— TWO-COLUMN BILINGUAL LAYOUT —— */
     .twocol {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8mm;
-      margin-bottom: 6mm;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8mm; margin-bottom: 6mm;
     }
     .col-fr { color: var(--ma-text); }
     .col-en { color: var(--ma-purple-deep); font-style: italic; }
 
-    /* —— SECTION HEADER (smaller — between content) —— */
     .section-h {
       font-family: "Manrope", sans-serif;
-      font-weight: 700;
-      color: var(--ma-text);
-      font-size: 11pt;
-      margin-top: 5mm;
-      margin-bottom: 2mm;
+      font-weight: 700; color: var(--ma-text);
+      font-size: 11pt; margin-top: 5mm; margin-bottom: 2mm;
     }
-    .section-h__en {
-      color: var(--ma-purple);
-      font-weight: 600;
-    }
+    .section-h__en { color: var(--ma-purple); font-weight: 600; }
 
-    /* —— LISTS —— */
     ul.tight { padding-left: 5mm; }
     ul.tight li { margin-bottom: 1mm; }
 
-    /* —— BOXES —— */
     .box {
       background: var(--ma-bg);
       border-left: 3pt solid var(--ma-purple);
-      padding: 4mm 5mm;
-      margin: 3mm 0;
+      padding: 4mm 5mm; margin: 3mm 0;
       border-radius: 1mm;
     }
     .box--accent {
       background: linear-gradient(90deg, rgba(189,170,217,0.18), rgba(189,170,217,0.05));
       border-left-color: var(--ma-purple-deep);
     }
-    .box--warn {
-      background: #fff7f0;
-      border-left-color: #d49a4f;
-    }
+    .box--warn { background: #fff7f0; border-left-color: #d49a4f; }
 
-    /* —— DATA ROWS —— */
     .data-row {
-      display: grid;
-      grid-template-columns: 50mm 1fr;
-      gap: 4mm;
-      padding: 2mm 0;
+      display: grid; grid-template-columns: 50mm 1fr;
+      gap: 4mm; padding: 2mm 0;
       border-bottom: 0.5pt solid var(--ma-border);
     }
     .data-row__lbl { font-weight: 600; }
     .data-row:last-child { border-bottom: 0; }
 
-    /* —— WIFI BLOCK —— */
-    .wifi {
+    /* —— WIFI BLOCK with QR —— */
+    .wifi-block {
+      display: grid;
+      grid-template-columns: 1fr 40mm;
+      gap: 6mm;
+      align-items: center;
       background: var(--ma-purple);
       color: #fff;
       padding: 6mm;
       border-radius: 2mm;
       margin: 3mm 0;
     }
-    .wifi__lbl { font-size: 9pt; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.08em; }
-    .wifi__val {
+    .wifi-block__lbl { font-size: 9pt; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.08em; }
+    .wifi-block__val {
       font-family: "Courier New", monospace;
-      font-size: 13pt;
-      font-weight: 600;
+      font-size: 13pt; font-weight: 600;
       letter-spacing: 0.02em;
-      margin-top: 1mm;
-      word-break: break-all;
+      margin-top: 1mm; word-break: break-all;
     }
-
-    /* —— STEP NUMBER —— */
-    .step {
-      display: flex;
-      gap: 4mm;
-      align-items: flex-start;
-      margin-bottom: 3mm;
-    }
-    .step__num {
-      flex-shrink: 0;
-      background: var(--ma-purple);
-      color: #fff;
-      width: 8mm;
-      height: 8mm;
-      border-radius: 50%;
+    .wifi-block__qr {
+      background: #fff;
+      padding: 2.5mm;
+      border-radius: 1.5mm;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      font-size: 10pt;
     }
-    .step__body { flex: 1; }
-    .step__title {
-      font-weight: 700;
-      color: var(--ma-text);
-      margin-bottom: 0.5mm;
+    .wifi-block__qr img {
+      width: 100%; height: auto; display: block;
+      image-rendering: pixelated;
     }
-    .step__title-en {
+    .wifi-block__qr-hint {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 9pt;
+      opacity: 0.85;
       font-style: italic;
-      color: var(--ma-purple);
-      font-weight: 500;
-      font-size: 10pt;
+      margin-top: 2mm;
     }
 
-    /* —— TABLE-LIKE ROWS for emergencies/contacts —— */
+    .step { display: flex; gap: 4mm; align-items: flex-start; margin-bottom: 3mm; }
+    .step__num {
+      flex-shrink: 0; background: var(--ma-purple); color: #fff;
+      width: 8mm; height: 8mm; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 10pt;
+    }
+    .step__body { flex: 1; }
+    .step__title { font-weight: 700; color: var(--ma-text); margin-bottom: 0.5mm; }
+    .step__title-en { font-style: italic; color: var(--ma-purple); font-weight: 500; font-size: 10pt; }
+
     .contact-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 4mm;
-      padding: 2mm 0;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 4mm; padding: 2mm 0;
       border-bottom: 0.5pt dotted var(--ma-border);
       font-size: 10pt;
     }
     .contact-row:last-child { border-bottom: 0; }
     .contact-row__phone { font-weight: 600; color: var(--ma-purple-deep); white-space: nowrap; }
 
-    /* —— FOOTER (page number) —— */
     .pagefoot {
-      position: absolute;
-      bottom: 8mm;
-      left: 16mm;
-      right: 16mm;
-      display: flex;
-      justify-content: space-between;
-      font-size: 8.5pt;
-      color: var(--ma-text-muted);
+      position: absolute; bottom: 8mm; left: 16mm; right: 16mm;
+      display: flex; justify-content: space-between;
+      font-size: 8.5pt; color: var(--ma-text-muted);
       font-style: italic;
       border-top: 0.5pt solid var(--ma-border);
       padding-top: 2mm;
     }
 
-    /* —— UTILITY —— */
-    .photo-strip {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3mm;
-      margin: 4mm 0;
-    }
-    .photo-strip img {
-      width: 100%;
-      height: 50mm;
-      object-fit: cover;
-      border-radius: 1.5mm;
-    }
+    .photo-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin: 4mm 0; }
+    .photo-strip img { width: 100%; height: 50mm; object-fit: cover; border-radius: 1.5mm; }
 
-    .stamp {
-      position: absolute;
-      top: 14mm;
-      right: 16mm;
-      width: 30mm;
-      height: 30mm;
-      opacity: 0.95;
-    }
-
-    /* —— TWO INTRO PARAGRAPHS WITH OLIVES IMG —— */
-    .intro {
-      display: grid;
-      grid-template-columns: 1fr 30mm;
-      gap: 6mm;
-      align-items: start;
-      margin-bottom: 4mm;
-    }
-    .intro img { width: 100%; }
-
-    /* —— PRINT —— */
-    @page {
-      size: A4;
-      margin: 0;
-    }
+    @page { size: A4; margin: 0; }
     @media print {
       body { background: #fff; }
-      .page {
-        margin: 0;
-        box-shadow: none;
-        page-break-after: always;
-      }
-      .no-print { display: none !important; }
+      .page { margin: 0; box-shadow: none; page-break-after: always; }
+      .no-print, .gate { display: none !important; }
     }
 
-    /* —— ON-SCREEN HEADER (not printed) —— */
+    /* —— ON-SCREEN TOOLBAR —— */
     .toolbar {
       max-width: 210mm;
       margin: 8mm auto 0;
@@ -355,463 +316,554 @@
       font-size: 14pt;
       color: var(--ma-purple-deep);
     }
+    .toolbar__guest { font-size: 10pt; color: var(--ma-text-muted); }
     .toolbar button {
-      background: var(--ma-purple);
-      color: #fff;
-      border: 0;
-      padding: 3mm 7mm;
-      font-family: inherit;
-      font-size: 11pt;
-      border-radius: 1.5mm;
-      cursor: pointer;
+      background: var(--ma-purple); color: #fff;
+      border: 0; padding: 3mm 7mm;
+      font-family: inherit; font-size: 11pt;
+      border-radius: 1.5mm; cursor: pointer;
     }
     .toolbar button:hover { background: var(--ma-purple-deep); }
   </style>
 </head>
 <body>
 
-  <div class="toolbar no-print">
-    <div class="toolbar__title">Mas d'Airaga — Livret d'Accueil / Welcome Booklet</div>
-    <button onclick="window.print()">Imprimer / Print PDF</button>
+  <!-- ————————————————————————————————————
+       GATE — visible until token validated
+       ———————————————————————————————————— -->
+  <div id="gate" class="gate">
+    <div class="gate__card">
+      <div class="gate__title">Mas d'Airaga</div>
+      <div id="gate-status">
+        <div class="spinner"></div>
+        <p class="gate__msg">Validation du lien… / Validating link…</p>
+      </div>
+      <p class="gate__hint">Ce livret est accessible uniquement avec un lien personnel.<br>This booklet is only accessible with a personal link.</p>
+    </div>
   </div>
 
   <!-- ————————————————————————————————————
-       PAGE 1 — COVER
+       BOOKLET — hidden until token validated
        ———————————————————————————————————— -->
-  <section class="page cover">
-    <div class="cover__top">
-      <div class="cover__name">
-        <h1>Mas<br>D'Airaga</h1>
+  <div id="booklet" style="display:none">
+
+    <div class="toolbar no-print">
+      <div>
+        <div class="toolbar__title">Mas d'Airaga — Livret d'Accueil / Welcome Booklet</div>
+        <div class="toolbar__guest" id="toolbar-guest"></div>
       </div>
-      <div class="cover__hero">
-        <img src="../images/LOGO.png" alt="Mas d'Airaga logo">
+      <button onclick="window.print()">Imprimer / Print PDF</button>
+    </div>
+
+    <!-- PAGE 1 — COVER -->
+    <section class="page cover">
+      <div class="cover__top">
+        <div class="cover__name"><h1>Mas<br>D'Airaga</h1></div>
+        <div class="cover__hero"><img src="../images/LOGO.png" alt="Mas d'Airaga logo"></div>
       </div>
-    </div>
+      <div class="cover__photos">
+        <img src="../images/14-outdoor-aerial-property.jpg" alt="Vue aerienne du Mas">
+        <img src="../images/12-outdoor-pergola-dining.jpg" alt="Pergola et terrasse">
+      </div>
+      <div class="cover__band">
+        <h2>Livret d'Accueil pour les<br>Locataires Saisonniers</h2>
+        <h2 class="en">Welcome Booklet for<br>Seasonal Renters</h2>
+      </div>
+      <p class="cover__footnote">* Eyragues in Occitan: Airaga en Provença</p>
+    </section>
 
-    <div class="cover__photos">
-      <img src="../images/14-outdoor-aerial-property.jpg" alt="Vue aerienne du Mas">
-      <img src="../images/12-outdoor-pergola-dining.jpg" alt="Pergola et terrasse">
-    </div>
+    <!-- PAGE 2 — WELCOME / GENERAL INFO / HOUSE RULES -->
+    <section class="page">
+      <div class="band"><h2>Bienvenue à Eyragues ! / Welcome to Eyragues!</h2></div>
 
-    <div class="cover__band">
-      <h2>Livret d'Accueil pour les<br>Locataires Saisonniers</h2>
-      <h2 class="en">Welcome Booklet for<br>Seasonal Renters</h2>
-    </div>
+      <div class="twocol">
+        <div class="col-fr">
+          <p>Nous sommes ravis de vous accueillir dans notre maison située à Eyragues. Nous espérons que vous passerez un séjour agréable et mémorable. Ce livret contient des informations utiles pour rendre votre séjour le plus confortable possible.</p>
+        </div>
+        <div class="col-en">
+          <p>We are delighted to welcome you to our home in Eyragues. We hope you have a pleasant and memorable stay. This booklet contains useful information to make your stay as comfortable as possible.</p>
+        </div>
+      </div>
 
-    <p class="cover__footnote">* Eyragues in Occitan: Airaga en Provença</p>
-  </section>
+      <div class="section-h">Informations Générales <span class="section-h__en">/ General Information</span></div>
+      <div class="data-row">
+        <div class="data-row__lbl">Adresse / Address</div>
+        <div>595 Chemin Notre Dame, 13630 Eyragues, France<br><span class="muted small">GPS : N 43°50'11.80"  E 4°50'05.50"</span></div>
+      </div>
+      <div class="data-row">
+        <div class="data-row__lbl">Propriétaires / Owners</div>
+        <div>Virginie &amp; Flavien MAIRE</div>
+      </div>
+      <div class="data-row">
+        <div class="data-row__lbl">Téléphone / Phone</div>
+        <div>+33 6 14 32 57 06 (FR) &middot; +971 50 204 8428 (WhatsApp)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-row__lbl">Email</div>
+        <div>virginieduvivier@gmail.com</div>
+      </div>
+
+      <div class="section-h">Arrivée &amp; Départ <span class="section-h__en">/ Check-in &amp; Check-out</span></div>
+      <div class="twocol">
+        <div class="col-fr">
+          <p><strong>Arrivée :</strong> entre 16h00 et 22h00<br><strong>Départ :</strong> avant 10h00</p>
+          <p class="small muted">Merci de communiquer votre heure d'arrivée la veille.</p>
+        </div>
+        <div class="col-en">
+          <p><strong>Check-in:</strong> between 4 pm and 10 pm<br><strong>Check-out:</strong> by 10 am</p>
+          <p class="small">Please share your arrival time the day before.</p>
+        </div>
+      </div>
+
+      <div class="section-h">Règles de la Maison <span class="section-h__en">/ House Rules</span></div>
+      <div class="box box--warn">
+        <strong>⚠️ Attention :</strong> Toujours replier les parasols et le store du pool house en cas de vent. <em>Always close parasols and the pool house sunshade in case of wind.</em>
+      </div>
+      <div class="twocol">
+        <div class="col-fr">
+          <ul class="tight small">
+            <li><strong>Non-fumeur :</strong> il est interdit de fumer à l'intérieur.</li>
+            <li><strong>Animaux :</strong> pas d'animaux sans accord préalable.</li>
+            <li><strong>Bruit :</strong> respecter la tranquillité des voisins, pas de bruit excessif après 23h.</li>
+            <li><strong>Propreté :</strong> laissez la maison propre et rangée.</li>
+            <li><strong>Déchets :</strong> triez et sortez les poubelles selon les indications.</li>
+            <li><strong>Capacité :</strong> maximum 10 personnes.</li>
+            <li><strong>Piscine :</strong> surveillance constante des enfants par un adulte obligatoire.</li>
+          </ul>
+        </div>
+        <div class="col-en">
+          <ul class="tight small">
+            <li><strong>Non-smoking:</strong> no smoking inside the house.</li>
+            <li><strong>Pets:</strong> no pets without prior approval.</li>
+            <li><strong>Noise:</strong> respect neighbours — no excessive noise after 11 pm.</li>
+            <li><strong>Cleanliness:</strong> leave the house clean and tidy.</li>
+            <li><strong>Waste:</strong> sort and dispose of waste per the instructions.</li>
+            <li><strong>Capacity:</strong> maximum 10 occupants.</li>
+            <li><strong>Pool:</strong> constant adult supervision of children is mandatory.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pagefoot">
+        <span>Mas d'Airaga · Eyragues, Provence</span>
+        <span>2 / 6</span>
+      </div>
+    </section>
+
+    <!-- PAGE 3 — AMENITIES / WIFI (with QR) / SAFETY -->
+    <section class="page">
+      <div class="band"><h2>Équipements et Commodités / Amenities &amp; Facilities</h2></div>
+
+      <div class="section-h">Wi-Fi <span class="section-h__en">/ Internet Access</span></div>
+      <div class="wifi-block">
+        <div>
+          <div class="wifi-block__lbl">SSID / Network</div>
+          <div class="wifi-block__val" id="wifi-ssid">…</div>
+          <div class="wifi-block__lbl" style="margin-top:3mm">Mot de passe / Password</div>
+          <div class="wifi-block__val" id="wifi-password">…</div>
+        </div>
+        <div class="wifi-block__qr" id="wifi-qr"></div>
+        <div class="wifi-block__qr-hint">Scannez pour vous connecter automatiquement / Scan to connect automatically</div>
+      </div>
+      <p class="small muted">Internet haut débit (Starlink + Freebox). TV : TNT.</p>
+
+      <div class="twocol">
+        <div class="col-fr">
+          <div class="section-h">Cuisine</div>
+          <p class="small">Réfrigérateur, four, micro-ondes, lave-vaisselle, cafetière à filtres + Nespresso, bouilloire, grille-pain, plaque induction, ustensiles complets.</p>
+
+          <div class="section-h">Chambres &amp; Salles de bain</div>
+          <p class="small">Draps fournis, lits faits à votre arrivée. Serviettes de toilette fournies (serviettes de plage non fournies).</p>
+
+          <div class="section-h">Linge &amp; Buanderie</div>
+          <p class="small">Lave-linge dans la buanderie. Fer et table à repasser disponibles.</p>
+
+          <div class="section-h">Climatisation</div>
+          <p class="small">Climatisation réversible — utilisez les télécommandes.</p>
+        </div>
+
+        <div class="col-en">
+          <div class="section-h section-h__en">Kitchen</div>
+          <p class="small">Fridge/freezer, oven, microwave, dishwasher, filter coffee maker + Nespresso, kettle, toaster, induction hob, full utensils.</p>
+
+          <div class="section-h section-h__en">Bedrooms &amp; Bathrooms</div>
+          <p class="small">Bed linen provided, beds made on arrival. Bath towels provided (beach towels NOT provided).</p>
+
+          <div class="section-h section-h__en">Laundry</div>
+          <p class="small">Washing machine in the utility room. Iron and ironing board available.</p>
+
+          <div class="section-h section-h__en">Air conditioning</div>
+          <p class="small">Reversible AC — use the remote controls.</p>
+        </div>
+      </div>
+
+      <div class="band band--sm" style="margin-top:6mm;margin-bottom:5mm">
+        <h2>Sécurité &amp; Urgences / Safety &amp; Emergencies</h2>
+      </div>
+
+      <div class="box">
+        <strong>🧯 Extincteur / Fire extinguisher :</strong> sous l'évier de la cuisine / under the kitchen sink.
+      </div>
+
+      <div class="contact-row">
+        <div><strong>Police / Pompiers / SAMU</strong> <span class="muted small">— Emergency services</span></div>
+        <div class="contact-row__phone">112</div>
+      </div>
+      <div class="contact-row">
+        <div><strong>Médecins d'Eyragues</strong> <span class="muted small">— Dr Gesta, Rogissart &amp; Abarki<br>6225 Allée les Allées, 13630 Eyragues</span></div>
+        <div class="contact-row__phone">04 90 94 12 32</div>
+      </div>
+      <div class="contact-row">
+        <div><strong>Centre Hospitalier d'Avignon</strong> <span class="muted small">— 305A Rue Raoul Follereau, 84000 Avignon</span></div>
+        <div class="contact-row__phone">04 32 75 33 33</div>
+      </div>
+      <div class="contact-row">
+        <div><strong>Propriétaires / Owners</strong> <span class="muted small">— Virginie &amp; Flavien MAIRE</span></div>
+        <div class="contact-row__phone">+33 6 14 32 57 06</div>
+      </div>
+
+      <div class="pagefoot">
+        <span>Mas d'Airaga · Eyragues, Provence</span>
+        <span>3 / 6</span>
+      </div>
+    </section>
+
+    <!-- PAGE 4 — LOCAL GUIDE -->
+    <section class="page">
+      <div class="band"><h2>Autour du Mas / Around the House</h2></div>
+
+      <div class="twocol">
+        <div class="col-fr">
+          <div class="section-h">Supermarchés &amp; commerces</div>
+          <ul class="tight small">
+            <li><strong>U Express</strong> — Les Allées, Eyragues · 04 90 94 00 31</li>
+            <li><strong>Petit Casino</strong> — 5 Pl. Jean Jaurès, Eyragues · 04 90 94 11 16</li>
+            <li><strong>Intermarché SUPER</strong> — 11 Av. de la 1ère DFL, Saint-Rémy · 04 90 92 04 71</li>
+          </ul>
+
+          <div class="section-h">Restaurants à Eyragues</div>
+          <ul class="tight small">
+            <li><strong>Le Pré Gourmand</strong> — 175 Av. Max Dormoy</li>
+            <li><strong>Un Bouchon en Provence</strong> — 2 Av. Henri Barbusse</li>
+            <li><strong>Le Café du Soleil</strong> — 144 Av. Henri Barbusse</li>
+            <li class="muted">… et beaucoup d'autres dans les villages voisins.</li>
+          </ul>
+
+          <div class="section-h">Marché d'Eyragues</div>
+          <p class="small">Halles couvertes, Place Saint-Paul. Tous les <strong>vendredis matin</strong>. Fruits, légumes, fleurs, épices, olives, rôtisseries.</p>
+
+          <div class="section-h">Autres marchés provençaux</div>
+          <ul class="tight small">
+            <li>Saint-Rémy-de-Provence — mercredi (8h30 – 13h)</li>
+            <li>Avignon — samedi</li>
+            <li>Arles — mercredi &amp; samedi</li>
+          </ul>
+        </div>
+
+        <div class="col-en">
+          <div class="section-h section-h__en">Supermarkets &amp; shops</div>
+          <ul class="tight small">
+            <li><strong>U Express</strong> — Les Allées, Eyragues · 04 90 94 00 31</li>
+            <li><strong>Petit Casino</strong> — 5 Pl. Jean Jaurès, Eyragues · 04 90 94 11 16</li>
+            <li><strong>Intermarché SUPER</strong> — Saint-Rémy-de-Provence · 04 90 92 04 71</li>
+          </ul>
+
+          <div class="section-h section-h__en">Restaurants in Eyragues</div>
+          <ul class="tight small">
+            <li><strong>Le Pré Gourmand</strong> — 175 Av. Max Dormoy</li>
+            <li><strong>Un Bouchon en Provence</strong> — 2 Av. Henri Barbusse</li>
+            <li><strong>Le Café du Soleil</strong> — 144 Av. Henri Barbusse</li>
+            <li class="muted">… and many more in nearby villages.</li>
+          </ul>
+
+          <div class="section-h section-h__en">Eyragues market</div>
+          <p class="small">Covered hall, Place Saint-Paul. Every <strong>Friday morning</strong>. Fresh produce, flowers, spices, olives, rotisserie.</p>
+
+          <div class="section-h section-h__en">Other Provençal markets</div>
+          <ul class="tight small">
+            <li>Saint-Rémy-de-Provence — Wednesday (8:30 am – 1 pm)</li>
+            <li>Avignon — Saturday</li>
+            <li>Arles — Wednesday &amp; Saturday</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-h" style="margin-top:6mm">À voir / Must-see <span class="section-h__en">— around Eyragues</span></div>
+      <div class="twocol">
+        <div class="col-fr">
+          <ul class="tight small">
+            <li><strong>Saint-Rémy-de-Provence</strong> (4 km) — Glanum, monastère Saint-Paul-de-Mausole, marché du mercredi.</li>
+            <li><strong>Les Baux-de-Provence</strong> (12 km) — Plus beau village de France, Carrières de Lumières.</li>
+            <li><strong>Avignon</strong> (15 km) — Cité des Papes, Pont d'Avignon, Festival en juillet.</li>
+            <li><strong>Arles</strong> (25 km) — Amphithéâtre romain, Fondation Van Gogh, Camargue.</li>
+            <li><strong>Parc Naturel des Alpilles</strong> — randonnées, oliveraies, panoramas.</li>
+            <li><strong>Châteauneuf-du-Pape</strong> (30 km) — vignobles AOC, dégustations.</li>
+          </ul>
+        </div>
+        <div class="col-en">
+          <ul class="tight small">
+            <li><strong>Saint-Rémy-de-Provence</strong> (4 km) — Glanum ruins, Saint-Paul monastery, Wednesday market.</li>
+            <li><strong>Les Baux-de-Provence</strong> (12 km) — Most Beautiful Village, Carrières de Lumières.</li>
+            <li><strong>Avignon</strong> (15 km) — City of Popes, Pont d'Avignon, July Festival.</li>
+            <li><strong>Arles</strong> (25 km) — Roman amphitheatre, Van Gogh Foundation, Camargue.</li>
+            <li><strong>Alpilles Regional Park</strong> — hiking, olive groves, panoramic views.</li>
+            <li><strong>Châteauneuf-du-Pape</strong> (30 km) — AOC vineyards, wine tastings.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pagefoot">
+        <span>Mas d'Airaga · Eyragues, Provence</span>
+        <span>4 / 6</span>
+      </div>
+    </section>
+
+    <!-- PAGE 5 — POOL & SAFETY -->
+    <section class="page">
+      <div class="band"><h2>Piscine &amp; Sécurité / Pool &amp; Safety</h2></div>
+
+      <div class="box box--accent">
+        <p class="small"><strong>FR :</strong> La piscine est par nature un endroit dangereux. La surveillance constante d'un adulte responsable est obligatoire pendant toute utilisation. Aucun système de sécurité ne remplace la vigilance humaine.</p>
+        <p class="small" style="margin-top:2mm"><strong>EN :</strong> The pool is inherently a dangerous place. Constant supervision by a responsible adult is mandatory during any use. No safety system replaces human vigilance.</p>
+      </div>
+
+      <div class="twocol">
+        <div class="col-fr">
+          <div class="section-h">Caractéristiques</div>
+          <ul class="tight small">
+            <li>Dimensions : 9 m × 4,5 m</li>
+            <li>Volet électrique de sécurité</li>
+            <li>Couverture AQUAL Life Hors Sol — norme NF P90-308</li>
+            <li>Pisciniste une fois par semaine</li>
+          </ul>
+
+          <div class="section-h">À faire chaque jour</div>
+          <ul class="tight small">
+            <li>Vider les skimmers une fois par jour.</li>
+            <li>Laisser le robot dans la piscine en permanence.</li>
+            <li>Ne pas modifier la programmation de la filtration.</li>
+            <li>Aucun animal dans la piscine.</li>
+          </ul>
+
+          <div class="section-h">En cas d'incident</div>
+          <p class="small">Prévenir immédiatement les propriétaires. Une décharge de responsabilité a été signée à votre arrivée — elle reste consultable dans le portail invité.</p>
+        </div>
+
+        <div class="col-en">
+          <div class="section-h section-h__en">Specs</div>
+          <ul class="tight small">
+            <li>Size: 9 m × 4.5 m</li>
+            <li>Electric safety cover</li>
+            <li>AQUAL Life Hors Sol cover — NF P90-308 norm</li>
+            <li>Pool technician visits weekly</li>
+          </ul>
+
+          <div class="section-h section-h__en">Daily tasks</div>
+          <ul class="tight small">
+            <li>Empty skimmers once a day.</li>
+            <li>Leave the cleaning robot in the pool at all times.</li>
+            <li>Do not change the filtration timer.</li>
+            <li>No animals in the pool.</li>
+          </ul>
+
+          <div class="section-h section-h__en">In case of incident</div>
+          <p class="small">Notify the owners immediately. A liability waiver was signed on arrival — it remains available in the guest portal.</p>
+        </div>
+      </div>
+
+      <div class="photo-strip">
+        <img src="../images/01-outdoor-pool-aerial-view.jpg" alt="Piscine vue aerienne">
+        <img src="../images/03-outdoor-pool-sunbeds.jpg" alt="Piscine et bains de soleil">
+      </div>
+
+      <div class="pagefoot">
+        <span>Mas d'Airaga · Eyragues, Provence</span>
+        <span>5 / 6</span>
+      </div>
+    </section>
+
+    <!-- PAGE 6 — DEPARTURE INSTRUCTIONS -->
+    <section class="page">
+      <div class="band"><h2>Avant votre départ / Before You Leave</h2></div>
+
+      <div class="twocol">
+        <div class="col-fr">
+          <p class="italic small">Nous espérons que vous avez passé un agréable séjour. Avant votre départ, merci de suivre les consignes ci-dessous pour aider à préparer la maison pour les prochains locataires.</p>
+        </div>
+        <div class="col-en">
+          <p class="italic small">We hope you had a pleasant stay. Before leaving, please follow the instructions below to help us prepare the house for the next guests.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">1</div>
+        <div class="step__body">
+          <div class="step__title">Vider le réfrigérateur</div>
+          <div class="step__title-en">Empty the refrigerator</div>
+          <div class="small muted">Jeter tous les aliments périssables. / Dispose of all perishable food.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">2</div>
+        <div class="step__body">
+          <div class="step__title">Nettoyer la plancha</div>
+          <div class="step__title-en">Clean the plancha / griddle</div>
+          <div class="small muted">Suivre les instructions d'utilisation et de nettoyage. / Follow the cleaning instructions.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">3</div>
+        <div class="step__body">
+          <div class="step__title">Éteindre toutes les climatisations &middot; fermer fenêtres et portes</div>
+          <div class="step__title-en">Turn off all air conditioning &middot; close windows and doors</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">4</div>
+        <div class="step__body">
+          <div class="step__title">Sortir les poubelles (triées)</div>
+          <div class="step__title-en">Take out the trash (sorted)</div>
+          <div class="small muted">Centre de collecte du village, Place de la Libération. / Collection point at Place de la Libération.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">5</div>
+        <div class="step__body">
+          <div class="step__title">Enlever les draps des lits utilisés</div>
+          <div class="step__title-en">Strip used beds</div>
+          <div class="small muted">Déposer les draps dans la salle de bain. / Leave linens in the bathroom.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">6</div>
+        <div class="step__body">
+          <div class="step__title">Laver et ranger la vaisselle</div>
+          <div class="step__title-en">Wash and put away the dishes</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">7</div>
+        <div class="step__body">
+          <div class="step__title">Éteindre lumières &amp; appareils &middot; verrouiller portes</div>
+          <div class="step__title-en">Turn off lights &amp; appliances &middot; lock all doors</div>
+          <div class="small muted">Remettre les clés et télécommandes au propriétaire. / Return keys and remotes to the owner.</div>
+        </div>
+      </div>
+
+      <div class="box box--accent" style="margin-top:6mm">
+        <p class="small italic"><strong>Merci !</strong> Si vous avez des questions ou besoin d'assistance, n'hésitez pas à nous contacter. Bon retour et à bientôt !</p>
+        <p class="small italic" style="margin-top:2mm"><strong>Thank you!</strong> If you have any questions or need help, please reach out. Safe travels — see you soon!</p>
+        <p class="small" style="margin-top:3mm">Virginie &amp; Flavien — +33 6 14 32 57 06 · virginieduvivier@gmail.com</p>
+      </div>
+
+      <div class="pagefoot">
+        <span>Mas d'Airaga · Eyragues, Provence</span>
+        <span>6 / 6</span>
+      </div>
+    </section>
+
+  </div><!-- /booklet -->
 
   <!-- ————————————————————————————————————
-       PAGE 2 — WELCOME / GENERAL INFO / HOUSE RULES
+       Token validation + content rendering
        ———————————————————————————————————— -->
-  <section class="page">
-    <div class="band">
-      <h2>Bienvenue à Eyragues ! / Welcome to Eyragues!</h2>
-    </div>
+  <script src="../shared/supabase-config.js"></script>
+  <script src="mas-airaga-content.js"></script>
+  <script>
+  (function () {
+    var gateStatus = document.getElementById("gate-status");
 
-    <div class="twocol">
-      <div class="col-fr">
-        <p>Nous sommes ravis de vous accueillir dans notre maison située à Eyragues. Nous espérons que vous passerez un séjour agréable et mémorable. Ce livret contient des informations utiles pour rendre votre séjour le plus confortable possible.</p>
-      </div>
-      <div class="col-en">
-        <p>We are delighted to welcome you to our home in Eyragues. We hope you have a pleasant and memorable stay. This booklet contains useful information to make your stay as comfortable as possible.</p>
-      </div>
-    </div>
+    function showGateError(fr, en) {
+      gateStatus.innerHTML =
+        '<p class="gate__msg error">' + fr + '</p>' +
+        '<p class="gate__msg error">' + en + '</p>';
+    }
 
-    <div class="section-h">Informations Générales <span class="section-h__en">/ General Information</span></div>
-    <div class="data-row">
-      <div class="data-row__lbl">Adresse / Address</div>
-      <div>595 Chemin Notre Dame, 13630 Eyragues, France<br><span class="muted small">GPS : N 43°50'11.80"  E 4°50'05.50"</span></div>
-    </div>
-    <div class="data-row">
-      <div class="data-row__lbl">Propriétaires / Owners</div>
-      <div>Virginie & Flavien MAIRE</div>
-    </div>
-    <div class="data-row">
-      <div class="data-row__lbl">Téléphone / Phone</div>
-      <div>+33 6 14 32 57 06 (FR) &middot; +971 50 204 8428 (WhatsApp)</div>
-    </div>
-    <div class="data-row">
-      <div class="data-row__lbl">Email</div>
-      <div>virginieduvivier@gmail.com</div>
-    </div>
+    function getToken() {
+      var params = new URLSearchParams(window.location.search);
+      return params.get("t");
+    }
 
-    <div class="section-h">Arrivée &amp; Départ <span class="section-h__en">/ Check-in &amp; Check-out</span></div>
-    <div class="twocol">
-      <div class="col-fr">
-        <p><strong>Arrivée :</strong> entre 16h00 et 22h00<br><strong>Départ :</strong> avant 10h00</p>
-        <p class="small muted">Merci de communiquer votre heure d'arrivée la veille.</p>
-      </div>
-      <div class="col-en">
-        <p><strong>Check-in:</strong> between 4 pm and 10 pm<br><strong>Check-out:</strong> by 10 am</p>
-        <p class="small">Please share your arrival time the day before.</p>
-      </div>
-    </div>
+    function reveal(booking) {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("booklet").style.display = "block";
 
-    <div class="section-h">Règles de la Maison <span class="section-h__en">/ House Rules</span></div>
-    <div class="box box--warn">
-      <strong>⚠️ Attention :</strong> Toujours replier les parasols et le store du pool house en cas de vent. <em>Always close parasols and the pool house sunshade in case of wind.</em>
-    </div>
-    <div class="twocol">
-      <div class="col-fr">
-        <ul class="tight small">
-          <li><strong>Non-fumeur :</strong> il est interdit de fumer à l'intérieur.</li>
-          <li><strong>Animaux :</strong> pas d'animaux sans accord préalable.</li>
-          <li><strong>Bruit :</strong> respecter la tranquillité des voisins, pas de bruit excessif après 23h.</li>
-          <li><strong>Propreté :</strong> laissez la maison propre et rangée.</li>
-          <li><strong>Déchets :</strong> triez et sortez les poubelles selon les indications.</li>
-          <li><strong>Capacité :</strong> maximum 10 personnes.</li>
-          <li><strong>Piscine :</strong> surveillance constante des enfants par un adulte obligatoire.</li>
-        </ul>
-      </div>
-      <div class="col-en">
-        <ul class="tight small">
-          <li><strong>Non-smoking:</strong> no smoking inside the house.</li>
-          <li><strong>Pets:</strong> no pets without prior approval.</li>
-          <li><strong>Noise:</strong> respect neighbours — no excessive noise after 11 pm.</li>
-          <li><strong>Cleanliness:</strong> leave the house clean and tidy.</li>
-          <li><strong>Waste:</strong> sort and dispose of waste per the instructions.</li>
-          <li><strong>Capacity:</strong> maximum 10 occupants.</li>
-          <li><strong>Pool:</strong> constant adult supervision of children is mandatory.</li>
-        </ul>
-      </div>
-    </div>
+      var c = (typeof MAS_AIRAGA !== "undefined") ? MAS_AIRAGA : null;
+      var ssid = (c && c.access && c.access.wifi) ? c.access.wifi.ssid : "MasAiraga";
+      var pwd  = (c && c.access && c.access.wifi) ? c.access.wifi.password : "";
+      document.getElementById("wifi-ssid").textContent = ssid;
+      document.getElementById("wifi-password").textContent = pwd;
 
-    <div class="pagefoot">
-      <span>Mas d'Airaga · Eyragues, Provence</span>
-      <span>2 / 6</span>
-    </div>
-  </section>
+      try {
+        var qr = qrcode(0, "M");
+        qr.addData("WIFI:T:WPA;S:" + ssid + ";P:" + pwd + ";;");
+        qr.make();
+        document.getElementById("wifi-qr").innerHTML = qr.createImgTag(4, 0);
+      } catch (e) { console.warn("QR generation failed:", e); }
 
-  <!-- ————————————————————————————————————
-       PAGE 3 — AMENITIES / WIFI / SAFETY
-       ———————————————————————————————————— -->
-  <section class="page">
-    <div class="band">
-      <h2>Équipements et Commodités / Amenities &amp; Facilities</h2>
-    </div>
+      if (booking && booking.guest_name) {
+        document.getElementById("toolbar-guest").textContent = "Pour / For: " + booking.guest_name;
+      }
+    }
 
-    <div class="section-h">Wi-Fi <span class="section-h__en">/ Internet Access</span></div>
-    <div class="wifi">
-      <div class="wifi__lbl">SSID / Network</div>
-      <div class="wifi__val">MasAiraga</div>
-      <div class="wifi__lbl" style="margin-top:3mm">Mot de passe / Password</div>
-      <div class="wifi__val">zazbIg-cutpud-2qygzo</div>
-    </div>
-    <p class="small muted">Internet haut débit (Starlink + Freebox). TV : TNT.</p>
+    document.addEventListener("DOMContentLoaded", async function () {
+      var token = getToken();
+      if (!token) {
+        showGateError(
+          "Lien invalide. Aucun jeton fourni.",
+          "Invalid link. No token provided."
+        );
+        return;
+      }
 
-    <div class="twocol">
-      <div class="col-fr">
-        <div class="section-h">Cuisine</div>
-        <p class="small">Réfrigérateur, four, micro-ondes, lave-vaisselle, cafetière à filtres + Nespresso, bouilloire, grille-pain, plaque induction, ustensiles complets.</p>
+      var db = (typeof getSupabase === "function") ? getSupabase() : null;
+      if (!db) {
+        showGateError(
+          "Erreur de configuration. Contactez le proprietaire.",
+          "Configuration error. Please contact the owner."
+        );
+        return;
+      }
 
-        <div class="section-h">Chambres &amp; Salles de bain</div>
-        <p class="small">Draps fournis, lits faits à votre arrivée. Serviettes de toilette fournies (serviettes de plage non fournies).</p>
+      try {
+        var { data, error } = await db
+          .from("bookings")
+          .select("guest_name,token_expires")
+          .eq("token", token)
+          .single();
 
-        <div class="section-h">Linge &amp; Buanderie</div>
-        <p class="small">Lave-linge dans la buanderie. Fer et table à repasser disponibles.</p>
+        if (error || !data) {
+          showGateError(
+            "Lien non reconnu. Contactez le proprietaire.",
+            "Link not recognized. Please contact the owner."
+          );
+          return;
+        }
+        if (data.token_expires && new Date(data.token_expires) < new Date()) {
+          showGateError(
+            "Ce lien a expire. Contactez le proprietaire pour un nouveau lien.",
+            "This link has expired. Contact the owner for a new link."
+          );
+          return;
+        }
 
-        <div class="section-h">Climatisation</div>
-        <p class="small">Climatisation réversible — utilisez les télécommandes.</p>
-      </div>
-
-      <div class="col-en">
-        <div class="section-h section-h__en">Kitchen</div>
-        <p class="small">Fridge/freezer, oven, microwave, dishwasher, filter coffee maker + Nespresso, kettle, toaster, induction hob, full utensils.</p>
-
-        <div class="section-h section-h__en">Bedrooms &amp; Bathrooms</div>
-        <p class="small">Bed linen provided, beds made on arrival. Bath towels provided (beach towels NOT provided).</p>
-
-        <div class="section-h section-h__en">Laundry</div>
-        <p class="small">Washing machine in the utility room. Iron and ironing board available.</p>
-
-        <div class="section-h section-h__en">Air conditioning</div>
-        <p class="small">Reversible AC — use the remote controls.</p>
-      </div>
-    </div>
-
-    <div class="band band--sm" style="margin-top:6mm;margin-bottom:5mm">
-      <h2>Sécurité &amp; Urgences / Safety &amp; Emergencies</h2>
-    </div>
-
-    <div class="box">
-      <strong>🧯 Extincteur / Fire extinguisher :</strong> sous l'évier de la cuisine / under the kitchen sink.
-    </div>
-
-    <div class="contact-row">
-      <div><strong>Police / Pompiers / SAMU</strong> <span class="muted small">— Emergency services</span></div>
-      <div class="contact-row__phone">112</div>
-    </div>
-    <div class="contact-row">
-      <div><strong>Médecins d'Eyragues</strong> <span class="muted small">— Dr Gesta, Rogissart &amp; Abarki<br>6225 Allée les Allées, 13630 Eyragues</span></div>
-      <div class="contact-row__phone">04 90 94 12 32</div>
-    </div>
-    <div class="contact-row">
-      <div><strong>Centre Hospitalier d'Avignon</strong> <span class="muted small">— 305A Rue Raoul Follereau, 84000 Avignon</span></div>
-      <div class="contact-row__phone">04 32 75 33 33</div>
-    </div>
-    <div class="contact-row">
-      <div><strong>Propriétaires / Owners</strong> <span class="muted small">— Virginie &amp; Flavien MAIRE</span></div>
-      <div class="contact-row__phone">+33 6 14 32 57 06</div>
-    </div>
-
-    <div class="pagefoot">
-      <span>Mas d'Airaga · Eyragues, Provence</span>
-      <span>3 / 6</span>
-    </div>
-  </section>
-
-  <!-- ————————————————————————————————————
-       PAGE 4 — LOCAL GUIDE: SHOPS, RESTAURANTS, MARKETS
-       ———————————————————————————————————— -->
-  <section class="page">
-    <div class="band">
-      <h2>Autour du Mas / Around the House</h2>
-    </div>
-
-    <div class="twocol">
-      <div class="col-fr">
-        <div class="section-h">Supermarchés &amp; commerces</div>
-        <ul class="tight small">
-          <li><strong>U Express</strong> — Les Allées, Eyragues · 04 90 94 00 31</li>
-          <li><strong>Petit Casino</strong> — 5 Pl. Jean Jaurès, Eyragues · 04 90 94 11 16</li>
-          <li><strong>Intermarché SUPER</strong> — 11 Av. de la 1ère DFL, Saint-Rémy · 04 90 92 04 71</li>
-        </ul>
-
-        <div class="section-h">Restaurants à Eyragues</div>
-        <ul class="tight small">
-          <li><strong>Le Pré Gourmand</strong> — 175 Av. Max Dormoy</li>
-          <li><strong>Un Bouchon en Provence</strong> — 2 Av. Henri Barbusse</li>
-          <li><strong>Le Café du Soleil</strong> — 144 Av. Henri Barbusse</li>
-          <li class="muted">… et beaucoup d'autres dans les villages voisins.</li>
-        </ul>
-
-        <div class="section-h">Marché d'Eyragues</div>
-        <p class="small">Halles couvertes, Place Saint-Paul. Tous les <strong>vendredis matin</strong>. Fruits, légumes, fleurs, épices, olives, rôtisseries.</p>
-
-        <div class="section-h">Autres marchés provençaux</div>
-        <ul class="tight small">
-          <li>Saint-Rémy-de-Provence — mercredi (8h30 – 13h)</li>
-          <li>Avignon — samedi</li>
-          <li>Arles — mercredi &amp; samedi</li>
-        </ul>
-      </div>
-
-      <div class="col-en">
-        <div class="section-h section-h__en">Supermarkets &amp; shops</div>
-        <ul class="tight small">
-          <li><strong>U Express</strong> — Les Allées, Eyragues · 04 90 94 00 31</li>
-          <li><strong>Petit Casino</strong> — 5 Pl. Jean Jaurès, Eyragues · 04 90 94 11 16</li>
-          <li><strong>Intermarché SUPER</strong> — Saint-Rémy-de-Provence · 04 90 92 04 71</li>
-        </ul>
-
-        <div class="section-h section-h__en">Restaurants in Eyragues</div>
-        <ul class="tight small">
-          <li><strong>Le Pré Gourmand</strong> — 175 Av. Max Dormoy</li>
-          <li><strong>Un Bouchon en Provence</strong> — 2 Av. Henri Barbusse</li>
-          <li><strong>Le Café du Soleil</strong> — 144 Av. Henri Barbusse</li>
-          <li class="muted">… and many more in nearby villages.</li>
-        </ul>
-
-        <div class="section-h section-h__en">Eyragues market</div>
-        <p class="small">Covered hall, Place Saint-Paul. Every <strong>Friday morning</strong>. Fresh produce, flowers, spices, olives, rotisserie.</p>
-
-        <div class="section-h section-h__en">Other Provençal markets</div>
-        <ul class="tight small">
-          <li>Saint-Rémy-de-Provence — Wednesday (8:30 am – 1 pm)</li>
-          <li>Avignon — Saturday</li>
-          <li>Arles — Wednesday &amp; Saturday</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="section-h" style="margin-top:6mm">À voir / Must-see <span class="section-h__en">— around Eyragues</span></div>
-    <div class="twocol">
-      <div class="col-fr">
-        <ul class="tight small">
-          <li><strong>Saint-Rémy-de-Provence</strong> (4 km) — Glanum, monastère Saint-Paul-de-Mausole, marché du mercredi.</li>
-          <li><strong>Les Baux-de-Provence</strong> (12 km) — Plus beau village de France, Carrières de Lumières.</li>
-          <li><strong>Avignon</strong> (15 km) — Cité des Papes, Pont d'Avignon, Festival en juillet.</li>
-          <li><strong>Arles</strong> (25 km) — Amphithéâtre romain, Fondation Van Gogh, Camargue.</li>
-          <li><strong>Parc Naturel des Alpilles</strong> — randonnées, oliveraies, panoramas.</li>
-          <li><strong>Châteauneuf-du-Pape</strong> (30 km) — vignobles AOC, dégustations.</li>
-        </ul>
-      </div>
-      <div class="col-en">
-        <ul class="tight small">
-          <li><strong>Saint-Rémy-de-Provence</strong> (4 km) — Glanum ruins, Saint-Paul monastery, Wednesday market.</li>
-          <li><strong>Les Baux-de-Provence</strong> (12 km) — Most Beautiful Village, Carrières de Lumières.</li>
-          <li><strong>Avignon</strong> (15 km) — City of Popes, Pont d'Avignon, July Festival.</li>
-          <li><strong>Arles</strong> (25 km) — Roman amphitheatre, Van Gogh Foundation, Camargue.</li>
-          <li><strong>Alpilles Regional Park</strong> — hiking, olive groves, panoramic views.</li>
-          <li><strong>Châteauneuf-du-Pape</strong> (30 km) — AOC vineyards, wine tastings.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="pagefoot">
-      <span>Mas d'Airaga · Eyragues, Provence</span>
-      <span>4 / 6</span>
-    </div>
-  </section>
-
-  <!-- ————————————————————————————————————
-       PAGE 5 — POOL & SAFETY
-       ———————————————————————————————————— -->
-  <section class="page">
-    <div class="band">
-      <h2>Piscine &amp; Sécurité / Pool &amp; Safety</h2>
-    </div>
-
-    <div class="box box--accent">
-      <p class="small"><strong>FR :</strong> La piscine est par nature un endroit dangereux. La surveillance constante d'un adulte responsable est obligatoire pendant toute utilisation. Aucun système de sécurité ne remplace la vigilance humaine.</p>
-      <p class="small" style="margin-top:2mm"><strong>EN :</strong> The pool is inherently a dangerous place. Constant supervision by a responsible adult is mandatory during any use. No safety system replaces human vigilance.</p>
-    </div>
-
-    <div class="twocol">
-      <div class="col-fr">
-        <div class="section-h">Caractéristiques</div>
-        <ul class="tight small">
-          <li>Dimensions : 9 m × 4,5 m</li>
-          <li>Volet électrique de sécurité</li>
-          <li>Couverture AQUAL Life Hors Sol — norme NF P90-308</li>
-          <li>Pisciniste une fois par semaine</li>
-        </ul>
-
-        <div class="section-h">À faire chaque jour</div>
-        <ul class="tight small">
-          <li>Vider les skimmers une fois par jour.</li>
-          <li>Laisser le robot dans la piscine en permanence.</li>
-          <li>Ne pas modifier la programmation de la filtration.</li>
-          <li>Aucun animal dans la piscine.</li>
-        </ul>
-
-        <div class="section-h">En cas d'incident</div>
-        <p class="small">Prévenir immédiatement les propriétaires. Une décharge de responsabilité a été signée à votre arrivée — elle reste consultable dans le portail invité.</p>
-      </div>
-
-      <div class="col-en">
-        <div class="section-h section-h__en">Specs</div>
-        <ul class="tight small">
-          <li>Size: 9 m × 4.5 m</li>
-          <li>Electric safety cover</li>
-          <li>AQUAL Life Hors Sol cover — NF P90-308 norm</li>
-          <li>Pool technician visits weekly</li>
-        </ul>
-
-        <div class="section-h section-h__en">Daily tasks</div>
-        <ul class="tight small">
-          <li>Empty skimmers once a day.</li>
-          <li>Leave the cleaning robot in the pool at all times.</li>
-          <li>Do not change the filtration timer.</li>
-          <li>No animals in the pool.</li>
-        </ul>
-
-        <div class="section-h section-h__en">In case of incident</div>
-        <p class="small">Notify the owners immediately. A liability waiver was signed on arrival — it remains available in the guest portal.</p>
-      </div>
-    </div>
-
-    <div class="photo-strip">
-      <img src="../images/01-outdoor-pool-aerial-view.jpg" alt="Piscine vue aerienne">
-      <img src="../images/03-outdoor-pool-sunbeds.jpg" alt="Piscine et bains de soleil">
-    </div>
-
-    <div class="pagefoot">
-      <span>Mas d'Airaga · Eyragues, Provence</span>
-      <span>5 / 6</span>
-    </div>
-  </section>
-
-  <!-- ————————————————————————————————————
-       PAGE 6 — DEPARTURE INSTRUCTIONS
-       ———————————————————————————————————— -->
-  <section class="page">
-    <div class="band">
-      <h2>Avant votre départ / Before You Leave</h2>
-    </div>
-
-    <div class="twocol">
-      <div class="col-fr">
-        <p class="italic small">Nous espérons que vous avez passé un agréable séjour. Avant votre départ, merci de suivre les consignes ci-dessous pour aider à préparer la maison pour les prochains locataires.</p>
-      </div>
-      <div class="col-en">
-        <p class="italic small">We hope you had a pleasant stay. Before leaving, please follow the instructions below to help us prepare the house for the next guests.</p>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step__num">1</div>
-      <div class="step__body">
-        <div class="step__title">Vider le réfrigérateur</div>
-        <div class="step__title-en">Empty the refrigerator</div>
-        <div class="small muted">Jeter tous les aliments périssables. / Dispose of all perishable food.</div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step__num">2</div>
-      <div class="step__body">
-        <div class="step__title">Nettoyer la plancha</div>
-        <div class="step__title-en">Clean the plancha / griddle</div>
-        <div class="small muted">Suivre les instructions d'utilisation et de nettoyage. / Follow the cleaning instructions.</div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step__num">3</div>
-      <div class="step__body">
-        <div class="step__title">Éteindre toutes les climatisations &middot; fermer fenêtres et portes</div>
-        <div class="step__title-en">Turn off all air conditioning &middot; close windows and doors</div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step__num">4</div>
-      <div class="step__body">
-        <div class="step__title">Sortir les poubelles (triées)</div>
-        <div class="step__title-en">Take out the trash (sorted)</div>
-        <div class="small muted">Centre de collecte du village, Place de la Libération. / Collection point at Place de la Libération.</div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step__num">5</div>
-      <div class="step__body">
-        <div class="step__title">Enlever les draps des lits utilisés</div>
-        <div class="step__title-en">Strip used beds</div>
-        <div class="small muted">Déposer les draps dans la salle de bain. / Leave linens in the bathroom.</div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step__num">6</div>
-      <div class="step__body">
-        <div class="step__title">Laver et ranger la vaisselle</div>
-        <div class="step__title-en">Wash and put away the dishes</div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step__num">7</div>
-      <div class="step__body">
-        <div class="step__title">Éteindre lumières &amp; appareils &middot; verrouiller portes</div>
-        <div class="step__title-en">Turn off lights &amp; appliances &middot; lock all doors</div>
-        <div class="small muted">Remettre les clés et télécommandes au propriétaire. / Return keys and remotes to the owner.</div>
-      </div>
-    </div>
-
-    <div class="box box--accent" style="margin-top:6mm">
-      <p class="small italic"><strong>Merci !</strong> Si vous avez des questions ou besoin d'assistance, n'hésitez pas à nous contacter. Bon retour et à bientôt !</p>
-      <p class="small italic" style="margin-top:2mm"><strong>Thank you!</strong> If you have any questions or need help, please reach out. Safe travels — see you soon!</p>
-      <p class="small" style="margin-top:3mm">Virginie &amp; Flavien — +33 6 14 32 57 06 · virginieduvivier@gmail.com</p>
-    </div>
-
-    <div class="pagefoot">
-      <span>Mas d'Airaga · Eyragues, Provence</span>
-      <span>6 / 6</span>
-    </div>
-  </section>
+        reveal(data);
+      } catch (err) {
+        console.error("Token validation error:", err);
+        showGateError(
+          "Erreur de connexion. Reessayez dans un instant.",
+          "Connection error. Please try again in a moment."
+        );
+      }
+    });
+  })();
+  </script>
 
 </body>
 </html>

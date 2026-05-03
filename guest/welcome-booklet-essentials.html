@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mas d'Airaga — Essentiels / Essentials</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+
+  <style>
+    /* ————————————————————————————————————
+       Mas d'Airaga — 2-page condensed booklet
+       Recto: arrival + WiFi/QR + house rules
+       Verso: emergencies + departure + local
+       Token-gated. Print ready: 1 sheet, both sides.
+       ———————————————————————————————————— */
+
+    :root {
+      --ma-purple: #6d5b8c;
+      --ma-purple-deep: #4d3f70;
+      --ma-purple-light: #b9a8d4;
+      --ma-purple-soft: #a89bbf;
+      --ma-text: #2b2b3b;
+      --ma-text-mid: #555;
+      --ma-text-muted: #7a7585;
+      --ma-bg: #f7f4f1;
+      --ma-border: #e6dfee;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: "Manrope", system-ui, sans-serif;
+      color: var(--ma-text);
+      background: #d9d3df;
+      font-size: 9.5pt;
+      line-height: 1.4;
+    }
+
+    /* —— GATE —— */
+    .gate {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 6mm; background: linear-gradient(135deg, #d9d3df, #efe9f3);
+    }
+    .gate__card {
+      max-width: 520px; background: #fff;
+      padding: 14mm 12mm; border-radius: 3mm;
+      text-align: center; box-shadow: 0 4mm 14mm rgba(0,0,0,0.10);
+    }
+    .gate__title {
+      font-family: "Playfair Display", serif; font-style: italic;
+      font-size: 24pt; color: var(--ma-purple-deep); margin-bottom: 4mm;
+    }
+    .gate__msg { color: var(--ma-text-mid); margin-bottom: 4mm; }
+    .gate__msg.error { color: #b04848; }
+    .gate__hint { font-size: 10pt; color: var(--ma-text-muted); font-style: italic; }
+    .spinner {
+      width: 8mm; height: 8mm;
+      border: 0.6mm solid var(--ma-purple-light);
+      border-top-color: var(--ma-purple);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 4mm auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* —— PAGE: A4 —— */
+    .page {
+      width: 210mm; min-height: 297mm; max-height: 297mm;
+      padding: 12mm 14mm 14mm;
+      margin: 8mm auto;
+      background: #fff;
+      box-shadow: 0 3mm 10mm rgba(0,0,0,0.15);
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+    }
+    .page:last-child { page-break-after: auto; }
+
+    h1, h2, h3, h4 {
+      font-family: "Playfair Display", Georgia, serif;
+      font-weight: 400; color: var(--ma-purple-deep);
+    }
+
+    /* —— TOP STRIP —— */
+    .top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 6mm;
+      padding-bottom: 4mm;
+      margin-bottom: 4mm;
+      border-bottom: 1pt solid var(--ma-purple-light);
+    }
+    .top__title {
+      font-family: "Playfair Display", serif;
+      font-style: italic;
+      color: var(--ma-purple-deep);
+      font-size: 22pt;
+      line-height: 1.05;
+    }
+    .top__sub {
+      font-size: 9pt;
+      color: var(--ma-text-muted);
+      font-style: italic;
+      margin-top: 1mm;
+    }
+    .top__logo img { max-height: 18mm; }
+
+    /* —— SECTION HEADER —— */
+    .h {
+      font-family: "Manrope", sans-serif;
+      font-weight: 700;
+      color: #fff;
+      background: var(--ma-purple);
+      font-size: 10pt;
+      padding: 1.2mm 3mm;
+      border-radius: 1mm;
+      margin: 4mm 0 2mm;
+      letter-spacing: 0.02em;
+    }
+    .h__en { font-style: italic; font-weight: 500; opacity: 0.85; margin-left: 2mm; }
+
+    /* —— TWO-COLUMN —— */
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5mm;
+      margin-bottom: 3mm;
+    }
+    .col-en { color: var(--ma-purple-deep); font-style: italic; }
+
+    .small { font-size: 9pt; }
+    .xs { font-size: 8.5pt; }
+    .muted { color: var(--ma-text-muted); }
+
+    ul.tight { padding-left: 4mm; margin: 0; }
+    ul.tight li { margin-bottom: 0.6mm; }
+
+    /* —— ROW LABEL —— */
+    .row {
+      display: grid;
+      grid-template-columns: 28mm 1fr;
+      gap: 3mm;
+      padding: 1mm 0;
+      font-size: 9pt;
+    }
+    .row strong { font-weight: 600; }
+
+    /* —— WIFI BLOCK —— */
+    .wifi {
+      display: grid;
+      grid-template-columns: 1fr 32mm;
+      gap: 5mm;
+      align-items: center;
+      background: var(--ma-purple);
+      color: #fff;
+      padding: 4mm 5mm;
+      border-radius: 2mm;
+      margin: 2mm 0 3mm;
+    }
+    .wifi__lbl {
+      font-size: 7.5pt;
+      opacity: 0.85;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .wifi__val {
+      font-family: "Courier New", monospace;
+      font-size: 11pt;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-top: 0.5mm;
+      word-break: break-all;
+    }
+    .wifi__qr {
+      background: #fff;
+      padding: 1.5mm;
+      border-radius: 1mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wifi__qr img {
+      width: 100%; height: auto; display: block;
+      image-rendering: pixelated;
+    }
+    .wifi__hint {
+      grid-column: 1 / -1;
+      font-size: 7.5pt;
+      opacity: 0.85;
+      font-style: italic;
+      text-align: center;
+      margin-top: 1mm;
+    }
+
+    /* —— EMERGENCY BAR —— */
+    .emerg {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2mm;
+      margin: 2mm 0 3mm;
+    }
+    .emerg__cell {
+      background: var(--ma-bg);
+      border-left: 2pt solid var(--ma-purple);
+      padding: 2mm 3mm;
+      border-radius: 1mm;
+      font-size: 8.5pt;
+    }
+    .emerg__cell strong {
+      display: block;
+      color: var(--ma-purple-deep);
+      font-size: 11pt;
+      margin-top: 0.5mm;
+    }
+    .emerg__cell--alert { border-left-color: #c0392b; }
+    .emerg__cell--alert strong { color: #c0392b; }
+
+    /* —— DEPARTURE CHECKLIST —— */
+    .checklist {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2mm 5mm;
+      margin: 2mm 0 3mm;
+    }
+    .check {
+      display: grid;
+      grid-template-columns: 6mm 1fr;
+      gap: 2mm;
+      align-items: start;
+      font-size: 9pt;
+    }
+    .check__num {
+      width: 5.5mm; height: 5.5mm;
+      background: var(--ma-purple);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 8.5pt;
+    }
+    .check__body strong { color: var(--ma-text); }
+    .check__body em { color: var(--ma-purple); font-size: 8pt; }
+
+    /* —— RULES INLINE —— */
+    .rules {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1mm 4mm;
+      font-size: 8.5pt;
+    }
+    .rules li { list-style: none; padding-left: 4mm; position: relative; }
+    .rules li::before {
+      content: "•"; color: var(--ma-purple);
+      position: absolute; left: 0; font-weight: 700;
+    }
+
+    .warn {
+      background: #fff7f0;
+      border-left: 2pt solid #d49a4f;
+      padding: 2mm 3mm;
+      border-radius: 1mm;
+      font-size: 8.5pt;
+      margin: 2mm 0 3mm;
+    }
+
+    .footnote {
+      position: absolute;
+      bottom: 6mm;
+      left: 14mm;
+      right: 14mm;
+      display: flex;
+      justify-content: space-between;
+      font-size: 8pt;
+      font-style: italic;
+      color: var(--ma-text-muted);
+      border-top: 0.5pt solid var(--ma-border);
+      padding-top: 1.5mm;
+    }
+
+    /* —— PRINT —— */
+    @page { size: A4; margin: 0; }
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; box-shadow: none; }
+      .gate, .toolbar, .no-print { display: none !important; }
+    }
+
+    /* —— TOOLBAR (screen only) —— */
+    .toolbar {
+      max-width: 210mm; margin: 8mm auto 0;
+      padding: 5mm; background: #fff;
+      border-radius: 2mm;
+      display: flex; gap: 4mm;
+      align-items: center; justify-content: space-between;
+      box-shadow: 0 1mm 4mm rgba(0,0,0,0.08);
+    }
+    .toolbar__title {
+      font-family: "Playfair Display", serif;
+      font-style: italic;
+      font-size: 13pt;
+      color: var(--ma-purple-deep);
+    }
+    .toolbar__guest { font-size: 9.5pt; color: var(--ma-text-muted); }
+    .toolbar button {
+      background: var(--ma-purple); color: #fff;
+      border: 0; padding: 3mm 6mm;
+      font-family: inherit; font-size: 10pt;
+      border-radius: 1.5mm; cursor: pointer;
+    }
+    .toolbar button:hover { background: var(--ma-purple-deep); }
+  </style>
+</head>
+<body>
+
+  <div id="gate" class="gate">
+    <div class="gate__card">
+      <div class="gate__title">Mas d'Airaga</div>
+      <div id="gate-status">
+        <div class="spinner"></div>
+        <p class="gate__msg">Validation du lien… / Validating link…</p>
+      </div>
+      <p class="gate__hint">Accès uniquement avec un lien personnel.<br>Personal-link access only.</p>
+    </div>
+  </div>
+
+  <div id="booklet" style="display:none">
+
+    <div class="toolbar no-print">
+      <div>
+        <div class="toolbar__title">Essentiels — 1 feuille recto/verso</div>
+        <div class="toolbar__guest" id="toolbar-guest"></div>
+      </div>
+      <button onclick="window.print()">Imprimer / Print</button>
+    </div>
+
+    <!-- ════════════ PAGE 1 — RECTO ════════════ -->
+    <section class="page">
+      <div class="top">
+        <div>
+          <div class="top__title">Mas d'Airaga</div>
+          <div class="top__sub">Eyragues, Provence — Essentiels / Essentials</div>
+        </div>
+        <div class="top__logo"><img src="../images/LOGO.png" alt="Logo"></div>
+      </div>
+
+      <!-- WELCOME + GENERAL INFO -->
+      <div class="two">
+        <div>
+          <div class="h">Bienvenue <span class="h__en">/ Welcome</span></div>
+          <p class="small">Bienvenue au Mas d'Airaga. Ce livret regroupe l'essentiel pour votre séjour. Le livret complet est disponible dans votre portail invité en ligne.</p>
+        </div>
+        <div>
+          <div class="h">Coordonnées <span class="h__en">/ Contact</span></div>
+          <div class="row"><strong>Adresse</strong><div>595 Chemin Notre Dame, 13630 Eyragues</div></div>
+          <div class="row"><strong>Propriétaires</strong><div>Virginie &amp; Flavien MAIRE</div></div>
+          <div class="row"><strong>Tel / WhatsApp</strong><div>+33 6 14 32 57 06 &middot; +971 50 204 8428</div></div>
+          <div class="row"><strong>Email</strong><div>virginieduvivier@gmail.com</div></div>
+        </div>
+      </div>
+
+      <!-- WIFI -->
+      <div class="h">Wi-Fi <span class="h__en">/ Internet</span></div>
+      <div class="wifi">
+        <div>
+          <div class="wifi__lbl">SSID / Network</div>
+          <div class="wifi__val" id="wifi-ssid">…</div>
+          <div class="wifi__lbl" style="margin-top:2mm">Mot de passe / Password</div>
+          <div class="wifi__val" id="wifi-password">…</div>
+        </div>
+        <div class="wifi__qr" id="wifi-qr"></div>
+        <div class="wifi__hint">📱 Scannez le QR code pour vous connecter automatiquement / Scan the QR code to connect automatically</div>
+      </div>
+
+      <!-- ARRIVAL & DEPARTURE -->
+      <div class="h">Arrivée &amp; Départ <span class="h__en">/ Check-in &amp; Check-out</span></div>
+      <div class="two">
+        <div class="small">
+          <strong>Arrivée :</strong> 16h00 – 22h00<br>
+          <strong>Départ :</strong> avant 10h00<br>
+          <span class="muted xs">Communiquer l'heure d'arrivée la veille.</span>
+        </div>
+        <div class="col-en small">
+          <strong>Check-in:</strong> 4 pm – 10 pm<br>
+          <strong>Check-out:</strong> by 10 am<br>
+          <span class="xs">Share your arrival time the day before.</span>
+        </div>
+      </div>
+
+      <!-- HOUSE RULES -->
+      <div class="h">Règles essentielles <span class="h__en">/ Key House Rules</span></div>
+      <div class="warn">
+        <strong>⚠️</strong> Toujours replier les parasols et le store du pool house en cas de vent. <em>Always close parasols and the sunshade in case of wind.</em>
+      </div>
+      <ul class="rules">
+        <li>Non-fumeur / No smoking inside</li>
+        <li>Pas d'animaux sans accord / No pets without approval</li>
+        <li>Pas de bruit après 23h / Quiet after 11 pm</li>
+        <li>Capacité max 10 personnes / Max 10 occupants</li>
+        <li>Piscine : surveillance adulte obligatoire / Pool: constant adult supervision</li>
+        <li>Robot piscine : ne pas le retirer / Pool robot: leave in pool</li>
+        <li>Vider les skimmers chaque jour / Empty skimmers daily</li>
+        <li>Tri sélectif des déchets / Sort waste per instructions</li>
+      </ul>
+
+      <div class="footnote">
+        <span>Mas d'Airaga · Eyragues, Provence</span>
+        <span>Recto · 1 / 2</span>
+      </div>
+    </section>
+
+    <!-- ════════════ PAGE 2 — VERSO ════════════ -->
+    <section class="page">
+      <div class="top">
+        <div>
+          <div class="top__title">Sécurité &amp; Départ</div>
+          <div class="top__sub">Safety, departure &amp; local picks</div>
+        </div>
+        <div class="top__logo"><img src="../images/LOGO.png" alt="Logo"></div>
+      </div>
+
+      <!-- EMERGENCIES -->
+      <div class="h">Urgences <span class="h__en">/ Emergencies</span></div>
+      <div class="emerg">
+        <div class="emerg__cell emerg__cell--alert">
+          Police / Pompiers / SAMU
+          <strong>112</strong>
+        </div>
+        <div class="emerg__cell">
+          Médecins d'Eyragues
+          <strong>04 90 94 12 32</strong>
+        </div>
+        <div class="emerg__cell">
+          Hôpital d'Avignon
+          <strong>04 32 75 33 33</strong>
+        </div>
+        <div class="emerg__cell">
+          Propriétaires / Owners
+          <strong>+33 6 14 32 57 06</strong>
+        </div>
+      </div>
+      <p class="xs muted">🧯 Extincteur sous l'évier de la cuisine. / Fire extinguisher under the kitchen sink.</p>
+
+      <!-- DEPARTURE CHECKLIST -->
+      <div class="h">Avant de partir <span class="h__en">/ Departure checklist</span></div>
+      <div class="checklist">
+        <div class="check"><div class="check__num">1</div><div class="check__body"><strong>Vider le réfrigérateur</strong><br><em>Empty the fridge</em></div></div>
+        <div class="check"><div class="check__num">2</div><div class="check__body"><strong>Nettoyer la plancha</strong><br><em>Clean the plancha</em></div></div>
+        <div class="check"><div class="check__num">3</div><div class="check__body"><strong>Éteindre clim, fermer fenêtres</strong><br><em>Turn off AC, close windows</em></div></div>
+        <div class="check"><div class="check__num">4</div><div class="check__body"><strong>Sortir les poubelles (triées)</strong><br><em>Take out sorted trash</em></div></div>
+        <div class="check"><div class="check__num">5</div><div class="check__body"><strong>Enlever les draps des lits</strong><br><em>Strip used beds</em></div></div>
+        <div class="check"><div class="check__num">6</div><div class="check__body"><strong>Laver et ranger la vaisselle</strong><br><em>Wash and put away the dishes</em></div></div>
+        <div class="check"><div class="check__num">7</div><div class="check__body"><strong>Éteindre lumières, verrouiller portes</strong><br><em>Turn off lights, lock doors</em></div></div>
+        <div class="check"><div class="check__num">8</div><div class="check__body"><strong>Remettre les clés au propriétaire</strong><br><em>Return keys to the owner</em></div></div>
+      </div>
+      <p class="xs muted">📍 Centre de collecte des poubelles : Place de la Libération (centre du village). / Trash drop-off: Place de la Libération.</p>
+
+      <!-- LOCAL PICKS -->
+      <div class="h">À proximité <span class="h__en">/ Around the house</span></div>
+      <div class="two">
+        <div class="small">
+          <strong>Commerces &amp; restaurants à Eyragues</strong>
+          <ul class="tight xs">
+            <li>U Express &middot; Petit Casino</li>
+            <li>Le Pré Gourmand · Un Bouchon en Provence · Le Café du Soleil</li>
+          </ul>
+          <strong style="display:block;margin-top:2mm">Marchés</strong>
+          <ul class="tight xs">
+            <li>Eyragues — vendredi matin</li>
+            <li>Saint-Rémy — mercredi matin</li>
+            <li>Avignon — samedi · Arles — mercredi &amp; samedi</li>
+          </ul>
+        </div>
+        <div class="small">
+          <strong>À voir / Must-see</strong>
+          <ul class="tight xs">
+            <li>Saint-Rémy-de-Provence (4 km) — Glanum, Van Gogh</li>
+            <li>Les Baux-de-Provence (12 km) — Carrières de Lumières</li>
+            <li>Avignon (15 km) — Palais des Papes</li>
+            <li>Arles (25 km) — Amphithéâtre, Camargue</li>
+            <li>Alpilles — randonnées, oliveraies</li>
+            <li>Châteauneuf-du-Pape (30 km) — vignobles AOC</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- THANK YOU -->
+      <div class="warn" style="background:linear-gradient(90deg,rgba(189,170,217,0.18),rgba(189,170,217,0.05));border-left-color:var(--ma-purple-deep);margin-top:3mm">
+        <strong>Merci !</strong> Pour toute question, n'hésitez pas à nous contacter. <em>Thank you! For anything, just reach out.</em><br>
+        <span class="xs">Virginie &amp; Flavien — +33 6 14 32 57 06 · virginieduvivier@gmail.com</span>
+      </div>
+
+      <div class="footnote">
+        <span>Mas d'Airaga · Eyragues, Provence</span>
+        <span>Verso · 2 / 2</span>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="../shared/supabase-config.js"></script>
+  <script src="mas-airaga-content.js"></script>
+  <script>
+  (function () {
+    var gateStatus = document.getElementById("gate-status");
+    function showGateError(fr, en) {
+      gateStatus.innerHTML =
+        '<p class="gate__msg error">' + fr + '</p>' +
+        '<p class="gate__msg error">' + en + '</p>';
+    }
+    function getToken() {
+      return new URLSearchParams(window.location.search).get("t");
+    }
+    function reveal(booking) {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("booklet").style.display = "block";
+
+      var c = (typeof MAS_AIRAGA !== "undefined") ? MAS_AIRAGA : null;
+      var ssid = (c && c.access && c.access.wifi) ? c.access.wifi.ssid : "MasAiraga";
+      var pwd  = (c && c.access && c.access.wifi) ? c.access.wifi.password : "";
+      document.getElementById("wifi-ssid").textContent = ssid;
+      document.getElementById("wifi-password").textContent = pwd;
+
+      try {
+        var qr = qrcode(0, "M");
+        qr.addData("WIFI:T:WPA;S:" + ssid + ";P:" + pwd + ";;");
+        qr.make();
+        document.getElementById("wifi-qr").innerHTML = qr.createImgTag(4, 0);
+      } catch (e) { console.warn("QR generation failed:", e); }
+
+      if (booking && booking.guest_name) {
+        document.getElementById("toolbar-guest").textContent = "Pour / For: " + booking.guest_name;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      var token = getToken();
+      if (!token) {
+        showGateError("Lien invalide. Aucun jeton fourni.", "Invalid link. No token provided.");
+        return;
+      }
+      var db = (typeof getSupabase === "function") ? getSupabase() : null;
+      if (!db) {
+        showGateError("Erreur de configuration. Contactez le proprietaire.", "Configuration error. Please contact the owner.");
+        return;
+      }
+      try {
+        var { data, error } = await db
+          .from("bookings")
+          .select("guest_name,token_expires")
+          .eq("token", token)
+          .single();
+        if (error || !data) {
+          showGateError("Lien non reconnu. Contactez le proprietaire.", "Link not recognized. Please contact the owner.");
+          return;
+        }
+        if (data.token_expires && new Date(data.token_expires) < new Date()) {
+          showGateError("Ce lien a expire. Contactez le proprietaire.", "This link has expired. Please contact the owner.");
+          return;
+        }
+        reveal(data);
+      } catch (err) {
+        console.error("Token validation error:", err);
+        showGateError("Erreur de connexion. Reessayez dans un instant.", "Connection error. Please try again in a moment.");
+      }
+    });
+  })();
+  </script>
+</body>
+</html>
