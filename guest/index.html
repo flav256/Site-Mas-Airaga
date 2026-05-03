@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mas d'Airaga — Guide de Bienvenue / Welcome Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="guide.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+</head>
+<body>
+
+  <!-- TOKEN GATE -->
+  <div id="ma-gate">
+    <div class="gate__card">
+      <div class="gate__logo">
+        <p class="gate__logo-pre">Bienvenue au / Welcome to</p>
+        <h1 class="gate__logo-name">Mas d'Airaga</h1>
+        <p class="gate__logo-loc">Eyragues &middot; Provence</p>
+      </div>
+      <div class="gate__divider"></div>
+      <div class="gate__spinner" id="gate-spinner"></div>
+      <p class="gate__status" id="gate-status">
+        V&eacute;rification en cours&hellip;<br>
+        <span style="color:var(--ma-text-muted);font-size:13px">Verifying your access&hellip;</span>
+      </p>
+      <p class="gate__error" id="gate-error"></p>
+      <p class="gate__hint" id="gate-hint"></p>
+    </div>
+  </div>
+
+
+  <!-- WELCOME GUIDE -->
+  <div id="ma-guide" class="guide" style="display:none">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <span class="topbar__name">Mas d'Airaga</span>
+      <div class="topbar__actions">
+        <div class="topbar__lang">
+          <button class="lang-btn lang-btn--active" data-lang="fr" title="Fran&ccedil;ais">&#127467;&#127479;</button>
+          <button class="lang-btn" data-lang="en" title="English">&#127468;&#127463;</button>
+          <button class="lang-btn" data-lang="nl" title="Nederlands">&#127475;&#127473;</button>
+          <button class="lang-btn" data-lang="de" title="Deutsch">&#127465;&#127466;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION NAV (grouped) -->
+    <nav class="guide-nav" id="guide-nav">
+      <div class="guide-nav__scroll" id="guide-nav-links"></div>
+    </nav>
+
+    <!-- HERO with background image -->
+    <header class="hero hero--photo">
+      <div class="hero__bg" style="background-image: url('../images/Photo Exterieur 1.webp')"></div>
+      <div class="hero__overlay-photo"></div>
+      <div class="hero__content-photo">
+        <p class="hero__pre" data-ui="welcomeHome">Bienvenue chez vous</p>
+        <h1 class="hero__title"><em>Mas d'Airaga</em></h1>
+        <p class="hero__guest" id="hero-guest"></p>
+        <p class="hero__dates" id="hero-dates"></p>
+        <p class="hero__addr">595 Chemin Notre Dame &middot; 13630 Eyragues</p>
+      </div>
+
+      <!-- CHECK-IN CTA -->
+      <div class="cta-box" id="checkin-cta" style="display:none">
+        <div class="cta-box__text">
+          <strong data-ui="ctaForm">Formulaire d'arriv&eacute;e</strong>
+          <span data-ui="ctaFormHint"> &middot; 2 min avant votre arriv&eacute;e</span>
+        </div>
+        <a class="cta-box__btn" href="#sec-checkin" data-ui="fillIn">Compl&eacute;ter &rarr;</a>
+      </div>
+    </header>
+
+    <!-- WELCOME INTRO -->
+    <div class="welcome-intro">
+      <p class="welcome-intro__text" data-ui="welcomeIntro">
+        Nous sommes ravis de vous accueillir dans notre maison &agrave; Eyragues.
+        Ce guide contient toutes les informations utiles pour rendre votre s&eacute;jour
+        le plus confortable possible.
+      </p>
+    </div>
+
+    <!-- QUICK STRIP -->
+    <div class="strip">
+      <div class="strip__item">
+        <span class="strip__label" data-ui="checkin">Arriv&eacute;e</span>
+        <span class="strip__value">16h &mdash; 22h</span>
+      </div>
+      <div class="strip__item">
+        <span class="strip__label" data-ui="checkout">D&eacute;part</span>
+        <span class="strip__value" data-ui="beforeTen">avant 10h</span>
+      </div>
+      <div class="strip__item">
+        <span class="strip__label">Max</span>
+        <span class="strip__value">10 pers.</span>
+      </div>
+      <div class="strip__item strip__item--tap" onclick="revealWifi(this)" title="Tap for WiFi">
+        <span class="strip__label">WiFi</span>
+        <span class="strip__value strip__value--tap" id="wifi-tap-label">appuyer</span>
+        <div class="wifi-pop" id="wifi-pop" style="display:none">
+          <span id="wifi-ssid-pop"></span>
+          <span id="wifi-pass-pop"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OWNER CONTACT BAR -->
+    <div class="owner-bar">
+      <span class="owner-bar__names">Virginie &amp; Flavien</span>
+      <a class="owner-bar__link" id="wa-btn" href="#">WhatsApp</a>
+      <a class="owner-bar__link" id="tel-btn" href="#">+33 6 14 32 57 06</a>
+    </div>
+
+
+    <main class="guide__main">
+
+      <!-- SECTION: ARRIVAL TIME PICKER (module: arrival) -->
+      <section class="sec sec--arrival-time" id="sec-arrival-time" data-module="arrival">
+        <h2 class="sec__title" data-ui="arrivalTime">Heure d'arriv&eacute;e</h2>
+        <div class="sec__body">
+          <p class="sec__intro" data-ui="arrivalIntro">Merci de nous indiquer votre cr&eacute;neau d'arriv&eacute;e pour que nous puissions vous accueillir.</p>
+
+          <!-- State: form -->
+          <div id="arrival-form-state">
+            <div class="arrival-slots" id="arrival-slots"></div>
+            <button class="arrival-submit" id="arrival-submit-btn" onclick="submitArrivalTime()" disabled data-ui="confirmArrival">Confirmer l'heure d'arriv&eacute;e</button>
+          </div>
+
+          <!-- State: confirmed -->
+          <div id="arrival-confirmed-state" style="display:none">
+            <div class="arrival-confirmed">
+              <div class="arrival-confirmed__icon">&#10003;</div>
+              <p class="arrival-confirmed__text"><strong data-ui="timeConfirmed">Cr&eacute;neau confirm&eacute;</strong></p>
+              <p class="arrival-confirmed__slot" id="arrival-confirmed-slot"></p>
+              <p class="arrival-confirmed__note" data-ui="timeConfirmedNote">Nous vous attendons ! Vous pouvez modifier en nous contactant.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: ONLINE CHECK-IN (module: checkin) -->
+      <section class="sec" id="sec-checkin" data-module="checkin">
+        <h2 class="sec__title" data-ui="onlineCheckin">Enregistrement en ligne</h2>
+        <div class="sec__body">
+
+          <!-- State: form -->
+          <div id="checkin-form-state">
+
+            <!-- Guest list -->
+            <div class="checkin-block">
+              <h3 class="checkin-block__title" data-ui="guests">Voyageurs</h3>
+              <p class="checkin-block__hint" data-ui="guestsHint">Merci d'indiquer le nom et la date de naissance de chaque voyageur.</p>
+              <div id="checkin-guests-list"></div>
+              <button type="button" class="checkin-add-guest" onclick="addGuestRow()" data-ui="addGuest">+ Ajouter un voyageur</button>
+            </div>
+
+            <!-- House rules acknowledgement -->
+            <div class="checkin-block">
+              <h3 class="checkin-block__title" data-ui="houseRules">R&egrave;gles de la maison</h3>
+              <ul class="rule-list" id="checkin-house-rules"></ul>
+              <label class="checkin-checkbox">
+                <input type="checkbox" id="checkin-rules-accept">
+                <span data-ui="rulesAccept">J'ai lu et j'accepte les r&egrave;gles de la maison</span>
+              </label>
+            </div>
+
+            <!-- Pool waiver -->
+            <div class="checkin-block">
+              <h3 class="checkin-block__title" data-ui="poolWaiver">D&eacute;charge piscine</h3>
+              <div class="checkin-waiver checkin-waiver--full" id="checkin-waiver-text"></div>
+
+              <!-- Children present (Section 4 of waiver) -->
+              <div class="children-section">
+                <h4 class="children-section__title" data-ui="childrenTitle">Enfants pr&eacute;sents pendant la location</h4>
+                <div id="children-list"></div>
+                <button type="button" class="checkin-add-guest" onclick="addChildRow()" data-ui="addChild">+ Ajouter un enfant</button>
+              </div>
+
+              <div class="checkin-sig-block">
+                <label class="form-label" data-ui="signatureLabel">Votre nom complet (signature)</label>
+                <input type="text" id="checkin-sig-name" class="checkin-input" placeholder="Pr&eacute;nom Nom / Full Name">
+              </div>
+              <label class="checkin-checkbox">
+                <input type="checkbox" id="checkin-waiver-accept">
+                <span data-ui="waiverAccept">J'ai lu et j'accepte la d&eacute;charge de responsabilit&eacute; piscine</span>
+              </label>
+            </div>
+
+            <!-- ID upload (optional) -->
+            <div class="checkin-block">
+              <h3 class="checkin-block__title" data-ui="idDoc">Pi&egrave;ce d'identit&eacute; (optionnel)</h3>
+              <p class="checkin-block__hint" data-ui="idDocHint">Photo de votre passeport ou carte d'identit&eacute;.</p>
+              <input type="file" id="checkin-id-file" accept="image/*" class="checkin-file-input">
+              <div id="checkin-id-preview"></div>
+            </div>
+
+            <!-- Submit -->
+            <button class="checkin-submit" id="checkin-submit-btn" onclick="submitCheckin()" data-ui="submitCheckin">Envoyer l'enregistrement</button>
+            <p class="checkin-error" id="checkin-error"></p>
+          </div>
+
+          <!-- State: confirmed -->
+          <div id="checkin-confirmed-state" style="display:none">
+            <div class="arrival-confirmed">
+              <div class="arrival-confirmed__icon">&#10003;</div>
+              <p class="arrival-confirmed__text"><strong data-ui="checkinReceived">Enregistrement re&ccedil;u</strong></p>
+              <p class="arrival-confirmed__note" data-ui="checkinReceivedNote">Merci ! Nous avons bien re&ccedil;u vos informations.</p>
+              <button class="download-pdf-btn" onclick="downloadWaiverPdf()" data-ui="downloadWaiver">T&eacute;l&eacute;charger la d&eacute;charge sign&eacute;e (PDF)</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION: CONTRACT (module: contract) -->
+      <section class="sec sec--alt" id="sec-contract" data-module="contract">
+        <h2 class="sec__title" data-ui="rentalContract">Contrat de location</h2>
+        <div class="sec__body">
+
+          <!-- State: form -->
+          <div id="contract-form-state">
+            <div class="contract-doc" id="contract-doc"></div>
+
+            <div class="checkin-block" style="margin-top:1rem">
+              <div class="checkin-sig-block">
+                <label class="form-label" data-ui="signatureLabel">Votre nom complet (signature)</label>
+                <input type="text" id="contract-sig-name" class="checkin-input" placeholder="Pr&eacute;nom Nom / Full Name">
+              </div>
+              <label class="checkin-checkbox">
+                <input type="checkbox" id="contract-accept">
+                <span data-ui="contractAccept">J'ai lu et j'accepte l'ensemble des conditions du contrat de location</span>
+              </label>
+            </div>
+
+            <button class="checkin-submit" id="contract-submit-btn" onclick="submitContract()" data-ui="signContract">Signer le contrat</button>
+            <p class="checkin-error" id="contract-error"></p>
+          </div>
+
+          <!-- State: signed -->
+          <div id="contract-confirmed-state" style="display:none">
+            <div class="arrival-confirmed">
+              <div class="arrival-confirmed__icon">&#10003;</div>
+              <p class="arrival-confirmed__text"><strong data-ui="contractSigned">Contrat sign&eacute;</strong></p>
+              <p class="arrival-confirmed__note" data-ui="contractSignedNote">Merci ! Le contrat a &eacute;t&eacute; enregistr&eacute;.</p>
+              <button class="download-pdf-btn" onclick="downloadContractPdf()" data-ui="downloadContract">T&eacute;l&eacute;charger le contrat sign&eacute; (PDF)</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION: ARRIVEE -->
+      <section class="sec" id="sec-arrival" data-module="guide">
+        <h2 class="sec__title" data-ui="yourArrival">Votre arriv&eacute;e</h2>
+        <div class="sec__body">
+
+          <div class="infocard">
+            <h3 class="infocard__label" data-ui="addressGps">Adresse &amp; GPS</h3>
+            <p>595 Chemin Notre Dame<br>
+               <span class="text-muted" data-ui="nextToChapel">&Agrave; c&ocirc;t&eacute; de la Chapelle Notre Dame du Pieux Z&egrave;le</span><br>
+               13630 Eyragues, France</p>
+            <p class="gps-coord">N 43&deg;50'11.80" &nbsp; E 4&deg;50'05.50"</p>
+            <a class="btn-link" href="https://maps.google.com/?q=43.836611,4.834861" target="_blank" rel="noopener" data-ui="openMaps">Ouvrir dans Google Maps &rarr;</a>
+          </div>
+
+          <div class="infocard">
+            <h3 class="infocard__label" data-ui="timing">Horaires</h3>
+            <table class="timing-table">
+              <tr>
+                <td data-ui="arrival">Arriv&eacute;e</td>
+                <td class="timing-table__val">&agrave; partir de 16h00</td>
+              </tr>
+              <tr>
+                <td data-ui="departureLabel">D&eacute;part</td>
+                <td class="timing-table__val" data-ui="beforeTen">avant 10h00</td>
+              </tr>
+            </table>
+            <p class="infocard__note" data-ui="timingNote">Merci de nous pr&eacute;venir de votre heure d'arriv&eacute;e la veille.</p>
+          </div>
+
+          <div class="infocard">
+            <h3 class="infocard__label" data-ui="parking">Parking</h3>
+            <p data-ui="parkingDesc">4 places &agrave; l'entr&eacute;e de la propri&eacute;t&eacute;.</p>
+          </div>
+
+          <div class="infocard">
+            <h3 class="infocard__label" data-ui="keyHandover">Remise des cl&eacute;s</h3>
+            <p data-ui="keyHandoverDesc">Nous vous accueillerons sur place entre 16h et 22h. L'heure de rendez-vous se confirme &agrave; l'arriv&eacute;e.</p>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- SECTION: LA MAISON -->
+      <section class="sec sec--alt" id="sec-house" data-module="guide">
+        <h2 class="sec__title" data-ui="theHouse">La maison</h2>
+
+        <!-- Photo gallery strip -->
+        <div class="photo-strip">
+          <img src="../images/15-living-room-spacious-sofas.jpg" alt="Salon" loading="lazy">
+          <img src="../images/20-kitchen-modern-white.jpg" alt="Cuisine" loading="lazy">
+          <img src="../images/31-bedroom-4-master-queen.jpg" alt="Chambre" loading="lazy">
+          <img src="../images/34-bathroom-1.jpg" alt="Salle de bain" loading="lazy">
+        </div>
+
+        <div class="sec__body">
+          <p class="sec__intro fr">
+            Mas de caract&egrave;re de 185 m&sup2;, enti&egrave;rement climatis&eacute;,
+            4 chambres, 3 salles de bain, jardin de 2000 m&sup2; plant&eacute; de lavande et d'oliviers.
+          </p>
+          <p class="sec__intro en">
+            Character house of 185 m&sup2;, fully air-conditioned,
+            4 bedrooms, 3 bathrooms, 2000 m&sup2; garden with lavender and olive trees.
+          </p>
+
+          <!-- WiFi card -->
+          <div class="wifi-card">
+            <div class="wifi-card__header">
+              <span class="wifi-card__label">WiFi</span>
+            </div>
+            <p class="wifi-card__ssid" id="wifi-ssid"></p>
+            <p class="wifi-card__pass" id="wifi-pass"></p>
+            <p class="wifi-card__type">Starlink</p>
+            <div class="wifi-card__qr" id="wifi-qr"></div>
+            <p class="wifi-card__qr-hint" data-ui="wifiScan">Scannez pour vous connecter</p>
+          </div>
+
+          <!-- Rooms -->
+          <div class="rooms" id="rooms-container"></div>
+
+        </div>
+      </section>
+
+
+      <!-- SECTION: PISCINE -->
+      <section class="sec" id="sec-pool" data-module="guide">
+        <h2 class="sec__title" data-ui="thePool">La piscine</h2>
+
+        <!-- Pool photo -->
+        <div class="photo-strip photo-strip--single">
+          <img src="../images/03-outdoor-pool-sunbeds.jpg" alt="Piscine" loading="lazy">
+        </div>
+
+        <div class="sec__body">
+
+          <div class="pool-badge">
+            <span>9 m &times; 4,5 m</span>
+            <span class="fr">&middot; Volet &eacute;lectrique</span>
+            <span class="en">&middot; Electric cover</span>
+          </div>
+
+          <div class="alert alert--warn">
+            <span class="alert__icon">!</span>
+            <div>
+              <strong data-ui="supervisionWarn">Surveillance constante obligatoire</strong>
+              <p data-ui="supervisionDesc">Les enfants doivent &ecirc;tre surveill&eacute;s par un adulte en permanence. Le volet de s&eacute;curit&eacute; ne remplace en aucun cas la vigilance humaine.</p>
+            </div>
+          </div>
+
+          <ul class="rule-list" id="pool-rules"></ul>
+
+          <div class="infocard">
+            <h3 class="infocard__label" data-ui="poolMaintenance">Entretien de la piscine</h3>
+            <p data-ui="poolMaintenanceDesc">Le pisciniste intervient une fois par semaine. Ne pas modifier la programmation de la filtration. Laisser le robot dans la piscine en permanence. Vider les skimmers une fois par jour.</p>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- SECTION: REGLES -->
+      <section class="sec sec--alt" id="sec-rules" data-module="guide">
+        <h2 class="sec__title" data-ui="houseRules">R&egrave;gles de la maison</h2>
+        <div class="sec__body">
+          <ul class="rule-list" id="house-rules"></ul>
+        </div>
+      </section>
+
+
+      <!-- SECTION: URGENCES -->
+      <section class="sec" id="sec-emergency" data-module="guide">
+        <h2 class="sec__title" data-ui="emergency">Urgences &amp; contacts</h2>
+        <div class="sec__body">
+          <div class="alert alert--info">
+            <span class="alert__icon">i</span>
+            <span data-ui="fireExtinguisher">Extincteur : sous l'&eacute;vier de la cuisine.</span>
+          </div>
+          <div class="contact-grid" id="emergency-contacts"></div>
+        </div>
+      </section>
+
+
+      <!-- SECTION: LA REGION -->
+      <section class="sec sec--alt" id="sec-local" data-module="guide">
+        <h2 class="sec__title" data-ui="aroundMas">Autour du Mas</h2>
+
+        <!-- Region photos -->
+        <div class="photo-strip">
+          <img src="../images/13-outdoor-facade-flowers.jpg" alt="Facade" loading="lazy">
+          <img src="../images/10-outdoor-pergola-pool-view.jpg" alt="Pergola" loading="lazy">
+          <img src="../images/42-extras-terrace-garden.jpg" alt="Jardin" loading="lazy">
+        </div>
+
+        <div class="sec__body">
+
+          <p class="sec__intro" data-ui="aroundIntro">
+            Eyragues est un charmant village proven&ccedil;al &agrave; 4 km de Saint-R&eacute;my-de-Provence,
+            au c&oelig;ur des Alpilles. March&eacute;s, restaurants, sites historiques &mdash; tout est &agrave; port&eacute;e.
+          </p>
+
+          <div class="local-group">
+            <h3 class="local-group__title" data-ui="supermarkets">Supermarch&eacute;s</h3>
+            <div id="supermarkets"></div>
+          </div>
+
+          <div class="local-group">
+            <h3 class="local-group__title" data-ui="restaurantsTitle">Restaurants &agrave; Eyragues</h3>
+            <div id="restaurants"></div>
+          </div>
+
+          <div class="local-group">
+            <h3 class="local-group__title" data-ui="marketTitle">March&eacute;</h3>
+            <div id="market-block"></div>
+          </div>
+
+          <div id="local-categories"></div>
+
+        </div>
+      </section>
+
+
+      <!-- SECTION: DEPART -->
+      <section class="sec" id="sec-departure" data-module="checkout">
+        <h2 class="sec__title" data-ui="departure">Avant votre d&eacute;part</h2>
+        <div class="sec__body">
+          <p class="sec__intro" data-ui="departureIntro">Cochez chaque point avant de remettre les cl&eacute;s. Merci !</p>
+          <div class="checklist" id="departure-checklist"></div>
+          <div class="trash-note" id="trash-note"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="guide__footer">
+      <p class="guide__footer-wish" data-ui="footerWish">Nous vous souhaitons un s&eacute;jour merveilleux.</p>
+      <p class="guide__footer-name">Virginie &amp; Flavien MAIRE</p>
+      <p class="guide__footer-addr">595 Chemin Notre Dame &middot; 13630 Eyragues &middot; Provence</p>
+    </footer>
+
+  </div>
+
+  <script src="../shared/supabase-config.js"></script>
+  <script src="mas-airaga-content.js"></script>
+  <script src="guide.js"></script>
+</body>
+</html>
