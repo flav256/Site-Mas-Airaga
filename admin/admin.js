@@ -1,5 +1,5 @@
 /* ——————————————————————————————————————————————
-   MAS D'AIRAGA — admin.js
+   MAS AIRAGA — admin.js
    Owner dashboard: Supabase auth + booking CRUD + link generation
    —————————————————————————————————————————————— */
 
@@ -616,9 +616,9 @@ function sendWhatsApp(token, guestName, guestPhone) {
   var phone = guestPhone.replace(/\D/g, "");
   var message = encodeURIComponent(
     "Bonjour " + guestName + " ! \ud83c\udfe1\n\n" +
-    "Voici votre guide de bienvenue pour le Mas d'Airaga :\n" +
+    "Voici votre guide de bienvenue pour le Mas Airaga :\n" +
     url + "\n\n" +
-    "Here is your welcome guide for Mas d'Airaga.\n\n" +
+    "Here is your welcome guide for Mas Airaga.\n\n" +
     "Virginie & Flavien"
   );
   var waUrl = phone
@@ -635,8 +635,8 @@ function sendCheckinReminder(token, guestName, guestPhone, checkinDate) {
 
   var message = encodeURIComponent(
     "Bonjour " + guestName + " ! \ud83c\udf1e\n\n" +
-    "A gentle reminder: your stay at Mas d'Airaga begins on " + formattedDate + ".\n\n" +
-    "Check-in is from 4:00 PM. Address: Mas d'Airaga, Uzes, Gard.\n\n" +
+    "A gentle reminder: your stay at Mas Airaga begins on " + formattedDate + ".\n\n" +
+    "Check-in is from 4:00 PM. Address: Mas Airaga, Uzes, Gard.\n\n" +
     "Please complete your online check-in before arrival:\n" +
     url + "\n\n" +
     "See you soon!\nVirginie & Flavien"
@@ -653,7 +653,7 @@ function sendContractReminder(token, guestName, guestPhone) {
 
   var message = encodeURIComponent(
     "Bonjour " + guestName + " ! \ud83d\udcdd\n\n" +
-    "A quick reminder to sign the rental contract for your stay at Mas d'Airaga.\n\n" +
+    "A quick reminder to sign the rental contract for your stay at Mas Airaga.\n\n" +
     "You can review and sign it here:\n" +
     url + "\n\n" +
     "Thank you!\nVirginie & Flavien"

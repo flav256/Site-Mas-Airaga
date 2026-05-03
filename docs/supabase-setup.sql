@@ -1,5 +1,5 @@
 -- ============================================
--- MAS D'AIRAGA — Supabase Schema Setup
+-- MAS AIRAGA — Supabase Schema Setup
 -- Run this in the Supabase SQL Editor (Dashboard → SQL Editor → New query)
 -- ============================================
 

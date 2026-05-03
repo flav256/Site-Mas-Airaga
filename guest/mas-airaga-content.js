@@ -16,7 +16,7 @@ const MAS_AIRAGA = {
      PROPERTY
   ——————————————————————————————————— */
   property: {
-    name: "Mas d'Airaga",
+    name: "Mas Airaga",
     tagline: "Maison de caractere en Provence \u00b7 Eyragues, Alpilles",
     address: {
       street: "595 Chemin Notre Dame",
