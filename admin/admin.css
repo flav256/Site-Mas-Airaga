@@ -258,6 +258,24 @@ a:hover { text-decoration: underline; }
   border-bottom: 1px solid var(--ma-border-light);
 }
 
+.admin-section--compact { padding: 1rem 1.5rem; }
+.admin-section__sub {
+  font-size: 13px;
+  color: var(--ma-text-muted);
+  margin: -0.5rem 0 0.75rem;
+}
+.quick-link-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+.quick-link-form .admin-input { margin: 0; }
+.quick-link-form button { white-space: nowrap; }
+@media (max-width: 600px) {
+  .quick-link-form { grid-template-columns: 1fr; }
+}
+
 /* —— FORM —— */
 .form-row {
   display: grid;
