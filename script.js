@@ -235,6 +235,10 @@ const translations = {
     "around-activity6": "Vignobles",
     "around-activity6-desc": "Route des vins des Alpilles et dégustations dans les domaines",
     "around-discover-more": "Découvrir plus",
+    "form-ph-name": "Ex : Marie Dupont",
+    "form-ph-email": "vous@email.com",
+    "form-ph-phone": "+33 6 12 34 56 78",
+    "form-ph-message": "Besoins spécifiques...",
     "savings-airbnb": "Économisez ~14% par rapport à Airbnb"
   },
   en: {
@@ -478,6 +482,10 @@ const translations = {
     "selection-reset": "Change dates",
     "selection-validate": "View price and book",
     "around-discover-more": "Discover more",
+    "form-ph-name": "E.g. Marie Dupont",
+    "form-ph-email": "you@email.com",
+    "form-ph-phone": "+33 6 12 34 56 78",
+    "form-ph-message": "Specific requirements...",
     "savings-airbnb": "Save ~14% compared to Airbnb",
   },
   nl: {
@@ -686,6 +694,10 @@ const translations = {
     "selection-reset": "Datums wijzigen",
     "selection-validate": "Prijs bekijken en reserveren",
     "around-discover-more": "Meer ontdekken",
+    "form-ph-name": "Bijv. Marie Dupont",
+    "form-ph-email": "u@email.com",
+    "form-ph-phone": "+33 6 12 34 56 78",
+    "form-ph-message": "Specifieke wensen...",
     "savings-airbnb": "Bespaar ~14% vergeleken met Airbnb",
     "around-eyebrow": "De omgeving",
     "around-title": "Ontdek de Alpilles",
@@ -929,6 +941,10 @@ const translations = {
     "selection-reset": "Daten ändern",
     "selection-validate": "Preis ansehen und buchen",
     "around-discover-more": "Mehr entdecken",
+    "form-ph-name": "z. B. Marie Dupont",
+    "form-ph-email": "sie@email.com",
+    "form-ph-phone": "+33 6 12 34 56 78",
+    "form-ph-message": "Besondere Wünsche...",
     "savings-airbnb": "Sparen Sie ~14% im Vergleich zu Airbnb",
     "around-eyebrow": "Die Umgebung",
     "around-title": "Entdecken Sie die Alpilles",
@@ -980,6 +996,14 @@ function setLanguage(lang) {
     const key = element.getAttribute('data-i18n');
     if (translations[lang] && translations[lang][key]) {
       element.textContent = translations[lang][key];
+    }
+  });
+
+  // Placeholders need the attribute, not textContent
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+    const key = element.getAttribute('data-i18n-placeholder');
+    if (translations[lang] && translations[lang][key]) {
+      element.placeholder = translations[lang][key];
     }
   });
 
