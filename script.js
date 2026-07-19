@@ -239,6 +239,8 @@ const translations = {
     "form-ph-email": "vous@email.com",
     "form-ph-phone": "+33 6 12 34 56 78",
     "form-ph-message": "Besoins spécifiques...",
+    "calculator-discount": "Réduction séjour longue durée",
+    "booking-discount": "Réduction séjour longue durée",
     "savings-airbnb": "Économisez ~14% par rapport à Airbnb"
   },
   en: {
@@ -486,6 +488,8 @@ const translations = {
     "form-ph-email": "you@email.com",
     "form-ph-phone": "+33 6 12 34 56 78",
     "form-ph-message": "Specific requirements...",
+    "calculator-discount": "Long-stay discount",
+    "booking-discount": "Long-stay discount",
     "savings-airbnb": "Save ~14% compared to Airbnb",
   },
   nl: {
@@ -698,6 +702,8 @@ const translations = {
     "form-ph-email": "u@email.com",
     "form-ph-phone": "+33 6 12 34 56 78",
     "form-ph-message": "Specifieke wensen...",
+    "calculator-discount": "Korting langverblijf",
+    "booking-discount": "Korting langverblijf",
     "savings-airbnb": "Bespaar ~14% vergeleken met Airbnb",
     "around-eyebrow": "De omgeving",
     "around-title": "Ontdek de Alpilles",
@@ -945,6 +951,8 @@ const translations = {
     "form-ph-email": "sie@email.com",
     "form-ph-phone": "+33 6 12 34 56 78",
     "form-ph-message": "Besondere Wünsche...",
+    "calculator-discount": "Langzeit-Rabatt",
+    "booking-discount": "Langzeit-Rabatt",
     "savings-airbnb": "Sparen Sie ~14% im Vergleich zu Airbnb",
     "around-eyebrow": "Die Umgebung",
     "around-title": "Entdecken Sie die Alpilles",
@@ -1052,6 +1060,8 @@ const bookingTaxValue = document.getElementById("booking-tax-value");
 const bookingTotalValue = document.getElementById("booking-total-value");
 const bookingErrorsDiv = document.getElementById("booking-errors");
 const bookingSavingsDiv = document.getElementById("booking-savings");
+const bookingDiscountLine = document.getElementById("booking-discount-line");
+const bookingDiscountValue = document.getElementById("booking-discount-value");
 
 let bookingCalculatedData = null;
 
@@ -1080,12 +1090,21 @@ const HIGH_SEASON_WEEKLY_RATE = 3510;
 const HIGH_SEASON_MULTIWEEK_THRESHOLD = 2;
 const HIGH_SEASON_MULTIWEEK_DISCOUNT = 0.9;
 
+function highSeasonWeeksGross(weeks) {
+  return weeks > 0 ? weeks * HIGH_SEASON_WEEKLY_RATE : 0;
+}
+
 function highSeasonWeeksPrice(weeks) {
   if (weeks <= 0) return 0;
-  const gross = weeks * HIGH_SEASON_WEEKLY_RATE;
+  const gross = highSeasonWeeksGross(weeks);
   return weeks >= HIGH_SEASON_MULTIWEEK_THRESHOLD
     ? gross * HIGH_SEASON_MULTIWEEK_DISCOUNT
     : gross;
+}
+
+// Undiscounted standard-season price, for showing the reduction as its own line.
+function standardNightsGross(nights) {
+  return nights > 0 ? nights * 400 : 0;
 }
 
 function calculateTouristTax(totalAccommodationPrice, nights, adults, children) {
@@ -1228,6 +1247,7 @@ function calculateBookingPrice() {
     && checkout > highSeasonCheckoutLimit;
 
   let price = 0;
+  let grossPrice = 0;
 
   if (isHighSeason) {
     // Fully in high season
@@ -1248,6 +1268,7 @@ function calculateBookingPrice() {
 
     const weeks = Math.floor(nights / 7);
     price = highSeasonWeeksPrice(weeks);
+    grossPrice = highSeasonWeeksGross(weeks);
 
   } else if (isMixedSeason) {
     // Mixed season: starts in standard, extends into high season
@@ -1290,6 +1311,7 @@ function calculateBookingPrice() {
     }
 
     price = standardPrice + highSeasonPrice;
+    grossPrice = standardNightsGross(standardNights) + highSeasonWeeksGross(highSeasonWeeks);
 
   } else if (isHighToStandard) {
     // Starts in high season, runs past 29/08 into the standard season.
@@ -1314,6 +1336,7 @@ function calculateBookingPrice() {
       : standardNights * 400;
 
     price = highSeasonPrice + standardPrice;
+    grossPrice = highSeasonWeeksGross(Math.floor(highSeasonNights / 7)) + standardNightsGross(standardNights);
 
   } else {
     // Fully in standard season
@@ -1329,6 +1352,7 @@ function calculateBookingPrice() {
     } else {
       price = nights * 400;
     }
+    grossPrice = standardNightsGross(nights);
   }
 
   // Add 390€ per stay fee
@@ -1352,8 +1376,13 @@ function calculateBookingPrice() {
     totalPrice
   };
 
+  const bookingDiscount = Math.round((grossPrice - price) * 100) / 100;
   bookingNightsValue.textContent = nights;
-  bookingRateValue.textContent = `${price.toLocaleString('fr-FR')}€`;
+  bookingRateValue.textContent = `${(bookingDiscount > 0 ? grossPrice : price).toLocaleString('fr-FR')}€`;
+  if (bookingDiscountLine && bookingDiscountValue) {
+    bookingDiscountLine.style.display = bookingDiscount > 0 ? '' : 'none';
+    bookingDiscountValue.textContent = `-${bookingDiscount.toLocaleString('fr-FR')}€`;
+  }
   bookingTaxValue.textContent = `${touristTax.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€`;
   bookingTotalValue.textContent = `${totalPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€`;
 
@@ -1598,6 +1627,8 @@ const errorsDiv = document.getElementById('calc-errors');
 const sendEmailBtn = document.getElementById('calc-send-email');
 const sendWhatsAppBtn = document.getElementById('calc-send-whatsapp');
 const calcSavingsDiv = document.getElementById('calc-savings');
+const calcDiscountLine = document.getElementById('calc-discount-line');
+const calcDiscountValue = document.getElementById('calc-discount');
 
 let calculatedData = null;
 
@@ -1645,7 +1676,9 @@ function calculatePrice() {
   // Define season dates for 2026
   const seasonStart = new Date('2026-04-17');
   const highSeasonStart = new Date('2026-07-04');
+  // Last high-season NIGHT vs last valid CHECKOUT — see calculateBookingPrice.
   const highSeasonEnd = new Date('2026-08-28');
+  const highSeasonCheckoutLimit = new Date('2026-08-29');
   const standardSeasonEnd = new Date('2026-10-03');
 
   // Check if dates are within valid season
@@ -1666,10 +1699,14 @@ function calculatePrice() {
   }
 
   // Check if stay is entirely in high season
-  const isHighSeason = checkin >= highSeasonStart && checkout <= highSeasonEnd;
+  const isHighSeason = checkin >= highSeasonStart && checkout <= highSeasonCheckoutLimit;
   const isMixedSeason = checkin < highSeasonStart && checkout > highSeasonStart;
+  const isHighToStandard = checkin >= highSeasonStart
+    && checkin <= highSeasonEnd
+    && checkout > highSeasonCheckoutLimit;
 
   let price = 0;
+  let grossPrice = 0;
   let rateDescription = '';
 
   if (isHighSeason) {
@@ -1691,6 +1728,7 @@ function calculatePrice() {
 
     const weeks = Math.floor(nights / 7);
     price = highSeasonWeeksPrice(weeks);
+    grossPrice = highSeasonWeeksGross(weeks);
     rateDescription = currentLang === 'fr'
       ? (weeks === 1
           ? '3 510€ / semaine'
@@ -1740,9 +1778,27 @@ function calculatePrice() {
     }
 
     price = standardPrice + highSeasonPrice;
+    grossPrice = standardNightsGross(standardNights) + highSeasonWeeksGross(highSeasonWeeks);
     rateDescription = currentLang === 'fr'
       ? `Standard: ${standardPrice.toLocaleString('fr-FR')}€ + Haute saison: ${highSeasonPrice.toLocaleString('fr-FR')}€`
       : `Standard: €${standardPrice.toLocaleString('fr-FR')} + High season: €${highSeasonPrice.toLocaleString('fr-FR')}`;
+
+  } else if (isHighToStandard) {
+    // Starts in high season, runs past 29/08 into the standard season.
+    const highSeasonNights = Math.round((highSeasonCheckoutLimit - checkin) / (1000 * 60 * 60 * 24));
+    const standardNights = Math.round((checkout - highSeasonCheckoutLimit) / (1000 * 60 * 60 * 24));
+    const weeks = Math.floor(highSeasonNights / 7);
+
+    const highSeasonPrice = highSeasonWeeksPrice(weeks);
+    const standardPrice = standardNights >= 7
+      ? standardNights * 400 * 0.9
+      : standardNights * 400;
+
+    price = highSeasonPrice + standardPrice;
+    grossPrice = highSeasonWeeksGross(weeks) + standardNightsGross(standardNights);
+    rateDescription = currentLang === 'fr'
+      ? `${weeks} semaine(s) haute saison + ${standardNights} nuit(s) standard`
+      : `${weeks} high-season week(s) + ${standardNights} standard night(s)`;
 
   } else {
     // Fully in standard season pricing
@@ -1762,6 +1818,7 @@ function calculatePrice() {
       price = nights * 400;
       rateDescription = currentLang === 'fr' ? `400€ × ${nights} nuits` : `€400 × ${nights} nights`;
     }
+    grossPrice = standardNightsGross(nights);
   }
 
   // Add 390€ per stay fee
@@ -1791,7 +1848,12 @@ function calculatePrice() {
   guestsSpan.textContent = currentLang === 'fr'
     ? `${adults} adulte(s), ${children} enfant(s)`
     : `${adults} adult(s), ${children} child(ren)`;
-  rateSpan.textContent = `${price.toLocaleString('fr-FR')}€`;
+  const calcDiscount = Math.round((grossPrice - price) * 100) / 100;
+  rateSpan.textContent = `${(calcDiscount > 0 ? grossPrice : price).toLocaleString('fr-FR')}€`;
+  if (calcDiscountLine && calcDiscountValue) {
+    calcDiscountLine.style.display = calcDiscount > 0 ? '' : 'none';
+    calcDiscountValue.textContent = `-${calcDiscount.toLocaleString('fr-FR')}€`;
+  }
   taxSpan.textContent = `${touristTax.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€`;
   totalSpan.textContent = `${totalPrice.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€`;
 
