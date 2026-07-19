@@ -163,11 +163,11 @@ const translations = {
     "pricing-standard-7nights": "7 nuits et plus : -10%",
     "pricing-high-title": "Haute Saison",
     "pricing-high-period": "4 juillet au 28 août",
-    "pricing-high-rate": "3 900€ / semaine",
+    "pricing-high-rate": "3 510€ / semaine",
     "pricing-high-constraint": "Arrivée/départ : samedi uniquement",
     "pricing-high-degressive": "Tarif dégressif",
     "pricing-high-2weeks": "2 semaines et plus : -10%",
-    "pricing-included": "Ménage et linge de maison (400€ / séjour)",
+    "pricing-included": "Ménage et linge de maison (390€ / séjour)",
     "pricing-tax": "Tarif hors Taxe de séjour",
     "pricing-deposit": "Caution : 1 500€",
     "pricing-closed": "Fermé avant le 17 avril et après le 3 octobre 2026",
@@ -439,11 +439,11 @@ const translations = {
     "pricing-standard-7nights": "7+ nights: -10%",
     "pricing-high-title": "High Season",
     "pricing-high-period": "July 4 to August 28",
-    "pricing-high-rate": "€3,900 / week",
+    "pricing-high-rate": "€3,510 / week",
     "pricing-high-constraint": "Check-in/out: Saturday only",
     "pricing-high-degressive": "Degressive rate",
     "pricing-high-2weeks": "2+ weeks: -10%",
-    "pricing-included": "Cleaning and linens (€400 / stay)",
+    "pricing-included": "Cleaning and linens (€390 / stay)",
     "pricing-tax": "Price excluding tourist tax",
     "pricing-deposit": "Deposit: €1,500",
     "pricing-closed": "Closed before April 17 and after October 3, 2026",
@@ -651,11 +651,11 @@ const translations = {
     "pricing-standard-7nights": "7+ nachten: -10%",
     "pricing-high-title": "Hoogseizoen",
     "pricing-high-period": "4 juli tot 28 augustus",
-    "pricing-high-rate": "€3.900 / week",
+    "pricing-high-rate": "€3.510 / week",
     "pricing-high-constraint": "Aankomst/vertrek: alleen zaterdag",
     "pricing-high-degressive": "Degressief tarief",
     "pricing-high-2weeks": "2+ weken: -10%",
-    "pricing-included": "Schoonmaak en huishoudlinnen (€400 / verblijf)",
+    "pricing-included": "Schoonmaak en huishoudlinnen (€390 / verblijf)",
     "pricing-tax": "Tarief excl. toeristenbelasting",
     "pricing-deposit": "Borg: €1.500",
     "pricing-closed": "Gesloten vóór 17 april en na 3 oktober 2026",
@@ -898,11 +898,11 @@ const translations = {
     "pricing-standard-7nights": "7+ Nächte: -10%",
     "pricing-high-title": "Hochsaison",
     "pricing-high-period": "4. Juli bis 28. August",
-    "pricing-high-rate": "€3.900 / Woche",
+    "pricing-high-rate": "€3.510 / Woche",
     "pricing-high-constraint": "Ankunft/Abreise: nur Samstag",
     "pricing-high-degressive": "Degressiver Preis",
     "pricing-high-2weeks": "2+ Wochen: -10%",
-    "pricing-included": "Reinigung und Haushaltswäsche (€400 / Aufenthalt)",
+    "pricing-included": "Reinigung und Haushaltswäsche (€390 / Aufenthalt)",
     "pricing-tax": "Preis ohne Kurtaxe",
     "pricing-deposit": "Kaution: €1.500",
     "pricing-closed": "Geschlossen vor dem 17. April und nach dem 3. Oktober 2026",
@@ -1074,9 +1074,9 @@ function formatDateInput(date) {
 
 // Calculate tourist tax according to Terre de Provence regulations
 // For non-classified lodgings: 5% proportional rate, capped at 3.18€, + 10% departmental + 34% regional
-// High season (4 juillet - 28 août) : 3 900 €/semaine, -10% à partir de 2 semaines.
-// 2 semaines = 7 800 × 0,9 = 7 020 €.
-const HIGH_SEASON_WEEKLY_RATE = 3900;
+// High season (4 juillet - 28 août) : 3 510 €/semaine HT (hors ménage et taxe),
+// -10% à partir de 2 semaines. 2 semaines = 7 020 × 0,9 = 6 318 €.
+const HIGH_SEASON_WEEKLY_RATE = 3510;
 const HIGH_SEASON_MULTIWEEK_THRESHOLD = 2;
 const HIGH_SEASON_MULTIWEEK_DISCOUNT = 0.9;
 
@@ -1277,7 +1277,7 @@ function calculateBookingPrice() {
       standardPrice = standardNights * 400;
     }
 
-    // Calculate high season portion (7-day blocks, 3900€/week, -10% from 2 weeks)
+    // Calculate high season portion (7-day blocks, 3510€/week, -10% from 2 weeks)
     const highSeasonWeeks = Math.floor(highSeasonNights / 7);
     const highSeasonPrice = highSeasonWeeksPrice(highSeasonWeeks);
 
@@ -1331,8 +1331,8 @@ function calculateBookingPrice() {
     }
   }
 
-  // Add 400€ per stay fee
-  const stayFee = 400;
+  // Add 390€ per stay fee
+  const stayFee = 390;
   const priceWithFee = price + stayFee;
 
   // Calculate tourist tax (Terre de Provence - meublé non classé)
@@ -1673,7 +1673,7 @@ function calculatePrice() {
   let rateDescription = '';
 
   if (isHighSeason) {
-    // Fully in high season: €3900/week (-10% from 2 weeks), Saturday to Saturday only
+    // Fully in high season: €3510/week (-10% from 2 weeks), Saturday to Saturday only
     const checkinDay = checkin.getDay();
     const checkoutDay = checkout.getDay();
 
@@ -1693,11 +1693,11 @@ function calculatePrice() {
     price = highSeasonWeeksPrice(weeks);
     rateDescription = currentLang === 'fr'
       ? (weeks === 1
-          ? '3 900€ / semaine'
-          : `${weeks} semaines × 3 900€ − 10% = ${price.toLocaleString('fr-FR')}€`)
+          ? '3 510€ / semaine'
+          : `${weeks} semaines × 3 510€ − 10% = ${price.toLocaleString('fr-FR')}€`)
       : (weeks === 1
-          ? '€3,900 / week'
-          : `${weeks} weeks × €3,900 − 10% = €${price.toLocaleString('fr-FR')}`);
+          ? '€3,510 / week'
+          : `${weeks} weeks × €3,510 − 10% = €${price.toLocaleString('fr-FR')}`);
 
   } else if (isMixedSeason) {
     // Mixed season: starts in standard, extends into high season
@@ -1727,7 +1727,7 @@ function calculatePrice() {
       standardPrice = standardNights * 400;
     }
 
-    // Calculate high season portion (7-day blocks, 3900€/week, -10% from 2 weeks)
+    // Calculate high season portion (7-day blocks, 3510€/week, -10% from 2 weeks)
     const highSeasonWeeks = Math.floor(highSeasonNights / 7);
     const highSeasonPrice = highSeasonWeeksPrice(highSeasonWeeks);
 
@@ -1764,8 +1764,8 @@ function calculatePrice() {
     }
   }
 
-  // Add 400€ per stay fee
-  const stayFee = 400;
+  // Add 390€ per stay fee
+  const stayFee = 390;
   const priceWithFee = price + stayFee;
 
   // Calculate tourist tax (Terre de Provence - meublé non classé)
